@@ -1,26 +1,70 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useMemo } from 'react';
+import { useSet } from './hooks';
 import './App.css';
+import {
+  flattenSchema,
+  idToSchema,
+  combineSchema,
+  dataToFlatten,
+  onChangeById,
+  flattenToData,
+} from './utils';
+import SCHEMA from './json/basic.json';
+import FR from './FR';
+import 'tachyons';
 
 function App() {
+  const [state, setState] = useSet({
+    formData: SCHEMA.formData,
+    schema: SCHEMA,
+  });
+
+  const onChange = (data) => {
+    setState({ formData: data });
+  };
+
+  const onSchemaChange = (newSchema) => {
+    const result = { ...state.schema, propsSchema: newSchema };
+    setState({ schema: result });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="">
+      <Wrapper
+        schema={state.schema}
+        formData={state.formData}
+        onChange={onChange}
+        onSchemaChange={onSchemaChange}
+      />
     </div>
   );
 }
 
 export default App;
+
+const Wrapper = ({ schema, formData, onChange, onSchemaChange }) => {
+  const _schema = combineSchema(schema.propsSchema, schema.uiSchema);
+  const flatten = flattenSchema(_schema);
+
+  const flattenWithData = dataToFlatten(flatten, formData);
+  console.group('flatten');
+  console.log(flattenWithData);
+  console.groupEnd();
+
+  const newSchema = idToSchema(flattenWithData);
+  const newData = flattenToData(flattenWithData);
+  console.group('schema');
+  console.log(newSchema, newData);
+  console.groupEnd();
+
+  const onItemChange = (key, value) => {
+    flattenWithData[key] = value;
+    const newSchema = idToSchema(flattenWithData);
+    const newData = flattenToData(flattenWithData);
+    onChange(newData);
+    //TODO: 判断只有schema变化时才
+    onSchemaChange(newSchema);
+  };
+
+  return <FR flatten={flattenWithData} onItemChange={onItemChange} />;
+};
