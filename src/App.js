@@ -6,11 +6,11 @@ import {
   idToSchema,
   combineSchema,
   dataToFlatten,
-  onChangeById,
   flattenToData,
 } from './utils';
 import SCHEMA from './json/basic.json';
 import FR from './FR';
+import 'antd/dist/antd.css';
 import 'tachyons';
 
 function App() {
@@ -29,12 +29,14 @@ function App() {
   };
 
   return (
-    <div className="">
+    <div className="pa4">
       <Wrapper
         schema={state.schema}
         formData={state.formData}
         onChange={onChange}
         onSchemaChange={onSchemaChange}
+        displayType="row"
+        showDescIcon
       />
     </div>
   );
@@ -42,7 +44,13 @@ function App() {
 
 export default App;
 
-const Wrapper = ({ schema, formData, onChange, onSchemaChange }) => {
+const Wrapper = ({
+  schema,
+  formData,
+  onChange,
+  onSchemaChange,
+  ...globalProps
+}) => {
   const _schema = combineSchema(schema.propsSchema, schema.uiSchema);
   const flatten = flattenSchema(_schema);
 
@@ -66,5 +74,11 @@ const Wrapper = ({ schema, formData, onChange, onSchemaChange }) => {
     onSchemaChange(newSchema);
   };
 
-  return <FR flatten={flattenWithData} onItemChange={onItemChange} />;
+  return (
+    <FR
+      flatten={flattenWithData}
+      onItemChange={onItemChange}
+      globalProps={globalProps}
+    />
+  );
 };

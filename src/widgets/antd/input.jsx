@@ -23,7 +23,7 @@ export default function input(p) {
   const style = invalid ? { borderColor: '#f5222d' } : {};
   const { format = 'text' } = p.schema;
   const type = format === 'image' ? 'text' : format;
-  const handleChange = e => p.onChange(p.name, e.target.value);
+  const handleChange = (e) => p.onChange(e.target.value);
   return (
     <Input
       style={style}

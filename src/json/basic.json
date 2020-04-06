@@ -128,6 +128,7 @@
   "uiSchema": {},
   "formData": {
     "AllString": {
+      "input": "haha",
       "image": "http://placekitten.com/200/300"
     },
     "allEnum": {
