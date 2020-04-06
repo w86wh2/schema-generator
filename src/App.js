@@ -82,3 +82,7 @@ const Wrapper = ({
     />
   );
 };
+
+Wrapper.defaultProps = {
+  labelWidth: 120,
+};

@@ -1,6 +1,7 @@
 import React from 'react';
 import { getWidgetName } from './mapping';
 import { widgets } from './widgets/antd';
+import { isCssLength, isLooselyNumber } from './utils';
 
 const FR = ({ id = '#', onItemChange, flatten, globalProps }) => {
   const item = flatten[id];
@@ -92,9 +93,22 @@ const RenderField = ({
   isComplex,
 }) => {
   const { schema, data, $id } = item;
-  const { displayType, showDescIcon, showValidate } = globalProps || {};
+  const { displayType, showDescIcon, showValidate, labelWidth } =
+    globalProps || {};
   const { type, title, description, required } = schema;
   const isRequired = required && required.length > 0;
+
+  const _labelWidth = isLooselyNumber(labelWidth)
+    ? Number(labelWidth)
+    : isCssLength(labelWidth)
+    ? labelWidth
+    : 110; // 默认是 110px 的长度
+  let labelStyle = { width: _labelWidth };
+  if (type === 'boolean') {
+    labelStyle = { flexGrow: 1 };
+  } else if (isComplex || displayType === 'column') {
+    labelStyle = { flexGrow: 1 };
+  }
 
   const onChange = (value) => {
     const newItem = { ...item };
@@ -108,7 +122,7 @@ const RenderField = ({
   return (
     <>
       {schema.title ? (
-        <div className={labelClass}>
+        <div className={labelClass} style={labelStyle}>
           <label
             className={`fr-label-title ${
               type === 'boolean' || displayType === 'column' ? 'no-colon' : ''
