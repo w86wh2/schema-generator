@@ -72,11 +72,11 @@ const Wrapper = ({
     const newSchema = idToSchema(newFlatten);
     const newData = flattenToData(newFlatten);
     // console.group('schema');
-    // console.log(key, value, flattenWithData, newData);
+    // console.log(flattenWithData, newData);
     // console.groupEnd();
-    onChange(newData);
     //TODO: 判断只有schema变化时才
     onSchemaChange(newSchema);
+    onChange(newData);
   };
 
   const onItemChange = (key, value) => {
@@ -85,14 +85,11 @@ const Wrapper = ({
   };
 
   // TODO: flatten是频繁在变的，应该和其他两个函数分开
-  const store = useMemo(
-    () => ({
-      flatten: flattenWithData,
-      onFlattenChange,
-      onItemChange,
-    }),
-    [flattenWithData, onFlattenChange, onItemChange]
-  );
+  const store = {
+    flatten: flattenWithData,
+    onFlattenChange,
+    onItemChange,
+  };
 
   return (
     <PropsCtx.Provider value={globalProps}>

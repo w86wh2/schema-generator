@@ -46,7 +46,23 @@ export default function Wrapper({ item, inside = false, children }) {
 
   const copyItem = (e) => {
     e.stopPropagation();
-    const newId = $id + nanoid(6);
+    try {
+      const newId = $id + nanoid(6);
+      const newFlatten = { ...flatten };
+      const siblings = newFlatten[item.parent].children;
+      const idx = siblings.findIndex((x) => x === $id);
+      siblings.splice(idx + 1, 0, newId);
+      // 直接copy会让两个元素指向同一个object
+      newFlatten[newId] = {
+        parent: newFlatten[$id].parent,
+        schema: { ...newFlatten[$id].schema },
+        data: newFlatten[$id].data,
+        children: newFlatten[$id].children,
+      };
+      newFlatten[newId].schema.$id = newId;
+      console.log(newFlatten);
+      onFlattenChange(newFlatten);
+    } catch (error) {}
     // const
     // onFlattenChange()
   };

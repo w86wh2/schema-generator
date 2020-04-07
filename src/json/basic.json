@@ -134,7 +134,7 @@
   },
   "uiSchema": {},
   "formData": {
-    "AllString": {
+    "allString": {
       "input": "haha",
       "image": "http://placekitten.com/200/300"
     },

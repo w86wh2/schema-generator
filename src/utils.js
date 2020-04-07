@@ -407,9 +407,11 @@ export const flattenToData = (flatten, id = '#') => {
   try {
     let result = flatten[id].data;
     const ids = Object.keys(flatten);
-    const childrenIds = ids.filter(
-      (item) => item.indexOf(id) > -1 && item !== id
-    );
+    const childrenIds = ids.filter((item) => {
+      const lengthOfId = id.split('/').length;
+      const lengthOfChild = item.split('/').length;
+      return item.indexOf(id) > -1 && lengthOfChild > lengthOfId;
+    });
     if (childrenIds && childrenIds.length > 0) {
       if (result === undefined) result = {}; // TODO: 是不是就兜undefined？
       childrenIds.forEach((c) => {
