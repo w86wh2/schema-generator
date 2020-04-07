@@ -19,6 +19,7 @@ function App() {
   const [state, setState] = useSet({
     formData: SCHEMA.formData,
     schema: SCHEMA,
+    selected: undefined,
   });
 
   const onChange = (data) => {
