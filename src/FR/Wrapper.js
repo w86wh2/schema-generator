@@ -60,8 +60,8 @@ export default function Wrapper({ item, inside = false, children }) {
         children: newFlatten[$id].children,
       };
       newFlatten[newId].schema.$id = newId;
-      console.log(newFlatten);
       onFlattenChange(newFlatten);
+      setGlobal({ selected: newId });
     } catch (error) {}
     // const
     // onFlattenChange()
