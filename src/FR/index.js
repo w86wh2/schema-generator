@@ -4,7 +4,7 @@ import RenderChildren from './RenderChildren';
 import RenderField from './RenderField';
 import Wrapper from './Wrapper';
 
-const FR = ({ id = '#' }) => {
+const FR = ({ id = '#', simple = false }) => {
   const { onItemChange, onFlattenChange, flatten } = useStore();
   const { displayType } = useGlobalProps();
   const item = flatten[id];
@@ -68,6 +68,7 @@ const FR = ({ id = '#' }) => {
   };
   const childrenProps = {
     children: item.children,
+    simple,
   };
 
   const childrenElement =
@@ -76,6 +77,15 @@ const FR = ({ id = '#' }) => {
         <RenderChildren {...childrenProps} />
       </ul>
     ) : null;
+
+  if (simple) {
+    return (
+      <div className={containerClass}>
+        <RenderField {...fieldProps} />
+        {schema.type === 'object' && childrenElement}
+      </div>
+    );
+  }
 
   return (
     <Wrapper item={item}>

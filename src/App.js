@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
-import { useSet } from './hooks';
+import { useSet, useGlobal, useGlobalProps } from './hooks';
 import Left from './Left';
+import Right from './Right';
 import './App.css';
 import {
   flattenSchema,
@@ -15,15 +16,17 @@ import FR from './FR';
 import { widgets } from './widgets/antd';
 import 'antd/dist/antd.css';
 import 'tachyons';
+import { Button } from 'antd';
 
 function App() {
   const [state, setState] = useSet({
     formData: SCHEMA.formData,
     schema: SCHEMA,
     selected: undefined,
+    simple: false,
   });
 
-  const { schema, formData, selected } = state;
+  const { schema, formData, selected, simple } = state;
 
   const onChange = (data) => {
     setState({ formData: data });
@@ -45,6 +48,7 @@ function App() {
         showDescIcon
         widgets={widgets}
         selected={selected}
+        simple={simple}
       />
     </Ctx.Provider>
   );
@@ -59,6 +63,8 @@ const Wrapper = ({
   onSchemaChange,
   ...globalProps
 }) => {
+  const { simple } = globalProps;
+  const setGlobal = useGlobal();
   const _schema = combineSchema(schema.propsSchema, schema.uiSchema);
   const flatten = flattenSchema(_schema);
   const flattenWithData = dataToFlatten(flatten, formData);
@@ -95,7 +101,20 @@ const Wrapper = ({
       <InnerCtx.Provider value={store}>
         <div className="pa3 flex">
           <Left />
-          <FR />
+          <div>
+            <div>
+              <Button onClick={() => {}}>导出schema</Button>
+              <Button
+                onClick={() => {
+                  setGlobal({ simple: !simple, selected: '#' });
+                }}
+              >
+                {simple ? '开始编辑' : '展示最终'}
+              </Button>
+            </div>
+            <FR simple={simple} />
+          </div>
+          <Right />
         </div>
       </InnerCtx.Provider>
     </PropsCtx.Provider>
