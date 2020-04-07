@@ -27,19 +27,39 @@ const Element = ({ text, name, schema }) => {
   const handleElementClick = () => {
     if (!selected) return; //TODO: 不应该return，可以在root上加
     let newId;
-    if (selected === '#') {
-      newId = '#/' + name;
-    } else {
-      let _name = name;
-      const key = getKeyFromUniqueId(selected);
-      if (name === key) {
-        _name = name + nanoid(6);
+    // 初始字段是0，说明点击了object、list的里侧
+    if (selected[0] === '0' || selected === '#') {
+      try {
+        const newFlatten = { ...flatten };
+        let oldId = selected.substring(1);
+        newId = oldId + '/' + name + '_' + nanoid(6);
+        if (selected === '#') {
+          newId = '#/' + name + '_' + nanoid(6);
+          oldId = '#';
+          console.log(newFlatten, oldId);
+        }
+        const siblings = newFlatten[oldId].children;
+        siblings.push(newId);
+        const newItem = {
+          parent: oldId,
+          schema: { ...schema, $id: newId },
+          data: undefined,
+          children: [],
+        };
+        newFlatten[newId] = newItem;
+        onFlattenChange(newFlatten);
+        setGlobal({ selected: newId });
+      } catch (error) {
+        console.error(error, 'catch');
       }
-      const idArr = selected.split('/');
-      idArr.pop();
-      idArr.push(_name);
-      newId = idArr.join('/');
+      return;
     }
+
+    let _name = name + '_' + nanoid(6);
+    const idArr = selected.split('/');
+    idArr.pop();
+    idArr.push(_name);
+    newId = idArr.join('/');
     try {
       const newFlatten = { ...flatten };
       const item = newFlatten[selected];
