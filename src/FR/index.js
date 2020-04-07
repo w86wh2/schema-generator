@@ -1,10 +1,11 @@
 import React from 'react';
-import { useGlobal } from '../hooks';
+import { useGlobalProps } from '../hooks';
 import RenderChildren from './RenderChildren';
 import RenderField from './RenderField';
+import Wrapper from './Wrapper';
 
 const FR = ({ id = '#', onItemChange, flatten }) => {
-  const { displayType } = useGlobal();
+  const { displayType } = useGlobalProps();
   const item = flatten[id];
   const { schema } = item;
 
@@ -70,15 +71,24 @@ const FR = ({ id = '#', onItemChange, flatten }) => {
     onItemChange,
   };
 
+  const childrenElement =
+    item.children && item.children.length > 0 ? (
+      <ul className={`${id === '#' ? 'pl0' : 'pl3'}`}>
+        <RenderChildren {...childrenProps} />
+      </ul>
+    ) : null;
+
   return (
-    <div className={containerClass}>
-      <RenderField {...fieldProps} />
-      {item.children && item.children.length > 0 ? (
-        <ul className={`${id === '#' ? 'pl0' : 'pl3'}`}>
-          <RenderChildren {...childrenProps} />
-        </ul>
-      ) : null}
-    </div>
+    <Wrapper item={item}>
+      <div className={containerClass}>
+        <RenderField {...fieldProps} />
+        {schema.type === 'object' && (
+          <Wrapper item={item} inside>
+            {childrenElement}
+          </Wrapper>
+        )}
+      </div>
+    </Wrapper>
   );
 };
 

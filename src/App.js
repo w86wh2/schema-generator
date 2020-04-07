@@ -8,7 +8,7 @@ import {
   dataToFlatten,
   flattenToData,
 } from './utils';
-import { Ctx, FuncCtx } from './context';
+import { Ctx, PropsCtx, FuncCtx } from './context';
 import SCHEMA from './json/basic.json';
 import FR from './FR';
 import { widgets } from './widgets/antd';
@@ -22,27 +22,32 @@ function App() {
     selected: undefined,
   });
 
+  const { schema, formData, selected } = state;
+
   const onChange = (data) => {
     setState({ formData: data });
   };
 
   const onSchemaChange = (newSchema) => {
-    const result = { ...state.schema, propsSchema: newSchema };
+    const result = { ...schema, propsSchema: newSchema };
     setState({ schema: result });
   };
 
   return (
-    <div className="pa4">
-      <Wrapper
-        schema={state.schema}
-        formData={state.formData}
-        onChange={onChange}
-        onSchemaChange={onSchemaChange}
-        displayType="row"
-        showDescIcon
-        widgets={widgets}
-      />
-    </div>
+    <Ctx.Provider value={setState}>
+      <div className="pa4">
+        <Wrapper
+          schema={schema}
+          formData={formData}
+          onChange={onChange}
+          onSchemaChange={onSchemaChange}
+          displayType="row"
+          showDescIcon
+          widgets={widgets}
+          selected={selected}
+        />
+      </div>
+    </Ctx.Provider>
   );
 }
 
@@ -76,9 +81,9 @@ const Wrapper = ({
     onSchemaChange(newSchema);
   };
   return (
-    <Ctx.Provider value={globalProps}>
+    <PropsCtx.Provider value={globalProps}>
       <FR flatten={flattenWithData} onItemChange={onItemChange} />
-    </Ctx.Provider>
+    </PropsCtx.Provider>
   );
 };
 

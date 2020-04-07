@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from '../hooks';
+import { useGlobalProps } from '../hooks';
 import { isLooselyNumber, isCssLength } from '../utils';
 import { getWidgetName } from '../mapping';
 
@@ -17,7 +17,7 @@ const RenderField = ({
     showValidate,
     labelWidth,
     widgets,
-  } = useGlobal();
+  } = useGlobalProps();
   const { $id, type, title, description, required } = schema;
   const isRequired = required && required.length > 0;
 
@@ -86,7 +86,7 @@ const RenderField = ({
           </label>
         </div>
       ) : null}
-      {['map', 'list'].indexOf(widgetName) === -1 && (
+      {['list'].indexOf(widgetName) === -1 && (
         <div className={contentClass}>
           <Widget value={data} onChange={onChange} schema={schema} />
         </div>

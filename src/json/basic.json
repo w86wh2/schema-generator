@@ -2,6 +2,12 @@
   "propsSchema": {
     "type": "object",
     "properties": {
+      "objectName": {
+        "title": "对象",
+        "description": "这是一个对象类型",
+        "type": "object",
+        "properties": {}
+      },
       "allString": {
         "title": "string类",
         "type": "object",

@@ -4,7 +4,7 @@ import color from './color';
 import date from './date';
 import dateRange from './dateRange';
 import list from './list';
-// import map from './map';
+import map from './map';
 import multiSelect from './multiSelect';
 import number from './number';
 import radio from './radio';
@@ -23,7 +23,7 @@ export const widgets = {
   dateRange,
   input,
   list,
-  // map,
+  map,
   multiSelect, // 下拉多选
   number,
   radio,
