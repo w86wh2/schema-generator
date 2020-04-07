@@ -8,7 +8,7 @@ import {
   dataToFlatten,
   flattenToData,
 } from './utils';
-import { Ctx, PropsCtx, FuncCtx } from './context';
+import { Ctx, PropsCtx, InnerCtx } from './context';
 import SCHEMA from './json/basic.json';
 import FR from './FR';
 import { widgets } from './widgets/antd';
@@ -62,17 +62,15 @@ const Wrapper = ({
 }) => {
   const _schema = combineSchema(schema.propsSchema, schema.uiSchema);
   const flatten = flattenSchema(_schema);
-
   const flattenWithData = dataToFlatten(flatten, formData);
   // console.group('flatten');
   // console.log(flattenWithData);
   // console.groupEnd();
   console.log('render');
 
-  const onItemChange = (key, value) => {
-    flattenWithData[key] = value;
-    const newSchema = idToSchema(flattenWithData);
-    const newData = flattenToData(flattenWithData);
+  const onFlattenChange = (newFlatten) => {
+    const newSchema = idToSchema(newFlatten);
+    const newData = flattenToData(newFlatten);
     // console.group('schema');
     // console.log(key, value, flattenWithData, newData);
     // console.groupEnd();
@@ -80,9 +78,27 @@ const Wrapper = ({
     //TODO: 判断只有schema变化时才
     onSchemaChange(newSchema);
   };
+
+  const onItemChange = (key, value) => {
+    flattenWithData[key] = value;
+    onFlattenChange(flattenWithData);
+  };
+
+  // TODO: flatten是频繁在变的，应该和其他两个函数分开
+  const store = useMemo(
+    () => ({
+      flatten: flattenWithData,
+      onFlattenChange,
+      onItemChange,
+    }),
+    [flattenWithData, onFlattenChange, onItemChange]
+  );
+
   return (
     <PropsCtx.Provider value={globalProps}>
-      <FR flatten={flattenWithData} onItemChange={onItemChange} />
+      <InnerCtx.Provider value={store}>
+        <FR />
+      </InnerCtx.Provider>
     </PropsCtx.Provider>
   );
 };

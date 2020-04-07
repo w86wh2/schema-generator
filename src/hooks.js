@@ -1,5 +1,5 @@
 import { useReducer, useContext, useRef, useEffect, useState } from 'react';
-import { Ctx, FuncCtx, PropsCtx } from './context';
+import { Ctx, InnerCtx, PropsCtx } from './context';
 
 // 使用最顶层组件的 setState
 export const useGlobal = () => {
@@ -10,8 +10,8 @@ export const useGlobalProps = () => {
   return useContext(PropsCtx);
 };
 
-export const useChange = () => {
-  return useContext(FuncCtx);
+export const useStore = () => {
+  return useContext(InnerCtx);
 };
 
 // const logger = reducer => {

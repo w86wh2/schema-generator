@@ -1,8 +1,10 @@
 import React from 'react';
 import './Wrapper.css';
-import { useGlobal, useGlobalProps } from '../hooks';
+import { useGlobal, useGlobalProps, useStore } from '../hooks';
+import nanoid from 'nanoid';
 
 export default function Wrapper({ item, inside = false, children }) {
+  const { flatten, onItemChange, onFlattenChange } = useStore();
   const setGlobal = useGlobal();
   const { selected } = useGlobalProps();
   const { schema } = item;
@@ -34,6 +36,21 @@ export default function Wrapper({ item, inside = false, children }) {
     setGlobal({ selected: _id });
   };
 
+  const deleteItem = (e) => {
+    e.stopPropagation();
+    const newFlatten = { ...flatten };
+    delete newFlatten[$id];
+    onFlattenChange(newFlatten);
+    // onItemChange($id, undefined);
+  };
+
+  const copyItem = (e) => {
+    e.stopPropagation();
+    const newId = $id + nanoid(6);
+    // const
+    // onFlattenChange()
+  };
+
   if ($id === '#' && inside) return children;
 
   return (
@@ -46,7 +63,7 @@ export default function Wrapper({ item, inside = false, children }) {
         <div className="absolute top-0 left-0 blue f7">{$id.substring(1)}</div>
       )}
       {children}
-      {isSelected && !inside && (
+      {isSelected && !inside && $id !== '#' && (
         <div
           style={{
             position: 'absolute',
@@ -62,30 +79,18 @@ export default function Wrapper({ item, inside = false, children }) {
             alignItems: 'center',
           }}
         >
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              try {
-              } catch (error) {
-                console.error(error.message);
-              }
-            }}
-          >
+          <div onClick={deleteItem}>
             <img
               style={{ height: 14, width: 14, marginRight: 8 }}
               src="https://gw.alicdn.com/tfs/TB1oaaUu4v1gK0jSZFFXXb0sXXa-128-128.png"
               alt="delete"
             />
           </div>
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
+          <div onClick={copyItem}>
             <img
               style={{ height: 14, width: 14 }}
               src="https://gw.alicdn.com/tfs/TB1xSGTu1L2gK0jSZFmXXc7iXXa-128-128.png"
-              alt="delete"
+              alt="copy"
             />
           </div>
         </div>

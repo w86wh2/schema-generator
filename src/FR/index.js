@@ -1,14 +1,16 @@
 import React from 'react';
-import { useGlobalProps } from '../hooks';
+import { useGlobalProps, useStore } from '../hooks';
 import RenderChildren from './RenderChildren';
 import RenderField from './RenderField';
 import Wrapper from './Wrapper';
 
-const FR = ({ id = '#', onItemChange, flatten }) => {
+const FR = ({ id = '#' }) => {
+  const { onItemChange, onFlattenChange, flatten } = useStore();
   const { displayType } = useGlobalProps();
   const item = flatten[id];
-  const { schema } = item;
+  if (!item) return null;
 
+  const { schema } = item;
   const isObj = schema.type === 'object';
   const isList = schema.type === 'array' && schema.enum === undefined;
   const isComplex = isObj || isList;
@@ -60,15 +62,12 @@ const FR = ({ id = '#', onItemChange, flatten }) => {
 
   const fieldProps = {
     item,
-    onItemChange,
     labelClass,
     contentClass,
     isComplex,
   };
   const childrenProps = {
-    flatten,
     children: item.children,
-    onItemChange,
   };
 
   const childrenElement =

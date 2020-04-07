@@ -1,7 +1,9 @@
 import React from 'react';
+import { useStore } from '../hooks';
 import FR from './index';
 
-const RenderChildren = ({ children = [], onItemChange, flatten }) => {
+const RenderChildren = ({ children = [] }) => {
+  const { onItemChange, flatten } = useStore();
   return (
     <>
       {children.map((child, i) => {

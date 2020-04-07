@@ -1,15 +1,10 @@
 import React from 'react';
-import { useGlobalProps } from '../hooks';
+import { useGlobalProps, useStore } from '../hooks';
 import { isLooselyNumber, isCssLength } from '../utils';
 import { getWidgetName } from '../mapping';
 
-const RenderField = ({
-  item,
-  onItemChange,
-  labelClass,
-  contentClass,
-  isComplex,
-}) => {
+const RenderField = ({ item, labelClass, contentClass, isComplex }) => {
+  const { onItemChange } = useStore();
   const { schema, data } = item;
   const {
     displayType,
@@ -36,7 +31,6 @@ const RenderField = ({
   const onChange = (value) => {
     const newItem = { ...item };
     newItem.data = value;
-    console.log($id, newItem, value, 'haha');
     onItemChange($id, newItem);
   };
 
