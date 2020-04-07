@@ -1,6 +1,7 @@
 import React from 'react';
 import './Wrapper.css';
 import { useGlobal, useGlobalProps, useStore } from '../hooks';
+import { copyItem } from '../utils';
 import nanoid from 'nanoid';
 
 export default function Wrapper({ item, inside = false, children }) {
@@ -44,27 +45,11 @@ export default function Wrapper({ item, inside = false, children }) {
     // onItemChange($id, undefined);
   };
 
-  const copyItem = (e) => {
+  const handleItemCopy = (e) => {
     e.stopPropagation();
-    try {
-      const newId = $id + nanoid(6);
-      const newFlatten = { ...flatten };
-      const siblings = newFlatten[item.parent].children;
-      const idx = siblings.findIndex((x) => x === $id);
-      siblings.splice(idx + 1, 0, newId);
-      // 直接copy会让两个元素指向同一个object
-      newFlatten[newId] = {
-        parent: newFlatten[$id].parent,
-        schema: { ...newFlatten[$id].schema },
-        data: newFlatten[$id].data,
-        children: newFlatten[$id].children,
-      };
-      newFlatten[newId].schema.$id = newId;
-      onFlattenChange(newFlatten);
-      setGlobal({ selected: newId });
-    } catch (error) {}
-    // const
-    // onFlattenChange()
+    const [newFlatten, newId] = copyItem(flatten, $id);
+    onFlattenChange(newFlatten);
+    setGlobal({ selected: newId });
   };
 
   if ($id === '#' && inside) return children;
@@ -102,7 +87,7 @@ export default function Wrapper({ item, inside = false, children }) {
               alt="delete"
             />
           </div>
-          <div onClick={copyItem}>
+          <div onClick={handleItemCopy}>
             <img
               style={{ height: 14, width: 14 }}
               src="https://gw.alicdn.com/tfs/TB1xSGTu1L2gK0jSZFmXXc7iXXa-128-128.png"

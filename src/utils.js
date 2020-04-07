@@ -290,38 +290,61 @@ export const deleteSchema = (id, schema) => {
 };
 
 // 复制对应id的schema
-export const copySchema = (id, schema) => {
-  const flatten = flattenSchema(schema);
-  let newId = id + '$$' + nanoid(10);
-  if (id && typeof id === 'string' && id.split('$$').length > 1) {
-    newId = id.split('$$')[0] + '$$' + nanoid(10);
-  }
-  if (id in flatten) {
-    // 将创建的新id注入到parent的children array
-    const parent = flatten[id].parent;
-    if (parent && parent in flatten) {
-      const children = flatten[parent].children;
-      try {
-        const idx = children.findIndex((x) => x === id);
-        children.splice(idx + 1, 0, newId);
-      } catch (error) {
-        console.error(error.message);
-      }
-    }
+// export const copySchema = (id, schema) => {
+//   const flatten = flattenSchema(schema);
+//   let newId = id + '$$' + nanoid(10);
+//   if (id && typeof id === 'string' && id.split('$$').length > 1) {
+//     newId = id.split('$$')[0] + '$$' + nanoid(10);
+//   }
+//   if (id in flatten) {
+//     // 将创建的新id注入到parent的children array
+//     const parent = flatten[id].parent;
+//     if (parent && parent in flatten) {
+//       const children = flatten[parent].children;
+//       try {
+//         const idx = children.findIndex((x) => x === id);
+//         children.splice(idx + 1, 0, newId);
+//       } catch (error) {
+//         console.error(error.message);
+//       }
+//     }
 
-    try {
-      // 简单的实现一下拷贝
-      flatten[newId] = {
-        parent: flatten[id].parent,
-        schema: { ...flatten[id].schema },
-        children: flatten[id].children,
-      };
-      flatten[newId].schema.$id = newId;
-    } catch (error) {
-      console.error(error.message);
-    }
+//     try {
+//       // 简单的实现一下拷贝
+//       flatten[newId] = {
+//         parent: flatten[id].parent,
+//         schema: { ...flatten[id].schema },
+//         children: flatten[id].children,
+//       };
+//       flatten[newId].schema.$id = newId;
+//     } catch (error) {
+//       console.error(error.message);
+//     }
+//   }
+//   return [idToSchema(flatten), newId];
+// };
+
+export const copyItem = (flatten, $id) => {
+  let newFlatten = { ...flatten };
+  try {
+    const item = flatten[$id];
+    const newId = $id + nanoid(6);
+    const siblings = newFlatten[item.parent].children;
+    const idx = siblings.findIndex((x) => x === $id);
+    siblings.splice(idx + 1, 0, newId);
+    // 直接copy会让两个元素指向同一个object
+    newFlatten[newId] = {
+      parent: newFlatten[$id].parent,
+      schema: { ...newFlatten[$id].schema },
+      data: newFlatten[$id].data,
+      children: newFlatten[$id].children,
+    };
+    newFlatten[newId].schema.$id = newId;
+    return [newFlatten, newId];
+  } catch (error) {
+    console.error(error, 'catcherror');
+    return [flatten, $id];
   }
-  return [idToSchema(flatten), newId];
 };
 
 // schema的某个id位置后面添加一个名字是key的subSchema，生成新的schema
