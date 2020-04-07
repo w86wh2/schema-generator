@@ -8,8 +8,10 @@ import {
   dataToFlatten,
   flattenToData,
 } from './utils';
+import { Ctx, FuncCtx } from './context';
 import SCHEMA from './json/basic.json';
 import FR from './FR';
+import { widgets } from './widgets/antd';
 import 'antd/dist/antd.css';
 import 'tachyons';
 
@@ -37,6 +39,7 @@ function App() {
         onSchemaChange={onSchemaChange}
         displayType="row"
         showDescIcon
+        widgets={widgets}
       />
     </div>
   );
@@ -71,13 +74,10 @@ const Wrapper = ({
     //TODO: 判断只有schema变化时才
     onSchemaChange(newSchema);
   };
-
   return (
-    <FR
-      flatten={flattenWithData}
-      onItemChange={onItemChange}
-      globalProps={globalProps}
-    />
+    <Ctx.Provider value={globalProps}>
+      <FR flatten={flattenWithData} onItemChange={onItemChange} />
+    </Ctx.Provider>
   );
 };
 

@@ -1,5 +1,4 @@
 import { createContext } from 'react';
 
-const CbCtx = createContext(() => {});
-
-export default CbCtx;
+export const Ctx = createContext({});
+export const FuncCtx = createContext(() => {});

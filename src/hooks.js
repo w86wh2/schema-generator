@@ -1,9 +1,13 @@
 import { useReducer, useContext, useRef, useEffect, useState } from 'react';
-import Ctx from './context';
+import { Ctx, FuncCtx } from './context';
 
 // 使用最顶层组件的 setState
 export const useGlobal = () => {
   return useContext(Ctx);
+};
+
+export const useChange = () => {
+  return useContext(FuncCtx);
 };
 
 // const logger = reducer => {

@@ -1,12 +1,12 @@
 import React from 'react';
 import { getWidgetName } from './mapping';
-import { widgets } from './widgets/antd';
+import { useGlobal } from './hooks';
 import { isCssLength, isLooselyNumber } from './utils';
 
-const FR = ({ id = '#', onItemChange, flatten, globalProps }) => {
+const FR = ({ id = '#', onItemChange, flatten }) => {
+  const { displayType } = useGlobal();
   const item = flatten[id];
   const { schema, parent, children } = item;
-  const { displayType } = globalProps || {};
 
   const isObj = schema.type === 'object';
   const isList = schema.type === 'array' && schema.enum === undefined;
@@ -60,7 +60,6 @@ const FR = ({ id = '#', onItemChange, flatten, globalProps }) => {
   const fieldProps = {
     item,
     onItemChange,
-    globalProps,
     labelClass,
     contentClass,
     isComplex,
@@ -69,7 +68,6 @@ const FR = ({ id = '#', onItemChange, flatten, globalProps }) => {
     flatten,
     children: item.children,
     onItemChange,
-    globalProps,
   };
 
   return (
@@ -86,15 +84,19 @@ const FR = ({ id = '#', onItemChange, flatten, globalProps }) => {
 
 const RenderField = ({
   item,
-  globalProps,
   onItemChange,
   labelClass,
   contentClass,
   isComplex,
 }) => {
   const { schema, data } = item;
-  const { displayType, showDescIcon, showValidate, labelWidth } =
-    globalProps || {};
+  const {
+    displayType,
+    showDescIcon,
+    showValidate,
+    labelWidth,
+    widgets,
+  } = useGlobal();
   const { $id, type, title, description, required } = schema;
   const isRequired = required && required.length > 0;
 
@@ -172,17 +174,11 @@ const RenderField = ({
   );
 };
 
-const RenderChildren = ({
-  children = [],
-  onItemChange,
-  flatten,
-  globalProps,
-}) => {
+const RenderChildren = ({ children = [], onItemChange, flatten }) => {
   return (
     <>
       {children.map((child, i) => {
         const FRProps = {
-          globalProps,
           onItemChange,
           flatten,
           id: child,
