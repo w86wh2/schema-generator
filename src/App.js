@@ -49,6 +49,7 @@ function App() {
       selected={selected}
       preview={preview}
       setState={setState}
+      simple={false}
     />
   );
 }
@@ -56,6 +57,7 @@ function App() {
 export default App;
 
 export const Wrapper = ({
+  simple = true,
   schema,
   formData,
   onChange,
@@ -93,6 +95,17 @@ export const Wrapper = ({
     onFlattenChange,
     onItemChange,
   };
+  if (simple) {
+    return (
+      <Ctx.Provider value={setState}>
+        <PropsCtx.Provider value={globalProps}>
+          <InnerCtx.Provider value={store}>
+            <FR preview={true} />
+          </InnerCtx.Provider>
+        </PropsCtx.Provider>
+      </Ctx.Provider>
+    );
+  }
 
   return (
     <Ctx.Provider value={setState}>
