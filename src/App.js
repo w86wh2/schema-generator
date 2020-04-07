@@ -36,19 +36,16 @@ function App() {
 
   return (
     <Ctx.Provider value={setState}>
-      <div className="pa3 flex">
-        <Left />
-        <Wrapper
-          schema={schema}
-          formData={formData}
-          onChange={onChange}
-          onSchemaChange={onSchemaChange}
-          displayType="row"
-          showDescIcon
-          widgets={widgets}
-          selected={selected}
-        />
-      </div>
+      <Wrapper
+        schema={schema}
+        formData={formData}
+        onChange={onChange}
+        onSchemaChange={onSchemaChange}
+        displayType="row"
+        showDescIcon
+        widgets={widgets}
+        selected={selected}
+      />
     </Ctx.Provider>
   );
 }
@@ -96,7 +93,10 @@ const Wrapper = ({
   return (
     <PropsCtx.Provider value={globalProps}>
       <InnerCtx.Provider value={store}>
-        <FR />
+        <div className="pa3 flex">
+          <Left />
+          <FR />
+        </div>
       </InnerCtx.Provider>
     </PropsCtx.Provider>
   );
