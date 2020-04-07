@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useSet } from './hooks';
+import Left from './Left';
 import './App.css';
 import {
   flattenSchema,
@@ -35,7 +36,8 @@ function App() {
 
   return (
     <Ctx.Provider value={setState}>
-      <div className="pa4">
+      <div className="pa3 flex">
+        <Left />
         <Wrapper
           schema={schema}
           formData={formData}
