@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { useSet } from './hooks';
 import Left from './Left';
 import Right from './Right';
-import './App.css';
 import {
   flattenSchema,
   idToSchema,
@@ -14,9 +13,10 @@ import { Ctx, PropsCtx, InnerCtx } from './context';
 import SCHEMA from './json/basic.json';
 import FR from './FR';
 import { widgets } from './widgets/antd';
+import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import 'tachyons';
-import { Button } from 'antd';
+import './App.css';
 
 function App() {
   const [state, setState] = useSet({
@@ -113,7 +113,7 @@ export const Wrapper = ({
         <InnerCtx.Provider value={store}>
           <div className="pa3 flex">
             <Left />
-            <div>
+            <div className="mid-layout">
               <div className="mb3">
                 <Button type="primary" className="mr2" onClick={() => {}}>
                   导出schema
