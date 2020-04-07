@@ -4,7 +4,7 @@ import RenderChildren from './RenderChildren';
 import RenderField from './RenderField';
 import Wrapper from './Wrapper';
 
-const FR = ({ id = '#', simple = false }) => {
+const FR = ({ id = '#', preview = false }) => {
   const { onItemChange, onFlattenChange, flatten } = useStore();
   const { displayType } = useGlobalProps();
   const item = flatten[id];
@@ -68,7 +68,7 @@ const FR = ({ id = '#', simple = false }) => {
   };
   const childrenProps = {
     children: item.children,
-    simple,
+    preview,
   };
 
   const childrenElement =
@@ -78,7 +78,7 @@ const FR = ({ id = '#', simple = false }) => {
       </ul>
     ) : null;
 
-  if (simple) {
+  if (preview) {
     return (
       <div className={containerClass}>
         <RenderField {...fieldProps} />

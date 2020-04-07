@@ -2,14 +2,13 @@ import React from 'react';
 import ELEMENT_LIST from './elementList';
 import './index.css';
 import { useGlobal, useGlobalProps, useStore } from '../hooks';
-import { getKeyFromUniqueId } from '../utils';
 import nanoid from 'nanoid';
 
 const Left = (props) => (
   <div className="left-layout">
     {ELEMENT_LIST.map((ele, idx) => {
       return (
-        <div className="left-item">
+        <div key={idx.toString()} className="left-item">
           <Element {...ele} {...props} key={idx.toString()} />
         </div>
       );

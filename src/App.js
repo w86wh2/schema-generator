@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useSet, useGlobal, useGlobalProps } from './hooks';
+import { useSet } from './hooks';
 import Left from './Left';
 import Right from './Right';
 import './App.css';
@@ -23,10 +23,10 @@ function App() {
     formData: SCHEMA.formData,
     schema: SCHEMA,
     selected: undefined,
-    simple: false,
+    preview: false,
   });
 
-  const { schema, formData, selected, simple } = state;
+  const { schema, formData, selected, preview } = state;
 
   const onChange = (data) => {
     setState({ formData: data });
@@ -38,33 +38,31 @@ function App() {
   };
 
   return (
-    <Ctx.Provider value={setState}>
-      <Wrapper
-        schema={schema}
-        formData={formData}
-        onChange={onChange}
-        onSchemaChange={onSchemaChange}
-        displayType="row"
-        showDescIcon
-        widgets={widgets}
-        selected={selected}
-        simple={simple}
-      />
-    </Ctx.Provider>
+    <Wrapper
+      schema={schema}
+      formData={formData}
+      onChange={onChange}
+      onSchemaChange={onSchemaChange}
+      displayType="row"
+      showDescIcon
+      widgets={widgets}
+      selected={selected}
+      preview={preview}
+      setState={setState}
+    />
   );
 }
 
 export default App;
 
-const Wrapper = ({
+export const Wrapper = ({
   schema,
   formData,
   onChange,
   onSchemaChange,
   ...globalProps
 }) => {
-  const { simple } = globalProps;
-  const setGlobal = useGlobal();
+  const { setState, preview } = globalProps;
   const _schema = combineSchema(schema.propsSchema, schema.uiSchema);
   const flatten = flattenSchema(_schema);
   const flattenWithData = dataToFlatten(flatten, formData);
@@ -97,27 +95,31 @@ const Wrapper = ({
   };
 
   return (
-    <PropsCtx.Provider value={globalProps}>
-      <InnerCtx.Provider value={store}>
-        <div className="pa3 flex">
-          <Left />
-          <div>
+    <Ctx.Provider value={setState}>
+      <PropsCtx.Provider value={globalProps}>
+        <InnerCtx.Provider value={store}>
+          <div className="pa3 flex">
+            <Left />
             <div>
-              <Button onClick={() => {}}>导出schema</Button>
-              <Button
-                onClick={() => {
-                  setGlobal({ simple: !simple, selected: '#' });
-                }}
-              >
-                {simple ? '开始编辑' : '展示最终'}
-              </Button>
+              <div className="mb3">
+                <Button type="primary" className="mr2" onClick={() => {}}>
+                  导出schema
+                </Button>
+                <Button
+                  onClick={() => {
+                    setState({ preview: !preview, selected: '#' });
+                  }}
+                >
+                  {preview ? '开始编辑' : '展示最终'}
+                </Button>
+              </div>
+              <FR preview={preview} />
             </div>
-            <FR simple={simple} />
+            <Right />
           </div>
-          <Right />
-        </div>
-      </InnerCtx.Provider>
-    </PropsCtx.Provider>
+        </InnerCtx.Provider>
+      </PropsCtx.Provider>
+    </Ctx.Provider>
   );
 };
 
