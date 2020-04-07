@@ -5,9 +5,9 @@
 
 import React from 'react';
 
-export default MultiComponent => p => {
+export default (MultiComponent) => (p) => {
   const { Option } = MultiComponent;
-  const onChange = value => p.onChange(p.name, value);
+  const onChange = (value) => p.onChange(value);
   const style = p.invalid ? { borderColor: '#f5222d' } : {};
   const { enum: enums, enumNames } = p.schema || {};
   const _value = p.value && Array.isArray(p.value) ? p.value : [];

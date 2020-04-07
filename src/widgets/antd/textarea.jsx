@@ -8,7 +8,7 @@ export default function ta(p) {
   const style = invalid ? { borderColor: '#f5222d' } : {};
   const defaultUi = { rows: 3 };
   const ui = { ...defaultUi, ...options };
-  const onChange = e => p.onChange(p.name, e.target.value);
+  const onChange = (e) => p.onChange(e.target.value);
   return (
     <TextArea
       style={style}

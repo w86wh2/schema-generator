@@ -11,7 +11,7 @@ import {
   SortableElement,
   arrayMove,
 } from 'react-sortable-hoc';
-import { isFunction, evaluateString } from '../base/utils';
+import { isFunction, evaluateString } from '../utils';
 import FoldIcon from './foldIcon';
 import DescriptionList, { getDescription } from './descList';
 
@@ -86,7 +86,7 @@ const listItemHoc = (ButtonComponent) =>
                 onClick={() => {
                   const value = [...p.value];
                   value.splice(name, 1);
-                  p.onChange(p.name, value);
+                  p.onChange(value);
                 }}
               >
                 删除
@@ -104,7 +104,7 @@ const listItemHoc = (ButtonComponent) =>
                         const value = [...p.value];
                         if (typeof window[btn.callback] === 'function') {
                           const result = window[btn.callback](value, name); // eslint-disable-line
-                          p.onChange(p.name, result);
+                          p.onChange(result);
                         }
                       }}
                     >
@@ -126,7 +126,7 @@ const fieldListHoc = (ButtonComponent) => {
       const { p, addUnfoldItem } = this.props;
       const value = [...p.value];
       value.push(p.newItem);
-      p.onChange(p.name, value);
+      p.onChange(value);
       addUnfoldItem();
     };
     // buttons is a list, each item looks like:
@@ -138,7 +138,7 @@ const fieldListHoc = (ButtonComponent) => {
 
     render() {
       const { p, foldList = [], toggleFoldItem } = this.props;
-      const { options, extraButtons } = p || {};
+      const { options = {}, extraButtons = {} } = p || {};
       // prefer ui:options/buttons to ui:extraButtons, but keep both for backwards compatibility
       const buttons = options.buttons || extraButtons || [];
       const { readonly, schema = {} } = p;
@@ -158,11 +158,6 @@ const fieldListHoc = (ButtonComponent) => {
               item={p.getSubField({
                 name,
                 value: p.value[name],
-                onChange(key, val) {
-                  const value = [...p.value];
-                  value[key] = val;
-                  p.onChange(p.name, value);
-                },
               })}
             />
           ))}
@@ -182,7 +177,7 @@ const fieldListHoc = (ButtonComponent) => {
                     key={i.toString()}
                     onClick={() => {
                       if (item.callback === 'clearAll') {
-                        p.onChange(p.name, []);
+                        p.onChange([]);
                         return;
                       }
                       if (item.callback === 'copyLast') {
@@ -191,12 +186,12 @@ const fieldListHoc = (ButtonComponent) => {
                         value.push(
                           lastIndex > -1 ? value[lastIndex] : p.newItem
                         );
-                        p.onChange(p.name, value);
+                        p.onChange(value);
                         return;
                       }
                       if (typeof window[item.callback] === 'function') {
                         const value = [...p.value];
-                        const onChange = (value) => p.onChange(p.name, value);
+                        const onChange = (value) => p.onChange(value);
                         window[item.callback](value, onChange, p.newItem); // eslint-disable-line
                       }
                     }}
@@ -247,7 +242,7 @@ export default function listHoc(ButtonComponent) {
 
     handleSort = ({ oldIndex, newIndex }) => {
       const { onChange, name, value } = this.props;
-      onChange(name, arrayMove(value, oldIndex, newIndex));
+      onChange(arrayMove(value, oldIndex, newIndex));
       this.setState({
         foldList: arrayMove(this.state.foldList, oldIndex, newIndex),
       });

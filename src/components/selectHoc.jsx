@@ -5,9 +5,9 @@
 
 import React from 'react';
 
-export default SelectComponent => p => {
+export default (SelectComponent) => (p) => {
   const { Option } = SelectComponent;
-  const onChange = value => p.onChange(p.name, value);
+  const onChange = (value) => p.onChange(value);
   const style = p.invalid ? { borderColor: '#f5222d' } : {};
   const { enum: enums, enumNames } = p.schema || {};
   return (

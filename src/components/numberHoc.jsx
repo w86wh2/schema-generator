@@ -5,7 +5,7 @@
 
 import React from 'react';
 
-export default NumberComponent => p => {
+export default (NumberComponent) => (p) => {
   const style = p.invalid ? { borderColor: '#f5222d' } : {};
   const { max, min, step } = p.schema;
   let obj = {};
@@ -21,10 +21,6 @@ export default NumberComponent => p => {
     obj = { ...obj, step };
   }
 
-  const onChange = value => {
-    p.onChange(p.name, value);
-  };
-
   return (
     <NumberComponent
       {...obj}
@@ -32,7 +28,7 @@ export default NumberComponent => p => {
       disabled={p.disabled || p.readonly}
       {...p.options}
       value={p.value}
-      onChange={onChange}
+      onChange={p.onChange}
     />
   );
 };

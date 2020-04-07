@@ -8,9 +8,11 @@
     "@testing-library/user-event": "^7.1.2",
     "antd": "^4.0.3",
     "nanoid": "^2.1.11",
+    "rc-color-picker": "^1.2.6",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-scripts": "3.4.0",
+    "react-sortable-hoc": "^1.11.0",
     "tachyons": "^4.11.1"
   },
   "scripts": {

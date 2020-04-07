@@ -7,6 +7,6 @@ import { Radio } from 'antd';
 import radioHoc from '../../components/radioHoc';
 
 export default function radio(p) {
-  const onChange = e => p.onChange(p.name, e.target.value);
+  const onChange = (e) => p.onChange(e.target.value);
   return radioHoc(p, onChange, Radio);
 }

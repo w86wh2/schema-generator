@@ -8,7 +8,7 @@ import dateHoc from '../../components/dateHoc';
 
 export default function date(p) {
   const { format = 'dateTime' } = p.schema;
-  const onChange = (value, string) => p.onChange(p.name, string);
+  const onChange = (value, string) => p.onChange(string);
   const DateComponent = format === 'time' ? TimePicker : DatePicker;
   return dateHoc(p, onChange, DateComponent);
 }

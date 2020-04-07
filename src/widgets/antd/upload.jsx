@@ -12,13 +12,13 @@ export default function input(p) {
     onChange(info) {
       if (info.file.status === 'done') {
         message.success(`${info.file.name} 上传成功`);
-        p.onChange(p.name, info.file.response.url);
+        p.onChange(info.file.response.url);
       } else if (info.file.status === 'error') {
         message.error(`${info.file.name} 上传失败`);
       }
     },
     onRemove() {
-      p.onChange(p.name, '');
+      p.onChange('');
     },
   };
 

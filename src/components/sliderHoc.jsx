@@ -5,7 +5,7 @@
 
 import React from 'react';
 
-export default (SliderComponent, NumberComponent) => p => {
+export default (SliderComponent, NumberComponent) => (p) => {
   const style = p.invalid ? { borderColor: '#f5222d' } : {};
   const { max, min, step } = p.schema;
   let setting = {};
@@ -21,16 +21,12 @@ export default (SliderComponent, NumberComponent) => p => {
     setting = { ...setting, step };
   }
 
-  const onChange = value => {
-    p.onChange(p.name, value);
-  };
-
   return (
     <div className="fr-slider">
       <SliderComponent
         style={{ flexGrow: 1, marginRight: 12 }}
         {...setting}
-        onChange={onChange}
+        onChange={p.onChange}
         value={typeof p.value === 'number' ? p.value : min || 0}
         disabled={p.disabled || p.readonly}
       />
@@ -45,7 +41,7 @@ export default (SliderComponent, NumberComponent) => p => {
           style={{ width: '90px', ...style }}
           value={p.value}
           disabled={p.disabled}
-          onChange={onChange}
+          onChange={p.onChange}
         />
       )}
     </div>

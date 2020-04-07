@@ -1,6 +1,5 @@
 import React from 'react';
-import { isHidden } from '../base/isHidden';
-import { isFunction } from '../base/utils';
+import { isFunction } from '../utils';
 
 const getEnumValue = (value, enums, enumNames) => {
   if (Array.isArray(enums) && Array.isArray(enumNames)) {
@@ -11,7 +10,7 @@ const getEnumValue = (value, enums, enumNames) => {
       }
       return value;
     } else if (Array.isArray(value)) {
-      const result = value.map(v => getEnumValue(value, enums, enumNames));
+      const result = value.map((v) => getEnumValue(value, enums, enumNames));
       return String(result);
     }
     return value;
@@ -21,7 +20,7 @@ const getEnumValue = (value, enums, enumNames) => {
 
 const DescriptionList = ({ schema = {}, value = [], index }) => {
   const list = getDescription({ schema, value, index })
-    .filter(item => item.title)
+    .filter((item) => item.title)
     .slice(0, 3);
   return (
     <ul className="flex overflow-hidden" style={{ paddingRight: 45 }}>
@@ -53,9 +52,6 @@ export const getDescription = ({ schema = {}, value = [], index }) => {
   const descList = titles.map((t, idx) => {
     let hidden = t && t['ui:hidden'];
     // ui:hidden为判断式时解析 TODO: 解析在外部集中做
-    if (typeof hidden === 'string' && isFunction(hidden) === false) {
-      hidden = isHidden({ hidden, rootValue: description });
-    }
     if (hidden) return;
     const title = t.title;
     let text = valueList[idx];
@@ -74,5 +70,5 @@ export const getDescription = ({ schema = {}, value = [], index }) => {
     };
   });
   // 去空
-  return descList.filter(d => !!d);
+  return descList.filter((d) => !!d);
 };

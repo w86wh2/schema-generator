@@ -24,16 +24,16 @@ export const useGlobal = () => {
 // export default logger;
 
 // 类似于class component的setState
-export const useSet = initState => {
+export const useSet = (initState) => {
   const [state, setState] = useReducer((state, newState) => {
-    console.group('action'); // TODO: give it a name
-    console.log('%cState:', 'color: #9E9E9E; font-weight: 700;', state);
-    console.log('%cAction:', 'color: #00A7F7; font-weight: 700;', newState);
-    // console.log('%cNext:', 'color: #47B04B; font-weight: 700;', {
-    //   ...state,
-    //   ...newState,
-    // });
-    console.groupEnd();
+    // console.group('action'); // TODO: give it a name
+    // console.log('%cState:', 'color: #9E9E9E; font-weight: 700;', state);
+    // console.log('%cAction:', 'color: #00A7F7; font-weight: 700;', newState);
+    // // console.log('%cNext:', 'color: #47B04B; font-weight: 700;', {
+    // //   ...state,
+    // //   ...newState,
+    // // });
+    // console.groupEnd();
     return { ...state, ...newState };
   }, initState);
   const setStateWithActionName = (state, actionName) => {
@@ -110,7 +110,7 @@ export function usePrevious(value) {
   return ref.current;
 }
 
-export const useShowOnce = localKey => {
+export const useShowOnce = (localKey) => {
   // 从 localStorage 读取 key 值
   const [show, setShow] = useState(false);
   let localStr;

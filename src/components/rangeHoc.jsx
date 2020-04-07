@@ -5,7 +5,7 @@
 
 import React from 'react';
 import moment from 'moment';
-import { getFormat } from '../base/utils';
+import { getFormat } from '../utils';
 
 export default (p, onChange, RangeComponent) => {
   const { format = 'dateTime' } = p.schema;

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import moment from 'moment';
-import { getFormat } from '../base/utils';
+import { getFormat } from '../utils';
 
 export default (p, onChange, DateComponent) => {
   const style = p.invalid ? { borderColor: '#f5222d' } : {};

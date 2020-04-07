@@ -92,10 +92,10 @@ const RenderField = ({
   contentClass,
   isComplex,
 }) => {
-  const { schema, data, $id } = item;
+  const { schema, data } = item;
   const { displayType, showDescIcon, showValidate, labelWidth } =
     globalProps || {};
-  const { type, title, description, required } = schema;
+  const { $id, type, title, description, required } = schema;
   const isRequired = required && required.length > 0;
 
   const _labelWidth = isLooselyNumber(labelWidth)
@@ -113,11 +113,19 @@ const RenderField = ({
   const onChange = (value) => {
     const newItem = { ...item };
     newItem.data = value;
+    console.log($id, newItem, value, 'haha');
     onItemChange($id, newItem);
   };
 
-  const widgetName = getWidgetName(schema);
+  let widgetName = getWidgetName(schema);
+  const customWidget = schema['ui:widget'];
+  if (customWidget && widgets[customWidget]) {
+    widgetName = customWidget;
+  }
   const Widget = widgets[widgetName];
+  // if (widgetName === 'multiSelect') {
+  //   console.log(schema['ui:widget'], customWidget, Widget);
+  // }
 
   return (
     <>
@@ -155,7 +163,7 @@ const RenderField = ({
           </label>
         </div>
       ) : null}
-      {typeof data === 'string' && (
+      {['map', 'list'].indexOf(widgetName) === -1 && (
         <div className={contentClass}>
           <Widget value={data} onChange={onChange} schema={schema} />
         </div>

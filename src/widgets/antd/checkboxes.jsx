@@ -8,7 +8,7 @@ export default function checkboxes(p) {
     <Checkbox.Group
       disabled={p.disabled || p.readonly}
       value={_value}
-      onChange={values => p.onChange(p.name, values)}
+      onChange={p.onChange}
     >
       {(enums || [true, false]).map((val, index) => (
         <Checkbox value={val} key={index}>

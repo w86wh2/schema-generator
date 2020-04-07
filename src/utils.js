@@ -405,10 +405,13 @@ export const onChangeById = (onChange) => (id, value) => {};
 
 export const flattenToData = (flatten, id = '#') => {
   try {
-    const result = flatten[id].data;
+    let result = flatten[id].data;
     const ids = Object.keys(flatten);
-    const childrenIds = ids.filter((item) => item.indexOf(id) > -1);
+    const childrenIds = ids.filter(
+      (item) => item.indexOf(id) > -1 && item !== id
+    );
     if (childrenIds && childrenIds.length > 0) {
+      if (result === undefined) result = {}; // TODO: 是不是就兜undefined？
       childrenIds.forEach((c) => {
         const lengthOfId = id.split('/').length;
         const lengthOfChild = c.split('/').length;

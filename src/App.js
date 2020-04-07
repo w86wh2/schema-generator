@@ -55,20 +55,18 @@ const Wrapper = ({
   const flatten = flattenSchema(_schema);
 
   const flattenWithData = dataToFlatten(flatten, formData);
-  console.group('flatten');
-  console.log(flattenWithData);
-  console.groupEnd();
-
-  const newSchema = idToSchema(flattenWithData);
-  const newData = flattenToData(flattenWithData);
-  console.group('schema');
-  console.log(newSchema, newData);
-  console.groupEnd();
+  // console.group('flatten');
+  // console.log(flattenWithData);
+  // console.groupEnd();
+  console.log('render');
 
   const onItemChange = (key, value) => {
     flattenWithData[key] = value;
     const newSchema = idToSchema(flattenWithData);
     const newData = flattenToData(flattenWithData);
+    // console.group('schema');
+    // console.log(key, value, flattenWithData, newData);
+    // console.groupEnd();
     onChange(newData);
     //TODO: 判断只有schema变化时才
     onSchemaChange(newSchema);
