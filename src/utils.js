@@ -252,6 +252,9 @@ export const changeKeyFromUniqueId = (uniqueId = '#', key = 'something') => {
 };
 
 // final = true 用于最终的导出的输出
+// 几种特例：
+// 1. 删除时值删除了item，没有删除和parent的关联，也没有删除children，所以要在解析这步来兜住 (所有的解析都是)
+// 2. 修改$id的情况, 修改的是schema内的$id, 解析的时候要把schema.$id 作为真正的id (final = true的解析)
 export function idToSchema(flatten, id = '#', final = false) {
   let schema = {};
   const item = flatten[id];
@@ -264,6 +267,10 @@ export function idToSchema(flatten, id = '#', final = false) {
     if (item.children.length > 0) {
       item.children.forEach((child) => {
         let childId = child;
+        // TODO: 这个情况会出现吗？return会有问题吗？
+        if (!flatten[child]) {
+          return;
+        }
         // 最终输出将所有的 key 值改了
         try {
           if (final) {
