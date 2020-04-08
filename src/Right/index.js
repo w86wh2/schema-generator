@@ -58,7 +58,7 @@ export default function Right() {
   }
 
   return (
-    <div className="right-side pa3">
+    <div className="right-layout">
       {itemSelected && (
         <Wrapper
           schema={settingSchema}

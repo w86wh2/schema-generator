@@ -5,6 +5,7 @@
   flex-shrink: 0;
   min-width: 300px;
   width: 22vw;
+  margin: 16px 0 0 8px;
 }
 
 .left-item {

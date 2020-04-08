@@ -1,4 +1,6 @@
 .mid-layout {
   width: 48vw;
   flex-shrink: 1;
+  height: 100vh;
+  overflow: auto;
 }

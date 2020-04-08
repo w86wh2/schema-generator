@@ -125,10 +125,10 @@ export const Wrapper = ({
     <Ctx.Provider value={setState}>
       <PropsCtx.Provider value={globalProps}>
         <InnerCtx.Provider value={store}>
-          <div className="pa3 flex">
+          <div className="flex vh-100 overflow-hidden">
             <Left />
-            <div className="mid-layout">
-              <div className="mb3">
+            <div className="mid-layout pr2">
+              <div className="mv3">
                 <Button type="primary" className="mr2" onClick={toggleModal}>
                   导出schema
                 </Button>

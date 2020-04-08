@@ -31,12 +31,12 @@ const commonSettings = {
 const ELEMENT_LIST = [
   {
     text: 'input',
-    name: 'inputName',
+    name: 'input',
+    widget: 'input',
     schema: {
       title: '简单输入框',
       type: 'string',
     },
-    widget: 'input',
     setting: {
       minLength: {
         title: '最短字数',
@@ -50,13 +50,13 @@ const ELEMENT_LIST = [
   },
   {
     text: 'textarea',
-    name: 'textareaName',
+    name: 'textarea',
+    widget: 'textarea',
     schema: {
       title: '文本编辑框',
       type: 'string',
       format: 'textarea',
     },
-    widget: 'textarea',
     setting: {
       minLength: {
         title: '最短字数',
@@ -69,8 +69,86 @@ const ELEMENT_LIST = [
     },
   },
   {
+    text: '颜色选择',
+    name: 'color',
+    widget: 'color',
+    schema: {
+      title: '颜色选择',
+      type: 'string',
+      format: 'color',
+    },
+    setting: {},
+  },
+  {
+    text: '日期选择',
+    name: 'date',
+    widget: 'date',
+    schema: {
+      title: '日期选择',
+      type: 'string',
+      format: 'date',
+    },
+    setting: {},
+  },
+  {
+    text: '图片展示',
+    name: 'image',
+    widget: 'input',
+    schema: {
+      title: '图片展示',
+      type: 'string',
+      format: 'image',
+    },
+    setting: {},
+  },
+  {
+    text: '数字输入框',
+    name: 'number',
+    widget: 'number',
+    schema: {
+      title: '数字输入框',
+      type: 'number',
+    },
+    setting: {},
+  },
+  {
+    text: '数字（slider）',
+    name: 'slider',
+    widget: 'slider',
+    schema: {
+      title: '带滑动条',
+      type: 'number',
+      'ui:widget': 'slider',
+    },
+    setting: {},
+  },
+  {
+    text: '图片展示',
+    name: 'image',
+    widget: 'input',
+    schema: {
+      title: '图片展示',
+      type: 'string',
+      format: 'image',
+    },
+    setting: {},
+  },
+  {
+    text: '图片展示',
+    name: 'image',
+    widget: 'input',
+    schema: {
+      title: '图片展示',
+      type: 'string',
+      format: 'image',
+    },
+    setting: {},
+  },
+
+  {
     text: 'date range',
-    name: 'dateRangeName',
+    name: 'dateRange',
+    widget: 'dateRange',
     schema: {
       title: '日期范围',
       type: 'range',
@@ -79,7 +157,6 @@ const ELEMENT_LIST = [
         placeholder: ['开始时间', '结束时间'],
       },
     },
-    widget: 'dateRange',
     setting: {
       minLength: {
         title: '最短字数',
