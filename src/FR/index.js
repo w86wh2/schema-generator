@@ -94,7 +94,7 @@ const FR = ({ id = '#', preview = false }) => {
         <RenderField {...fieldProps} />
         {schema.type === 'object' && (
           <Wrapper $id={id} item={item} inside>
-            {childrenElement}
+            {childrenElement || <div className="h2" />}
           </Wrapper>
         )}
       </div>

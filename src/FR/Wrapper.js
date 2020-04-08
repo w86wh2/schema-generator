@@ -97,7 +97,7 @@ export default function Wrapper({ $id, item, inside = false, children }) {
   if (isSelected) {
     overwriteStyle = {
       ...overwriteStyle,
-      outline: '3px solid #19f',
+      outline: '2px solid #409eff',
       borderColor: '#fff',
     };
   }
@@ -123,12 +123,12 @@ export default function Wrapper({ $id, item, inside = false, children }) {
           style={{
             position: 'absolute',
             zIndex: 20,
-            bottom: 0,
-            right: 0,
+            bottom: -2,
+            right: -2,
             height: 24,
             width: 54,
             borderTopLeftRadius: 8,
-            background: '#19f',
+            background: '#409eff',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',

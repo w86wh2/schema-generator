@@ -1,7 +1,7 @@
 // 只需写配置，方便可扩展
 const commonSettings = {
   $id: {
-    title: '字段名',
+    title: 'key',
     type: 'string',
   },
   title: {
