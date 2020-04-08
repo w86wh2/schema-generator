@@ -251,19 +251,33 @@ export const changeKeyFromUniqueId = (uniqueId = '#', key = 'something') => {
   return arr.join('/');
 };
 
-export function idToSchema(flatten, id = '#') {
+// final = true 用于最终的导出的输出
+export function idToSchema(flatten, id = '#', final = false) {
   let schema = {};
   const item = flatten[id];
   if (item) {
     schema = { ...item.schema };
+    // 最终输出去掉 $id
+    if (final) {
+      schema.$id && delete schema.$id;
+    }
     if (item.children.length > 0) {
       item.children.forEach((child) => {
-        const key = getKeyFromUniqueId(child);
+        let childId = child;
+        // 最终输出将所有的 key 值改了
+        try {
+          if (final) {
+            childId = flatten[child].schema.$id;
+          }
+        } catch (error) {
+          console.log('catch', error);
+        }
+        const key = getKeyFromUniqueId(childId);
         if (schema.type === 'object') {
           if (!schema.properties) {
             schema.properties = {};
           }
-          schema.properties[key] = idToSchema(flatten, child);
+          schema.properties[key] = idToSchema(flatten, child, final);
         }
         if (
           schema.type === 'array' &&
@@ -273,7 +287,7 @@ export function idToSchema(flatten, id = '#') {
           if (!schema.items.properties) {
             schema.items.properties = {};
           }
-          schema.items.properties[key] = idToSchema(flatten, child);
+          schema.items.properties[key] = idToSchema(flatten, child, final);
         }
       });
     }
