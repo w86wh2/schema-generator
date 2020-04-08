@@ -4,15 +4,30 @@ import './index.css';
 import { useGlobal, useGlobalProps, useStore } from '../hooks';
 import nanoid from 'nanoid';
 
+const ELEMENT_LIST2 = [];
+
 const Left = (props) => (
   <div className="left-layout">
-    {ELEMENT_LIST.map((ele, idx) => {
-      return (
-        <div key={idx.toString()} className="left-item">
-          <Element {...ele} {...props} key={idx.toString()} />
-        </div>
-      );
-    })}
+    <p className="f6 b">基础组件</p>
+    <ul className="pl0">
+      {ELEMENT_LIST.map((ele, idx) => {
+        return (
+          <li key={idx.toString()} className="left-item">
+            <Element {...ele} {...props} key={idx.toString()} />
+          </li>
+        );
+      })}
+    </ul>
+    <p className="f6 b">定制组件</p>
+    <ul className="pl0">
+      {ELEMENT_LIST2.map((ele, idx) => {
+        return (
+          <li key={idx.toString()} className="left-item">
+            <Element {...ele} {...props} key={idx.toString()} />
+          </li>
+        );
+      })}
+    </ul>
   </div>
 );
 

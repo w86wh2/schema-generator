@@ -2,7 +2,7 @@ import React from 'react';
 import './Wrapper.css';
 import { useGlobal, useGlobalProps, useStore } from '../hooks';
 import { copyItem } from '../utils';
-import nanoid from 'nanoid';
+import { DeleteOutlined, CopyOutlined } from '@ant-design/icons';
 
 export default function Wrapper({ $id, item, inside = false, children }) {
   const { flatten, onItemChange, onFlattenChange } = useStore();
@@ -135,17 +135,18 @@ export default function Wrapper({ $id, item, inside = false, children }) {
           }}
         >
           <div onClick={deleteItem}>
-            <img
-              style={{ height: 14, width: 14, marginRight: 8 }}
-              src="https://gw.alicdn.com/tfs/TB1oaaUu4v1gK0jSZFFXXb0sXXa-128-128.png"
-              alt="delete"
+            <DeleteOutlined
+              style={{
+                height: 16,
+                width: 16,
+                margin: '0 8px 0 12px',
+                color: '#fff',
+              }}
             />
           </div>
           <div onClick={handleItemCopy}>
-            <img
-              style={{ height: 14, width: 14 }}
-              src="https://gw.alicdn.com/tfs/TB1xSGTu1L2gK0jSZFmXXc7iXXa-128-128.png"
-              alt="copy"
+            <CopyOutlined
+              style={{ height: 16, width: 16, marginRight: 12, color: '#fff' }}
             />
           </div>
         </div>

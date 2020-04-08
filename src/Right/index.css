@@ -1,4 +1,5 @@
 .right-layout {
-  width: 30vw;
+  flex-shrink: 0;
+  width: 360px;
   padding: 72px 24px 0 0;
 }

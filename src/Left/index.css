@@ -1,15 +1,17 @@
 .left-layout {
+  flex-shrink: 0;
+  width: 300px;
+  padding: 16px 0 0 8px;
+}
+
+.left-layout ul {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  flex-shrink: 0;
-  min-width: 300px;
-  width: 22vw;
-  margin: 16px 0 0 8px;
 }
 
 .left-item {
-  width: 150px;
+  width: 140px;
   height: 40px;
   display: flex;
   padding: 4px;
@@ -22,10 +24,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px dashed gray;
+  background-color: #f5f7fa;
 }
 
 .left-element:hover {
-  border: 3px solid #19f;
-  color: #19f;
+  border: 1px dashed #ddd;
+  color: #409eff;
+  border: 1px dashed #409eff;
 }

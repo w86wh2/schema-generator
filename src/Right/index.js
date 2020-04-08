@@ -1,11 +1,11 @@
 import React from 'react';
-import './index.css';
 import { Wrapper } from '../App';
 import { useGlobalProps, useStore } from '../hooks';
 import { widgets } from '../widgets/antd';
 import ELEMENT_LIST from '../Left/elementList';
 import { getWidgetName } from '../mapping';
 import { getKeyFromUniqueId } from '../utils';
+import './index.css';
 
 export default function Right() {
   const { flatten, onItemChange } = useStore();
@@ -27,8 +27,10 @@ export default function Right() {
     }
   };
 
-  if (selected && selected[0] === '0') return null;
-  if (selected === '#') return null;
+  const Placeholder = <div className="right-layout"></div>;
+
+  if (selected && selected[0] === '0') return Placeholder;
+  if (selected === '#') return Placeholder;
   let itemSelected;
   let widgetName;
   try {
@@ -36,7 +38,7 @@ export default function Right() {
     if (itemSelected) {
       widgetName = getWidgetName(itemSelected.schema);
     } else {
-      return null;
+      return Placeholder;
     }
     if (widgetName) {
       const name = getKeyFromUniqueId(selected);
