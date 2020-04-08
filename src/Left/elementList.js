@@ -1,4 +1,5 @@
 // 只需写配置，方便可扩展
+
 const ELEMENT_LIST = [
   {
     text: 'input',
@@ -7,7 +8,25 @@ const ELEMENT_LIST = [
       title: '简单输入框',
       type: 'string',
     },
-    setting: {},
+    widget: 'input',
+    setting: {
+      title: {
+        title: '标题',
+        type: 'string',
+      },
+      description: {
+        title: '说明',
+        type: 'string',
+      },
+      minLength: {
+        title: '最短字数',
+        type: 'number',
+      },
+      maxLength: {
+        title: '最长字数',
+        type: 'number',
+      },
+    },
   },
   {
     text: 'textarea',
@@ -17,6 +36,7 @@ const ELEMENT_LIST = [
       type: 'string',
       format: 'textarea',
     },
+    widget: 'textarea',
     setting: {},
   },
   {
@@ -30,6 +50,7 @@ const ELEMENT_LIST = [
         placeholder: ['开始时间', '结束时间'],
       },
     },
+    widget: 'dateRange',
     setting: {},
   },
 ];

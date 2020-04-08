@@ -79,8 +79,10 @@ export const Wrapper = ({
     // console.group('schema');
     // console.log(flattenWithData, newData);
     // console.groupEnd();
-    //TODO: 判断只有schema变化时才
-    onSchemaChange(newSchema);
+    // 判断只有schema变化时才调用，一般需求的用户不需要
+    if (onSchemaChange) {
+      onSchemaChange(newSchema);
+    }
     onChange(newData);
   };
 
