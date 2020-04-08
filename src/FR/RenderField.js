@@ -3,7 +3,7 @@ import { useGlobalProps, useStore } from '../hooks';
 import { isLooselyNumber, isCssLength } from '../utils';
 import { getWidgetName } from '../mapping';
 
-const RenderField = ({ item, labelClass, contentClass, isComplex }) => {
+const RenderField = ({ $id, item, labelClass, contentClass, isComplex }) => {
   const { onItemChange } = useStore();
   const { schema, data } = item;
   const {
@@ -13,7 +13,7 @@ const RenderField = ({ item, labelClass, contentClass, isComplex }) => {
     labelWidth,
     widgets,
   } = useGlobalProps();
-  const { $id, type, title, description, required } = schema;
+  const { type, title, description, required } = schema;
   const isRequired = required && required.length > 0;
 
   const _labelWidth = isLooselyNumber(labelWidth)

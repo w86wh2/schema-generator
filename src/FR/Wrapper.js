@@ -4,12 +4,12 @@ import { useGlobal, useGlobalProps, useStore } from '../hooks';
 import { copyItem } from '../utils';
 import nanoid from 'nanoid';
 
-export default function Wrapper({ item, inside = false, children }) {
+export default function Wrapper({ $id, item, inside = false, children }) {
   const { flatten, onItemChange, onFlattenChange } = useStore();
   const setGlobal = useGlobal();
   const { selected, hovering } = useGlobalProps();
   const { schema } = item;
-  const { $id, type } = schema;
+  const { type } = schema;
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -96,7 +96,9 @@ export default function Wrapper({ item, inside = false, children }) {
       onMouseLeave={handleMouseLeave}
     >
       {!inside && (
-        <div className="absolute top-0 left-0 blue f7">{$id.substring(1)}</div>
+        <div className="absolute top-0 left-0 blue f7">
+          {schema && schema.$id && schema.$id.substring(1)}
+        </div>
       )}
       {children}
       {isSelected && !inside && $id !== '#' && (

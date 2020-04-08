@@ -61,6 +61,7 @@ const FR = ({ id = '#', preview = false }) => {
   }
 
   const fieldProps = {
+    $id: id,
     item,
     labelClass,
     contentClass,
@@ -88,11 +89,11 @@ const FR = ({ id = '#', preview = false }) => {
   }
 
   return (
-    <Wrapper item={item}>
+    <Wrapper $id={id} item={item}>
       <div className={containerClass}>
         <RenderField {...fieldProps} />
         {schema.type === 'object' && (
-          <Wrapper item={item} inside>
+          <Wrapper $id={id} item={item} inside>
             {childrenElement}
           </Wrapper>
         )}
