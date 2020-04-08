@@ -12,6 +12,20 @@ const commonSettings = {
     title: '说明',
     type: 'string',
   },
+  width: {
+    title: '元素宽度',
+    type: 'string',
+    'ui:options': {
+      placeholder: "例如 '50%'",
+    },
+  },
+  labelWidth: {
+    title: '标签宽度',
+    type: 'string',
+    'ui:options': {
+      placeholder: '默认值是 120',
+    },
+  },
 };
 
 const ELEMENT_LIST = [

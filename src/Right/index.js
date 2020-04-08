@@ -28,6 +28,7 @@ export default function Right() {
   };
 
   if (selected && selected[0] === '0') return null;
+  if (selected === '#') return null;
   let itemSelected;
   let widgetName;
   try {

@@ -44,6 +44,16 @@ const RenderField = ({ item, labelClass, contentClass, isComplex }) => {
   //   console.log(schema['ui:widget'], customWidget, Widget);
   // }
 
+  // TODO: useMemo
+  const usefulWidgetProps = {
+    disabled: schema['ui:disabled'],
+    readonly: schema['ui:readonly'],
+    hidden: schema['ui:hidden'],
+    options: schema['ui:options'],
+    labelWidth: schema['ui:labelWidth'],
+    width: schema['ui:width'],
+  };
+
   return (
     <>
       {schema.title ? (
@@ -82,7 +92,12 @@ const RenderField = ({ item, labelClass, contentClass, isComplex }) => {
       ) : null}
       {['list'].indexOf(widgetName) === -1 && (
         <div className={contentClass}>
-          <Widget value={data} onChange={onChange} schema={schema} />
+          <Widget
+            value={data}
+            onChange={onChange}
+            schema={schema}
+            {...usefulWidgetProps}
+          />
         </div>
       )}
     </>
