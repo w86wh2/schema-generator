@@ -20,9 +20,26 @@ export default function Wrapper({ $id, item, inside = false, children }) {
   const deleteItem = (e) => {
     e.stopPropagation();
     const newFlatten = { ...flatten };
+    let newSelect = '#';
+    // 计算删除后新被选中的元素：
+    // 1. 如果是第一个，选第二个
+    // 2. 如果不是第一，选它前一个
+    // 3. 如果同级元素没了，选parent
+    try {
+      const parent = newFlatten[$id].parent;
+      const siblings = newFlatten[parent].children;
+      const idx = siblings.indexOf($id);
+      if (idx > 0) {
+        newSelect = siblings[idx - 1];
+      } else {
+        newSelect = siblings[1] || parent;
+      }
+    } catch (error) {
+      console.log('catch', error);
+    }
     delete newFlatten[$id];
     onFlattenChange(newFlatten);
-    // onItemChange($id, undefined);
+    setGlobal({ selected: newSelect });
   };
 
   const handleItemCopy = (e) => {

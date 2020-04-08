@@ -35,7 +35,6 @@ const Element = ({ text, name, schema }) => {
         if (_selected === '#') {
           newId = '#/' + name + '_' + nanoid(6);
           oldId = '#';
-          console.log(newFlatten, oldId);
         }
         const siblings = newFlatten[oldId].children;
         siblings.push(newId);
