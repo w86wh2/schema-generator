@@ -12,11 +12,14 @@ import {
 import { Ctx, PropsCtx, InnerCtx } from './context';
 import SCHEMA from './json/basic.json';
 import FR from './FR';
+import { Modal, Input } from 'antd';
 import { widgets } from './widgets/antd';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import 'tachyons';
 import './App.css';
+
+const { TextArea } = Input;
 
 function App() {
   const [state, setState] = useSet({
@@ -64,6 +67,7 @@ export const Wrapper = ({
   onSchemaChange,
   ...globalProps
 }) => {
+  const [local, setLocal] = useSet({ showModal: false });
   const { setState, preview } = globalProps;
   const _schema = combineSchema(schema.propsSchema, schema.uiSchema);
   const flatten = flattenSchema(_schema);
@@ -91,12 +95,20 @@ export const Wrapper = ({
     onFlattenChange(flattenWithData);
   };
 
+  const toggleModal = () => setLocal({ showModal: !local.showModal });
+
   // TODO: flatten是频繁在变的，应该和其他两个函数分开
   const store = {
     flatten: flattenWithData,
     onFlattenChange,
     onItemChange,
   };
+
+  let displaySchemaString = '';
+  try {
+    displaySchemaString = JSON.stringify(idToSchema(flattenWithData), null, 2);
+  } catch (error) {}
+
   if (simple) {
     return (
       <Ctx.Provider value={setState}>
@@ -117,7 +129,7 @@ export const Wrapper = ({
             <Left />
             <div className="mid-layout">
               <div className="mb3">
-                <Button type="primary" className="mr2" onClick={() => {}}>
+                <Button type="primary" className="mr2" onClick={toggleModal}>
                   导出schema
                 </Button>
                 <Button
@@ -131,6 +143,14 @@ export const Wrapper = ({
               <FR preview={preview} />
             </div>
             <Right />
+            <Modal
+              title="Basic Modal"
+              visible={local.showModal}
+              onOk={toggleModal}
+              onCancel={toggleModal}
+            >
+              <TextArea value={displaySchemaString} autoSize />
+            </Modal>
           </div>
         </InnerCtx.Provider>
       </PropsCtx.Provider>
