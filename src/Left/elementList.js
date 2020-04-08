@@ -1,4 +1,18 @@
 // 只需写配置，方便可扩展
+const commonSettings = {
+  $id: {
+    title: '字段名',
+    type: 'string',
+  },
+  title: {
+    title: '标题',
+    type: 'string',
+  },
+  description: {
+    title: '说明',
+    type: 'string',
+  },
+};
 
 const ELEMENT_LIST = [
   {
@@ -10,14 +24,6 @@ const ELEMENT_LIST = [
     },
     widget: 'input',
     setting: {
-      title: {
-        title: '标题',
-        type: 'string',
-      },
-      description: {
-        title: '说明',
-        type: 'string',
-      },
       minLength: {
         title: '最短字数',
         type: 'number',
@@ -37,7 +43,16 @@ const ELEMENT_LIST = [
       format: 'textarea',
     },
     widget: 'textarea',
-    setting: {},
+    setting: {
+      minLength: {
+        title: '最短字数',
+        type: 'number',
+      },
+      maxLength: {
+        title: '最长字数',
+        type: 'number',
+      },
+    },
   },
   {
     text: 'date range',
@@ -51,8 +66,33 @@ const ELEMENT_LIST = [
       },
     },
     widget: 'dateRange',
+    setting: {
+      minLength: {
+        title: '最短字数',
+        type: 'number',
+      },
+      maxLength: {
+        title: '最长字数',
+        type: 'number',
+      },
+    },
+  },
+  {
+    text: 'object',
+    name: 'objectName',
+    schema: {
+      title: '对象',
+      type: 'object',
+      properties: {},
+    },
+    widget: 'map',
     setting: {},
   },
 ];
 
-export default ELEMENT_LIST;
+const result = ELEMENT_LIST.map((item) => ({
+  ...item,
+  setting: { ...commonSettings, ...item.setting },
+}));
+
+export default result;

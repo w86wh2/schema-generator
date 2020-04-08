@@ -39,17 +39,13 @@ export default function Right() {
     }
     if (widgetName) {
       const name = getKeyFromUniqueId(selected);
-      const schemaNow = ELEMENT_LIST.find((e) => e.widget === widgetName)
-        .setting;
+      const element = ELEMENT_LIST.find((e) => e.widget === widgetName);
+      const schemaNow = element.setting;
       settingSchema = {
         propsSchema: {
           type: 'object',
           properties: {
             ...schemaNow,
-            $id: {
-              title: '字段名',
-              type: 'string',
-            },
           },
         },
         uiSchema: {},
