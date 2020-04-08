@@ -7,29 +7,9 @@ import nanoid from 'nanoid';
 export default function Wrapper({ item, inside = false, children }) {
   const { flatten, onItemChange, onFlattenChange } = useStore();
   const setGlobal = useGlobal();
-  const { selected } = useGlobalProps();
+  const { selected, hovering } = useGlobalProps();
   const { schema } = item;
   const { $id, type } = schema;
-  let isSelected = selected === $id && !inside;
-  if (selected && selected[0] === '0') {
-    isSelected = selected.substring(1) === $id && inside;
-  }
-
-  let overwriteStyle = {};
-  if (inside) {
-    overwriteStyle = { marginLeft: 12, padding: '8px 8px 0 0' };
-  } else if ($id === '#') {
-    overwriteStyle = { padding: 12 };
-  } else if (type === 'object') {
-    overwriteStyle = { paddingTop: 12 };
-  }
-  if (isSelected) {
-    overwriteStyle = {
-      ...overwriteStyle,
-      outline: '3px solid #19f',
-      borderColor: '#fff',
-    };
-  }
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -52,13 +32,68 @@ export default function Wrapper({ item, inside = false, children }) {
     setGlobal({ selected: newId });
   };
 
+  const handleMouseEnter = () => {
+    // setGlobal({ hovering: inside ? '0' + $id : $id });
+  };
+
+  const handleMouseLeave = () => {
+    // TODO: 如何写hoverLeave
+    // let hoverItem = '';
+    // if (hovering && hovering[0] === '0') {
+    //   hoverItem = $id;
+    // } else {
+    //   hoverItem = $id.split;
+    // }
+  };
+
+  // 一些computed
+  let isSelected = selected === $id && !inside;
+  if (selected && selected[0] === '0') {
+    isSelected = selected.substring(1) === $id && inside;
+  }
+
+  const hoverId = inside ? '0' + $id : $id;
+
+  let overwriteStyle = {
+    backgroundColor: hovering === hoverId ? '#ecf5ff' : '#fff',
+  };
+  if (inside) {
+    overwriteStyle = {
+      ...overwriteStyle,
+      borderColor: '#777',
+      marginLeft: 12,
+      padding: '8px 8px 0 0',
+      backgroundColor: '#fafafa',
+    };
+  } else if ($id === '#') {
+    overwriteStyle = {
+      ...overwriteStyle,
+      borderColor: '#777',
+      padding: 12,
+      height: 'calc(100vh - 80px)',
+      overflow: 'auto',
+      backgroundColor: '#fafafa',
+    };
+  } else if (type === 'object') {
+    overwriteStyle = { ...overwriteStyle, paddingTop: 12 };
+  }
+  if (isSelected) {
+    overwriteStyle = {
+      ...overwriteStyle,
+      outline: '3px solid #19f',
+      borderColor: '#fff',
+    };
+  }
+
   if ($id === '#' && inside) return children;
 
   return (
     <div
-      className="field-wrapper relative"
       style={overwriteStyle}
+      className={`field-wrapper relative`}
       onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {!inside && (
         <div className="absolute top-0 left-0 blue f7">{$id.substring(1)}</div>

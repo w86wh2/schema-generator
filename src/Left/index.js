@@ -24,15 +24,15 @@ const Element = ({ text, name, schema }) => {
   const { flatten, onFlattenChange } = useStore();
 
   const handleElementClick = () => {
-    if (!selected) return; //TODO: 不应该return，可以在root上加
+    let _selected = selected || '#';
     let newId;
     // 初始字段是0，说明点击了object、list的里侧
-    if (selected[0] === '0' || selected === '#') {
+    if ((_selected && _selected[0] === '0') || _selected === '#') {
       try {
         const newFlatten = { ...flatten };
-        let oldId = selected.substring(1);
+        let oldId = _selected.substring(1);
         newId = oldId + '/' + name + '_' + nanoid(6);
-        if (selected === '#') {
+        if (_selected === '#') {
           newId = '#/' + name + '_' + nanoid(6);
           oldId = '#';
           console.log(newFlatten, oldId);

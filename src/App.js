@@ -10,7 +10,7 @@ import {
   flattenToData,
 } from './utils';
 import { Ctx, PropsCtx, InnerCtx } from './context';
-import SCHEMA from './json/basic.json';
+// import SCHEMA from './json/basic.json';
 import FR from './FR';
 import { Modal, Input } from 'antd';
 import { widgets } from './widgets/antd';
@@ -21,15 +21,24 @@ import './App.css';
 
 const { TextArea } = Input;
 
+const SCHEMA = {
+  propsSchema: {
+    type: 'object',
+  },
+  uiSchema: {},
+  formData: {},
+};
+
 function App() {
   const [state, setState] = useSet({
     formData: SCHEMA.formData,
     schema: SCHEMA,
     selected: undefined,
+    hovering: undefined,
     preview: false,
   });
 
-  const { schema, formData, selected, preview } = state;
+  const { schema, formData, selected, preview, hovering } = state;
 
   const onChange = (data) => {
     setState({ formData: data });
@@ -50,6 +59,7 @@ function App() {
       showDescIcon
       widgets={widgets}
       selected={selected}
+      hovering={hovering}
       preview={preview}
       setState={setState}
       simple={false}
@@ -106,7 +116,11 @@ export const Wrapper = ({
 
   let displaySchemaString = '';
   try {
-    displaySchemaString = JSON.stringify(idToSchema(flattenWithData), null, 2);
+    displaySchemaString = JSON.stringify(
+      idToSchema(flattenWithData, '#', true),
+      null,
+      2
+    );
   } catch (error) {}
 
   if (simple) {
@@ -128,7 +142,7 @@ export const Wrapper = ({
           <div className="flex vh-100 overflow-hidden">
             <Left />
             <div className="mid-layout pr2">
-              <div className="mv3">
+              <div className="mv3 mh1">
                 <Button type="primary" className="mr2" onClick={toggleModal}>
                   导出schema
                 </Button>
@@ -137,19 +151,24 @@ export const Wrapper = ({
                     setState({ preview: !preview, selected: '#' });
                   }}
                 >
-                  {preview ? '开始编辑' : '展示最终'}
+                  {preview ? '开始编辑' : '最终展示'}
                 </Button>
               </div>
               <FR preview={preview} />
             </div>
             <Right />
             <Modal
-              title="Basic Modal"
               visible={local.showModal}
               onOk={toggleModal}
               onCancel={toggleModal}
             >
-              <TextArea value={displaySchemaString} autoSize />
+              <div className="mt3">
+                <TextArea
+                  style={{ fontSize: 12 }}
+                  value={displaySchemaString}
+                  autoSize={{ minRows: 10, maxRows: 30 }}
+                />
+              </div>
             </Modal>
           </div>
         </InnerCtx.Provider>

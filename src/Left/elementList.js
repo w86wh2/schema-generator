@@ -123,29 +123,6 @@ const ELEMENT_LIST = [
     setting: {},
   },
   {
-    text: '图片展示',
-    name: 'image',
-    widget: 'input',
-    schema: {
-      title: '图片展示',
-      type: 'string',
-      format: 'image',
-    },
-    setting: {},
-  },
-  {
-    text: '图片展示',
-    name: 'image',
-    widget: 'input',
-    schema: {
-      title: '图片展示',
-      type: 'string',
-      format: 'image',
-    },
-    setting: {},
-  },
-
-  {
     text: 'date range',
     name: 'dateRange',
     widget: 'dateRange',
