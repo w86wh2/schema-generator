@@ -82,7 +82,7 @@ export function hasRepeat(list) {
 // ----------------- schema 相关
 
 // 合并propsSchema和UISchema。由于两者的逻辑相关性，合并为一个大schema能简化内部处理
-export function combineSchema(propsSchema, uiSchema) {
+export function combineSchema(propsSchema = {}, uiSchema = {}) {
   const propList = getChildren(propsSchema);
   const newList = propList.map((p) => {
     const { name } = p;
@@ -129,6 +129,7 @@ function isEmpty(obj) {
 
 // 获得propsSchema的children
 function getChildren(schema) {
+  if (!schema) return [];
   const {
     // object
     properties,
