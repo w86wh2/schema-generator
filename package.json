@@ -1,8 +1,8 @@
 {
-  "name": "fr-generator",
+  "name": "schema-generator",
   "version": "0.1.0",
   "private": true,
-  "homepage": "form-render.github.com/schema-generator",
+  "homepage": "https://form-render.github.com/schema-generator",
   "dependencies": {
     "@ant-design/icons": "^4.0.5",
     "@testing-library/jest-dom": "^4.2.4",
