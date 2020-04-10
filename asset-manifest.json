@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/form-render.github.com/schema-generator/static/css/main.e9ca8e99.chunk.css",
+    "main.js": "/form-render.github.com/schema-generator/static/js/main.18d4d31f.chunk.js",
+    "main.js.map": "/form-render.github.com/schema-generator/static/js/main.18d4d31f.chunk.js.map",
+    "runtime-main.js": "/form-render.github.com/schema-generator/static/js/runtime-main.220a9858.js",
+    "runtime-main.js.map": "/form-render.github.com/schema-generator/static/js/runtime-main.220a9858.js.map",
+    "static/css/2.e0d87904.chunk.css": "/form-render.github.com/schema-generator/static/css/2.e0d87904.chunk.css",
+    "static/js/2.bcc0d177.chunk.js": "/form-render.github.com/schema-generator/static/js/2.bcc0d177.chunk.js",
+    "static/js/2.bcc0d177.chunk.js.map": "/form-render.github.com/schema-generator/static/js/2.bcc0d177.chunk.js.map",
+    "index.html": "/form-render.github.com/schema-generator/index.html",
+    "precache-manifest.6b7ec884e85bb681497913ff7f1e59d7.js": "/form-render.github.com/schema-generator/precache-manifest.6b7ec884e85bb681497913ff7f1e59d7.js",
+    "service-worker.js": "/form-render.github.com/schema-generator/service-worker.js",
+    "static/css/2.e0d87904.chunk.css.map": "/form-render.github.com/schema-generator/static/css/2.e0d87904.chunk.css.map",
+    "static/css/main.e9ca8e99.chunk.css.map": "/form-render.github.com/schema-generator/static/css/main.e9ca8e99.chunk.css.map",
+    "static/js/2.bcc0d177.chunk.js.LICENSE.txt": "/form-render.github.com/schema-generator/static/js/2.bcc0d177.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.220a9858.js",
+    "static/css/2.e0d87904.chunk.css",
+    "static/js/2.bcc0d177.chunk.js",
+    "static/css/main.e9ca8e99.chunk.css",
+    "static/js/main.18d4d31f.chunk.js"
+  ]
+}
