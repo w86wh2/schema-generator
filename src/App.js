@@ -106,6 +106,19 @@ export const Wrapper = ({
 
   const toggleModal = () => setLocal({ showModal: !local.showModal });
 
+  const clearSchema = () => {
+    setState({
+      schema: {
+        propsSchema: {
+          type: 'object',
+          properties: {},
+        },
+      },
+      formData: {},
+      selected: undefined,
+    });
+  };
+
   // TODO: flatten是频繁在变的，应该和其他两个函数分开
   const store = {
     flatten: flattenWithData,
@@ -146,11 +159,15 @@ export const Wrapper = ({
                   导出schema
                 </Button>
                 <Button
+                  className="mr2"
                   onClick={() => {
                     setState({ preview: !preview, selected: '#' });
                   }}
                 >
                   {preview ? '开始编辑' : '最终展示'}
+                </Button>
+                <Button className="mr2" onClick={clearSchema}>
+                  清空
                 </Button>
               </div>
               <FR preview={preview} />
