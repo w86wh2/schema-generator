@@ -79,11 +79,13 @@ const FR = ({ id = '#', preview = false }) => {
       </ul>
     ) : null;
 
+  // TODO: list 也要算进去
   if (preview) {
     return (
       <div className={containerClass}>
-        <RenderField {...fieldProps} />
-        {schema.type === 'object' && childrenElement}
+        <RenderField {...fieldProps}>
+          {schema.type === 'object' && childrenElement}
+        </RenderField>
       </div>
     );
   }
@@ -91,12 +93,13 @@ const FR = ({ id = '#', preview = false }) => {
   return (
     <Wrapper $id={id} item={item}>
       <div className={containerClass}>
-        <RenderField {...fieldProps} />
-        {schema.type === 'object' && (
-          <Wrapper $id={id} item={item} inside>
-            {childrenElement || <div className="h2" />}
-          </Wrapper>
-        )}
+        <RenderField {...fieldProps}>
+          {schema.type === 'object' && (
+            <Wrapper $id={id} item={item} inside>
+              {childrenElement || <div className="h2" />}
+            </Wrapper>
+          )}
+        </RenderField>
       </div>
     </Wrapper>
   );
