@@ -38,7 +38,7 @@ function App() {
     preview: false,
   });
 
-  const { schema, formData, selected, preview, hovering } = state;
+  const { schema, formData, preview, ...rest } = state;
 
   const onChange = (data) => {
     setState({ formData: data });
@@ -58,11 +58,10 @@ function App() {
       displayType="row"
       showDescIcon
       widgets={widgets}
-      selected={selected}
-      hovering={hovering}
       preview={preview}
       setState={setState}
       simple={false}
+      {...rest}
     />
   );
 }
