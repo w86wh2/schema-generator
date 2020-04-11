@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Wrapper from '../Wrapper';
+import FRWrapper from '../FRWrapper';
 import { useGlobalProps, useStore } from '../hooks';
 import { widgets } from '../widgets/antd';
 import ELEMENT_LIST from '../Left/elementList';
@@ -88,7 +88,7 @@ export default function Right() {
     <div className="right-layout relative">
       <ToggleIcon />
       {itemSelected && (
-        <Wrapper
+        <FRWrapper
           schema={settingSchema}
           formData={settingData}
           onChange={onDataChange}

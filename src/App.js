@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSet } from './hooks';
 // import SCHEMA from './json/basic.json';
-import Wrapper from './Wrapper';
+import FRWrapper from './FRWrapper';
 import { widgets } from './widgets/antd';
 import 'antd/dist/antd.css';
 import 'tachyons';
@@ -36,7 +36,7 @@ function App() {
   };
 
   return (
-    <Wrapper
+    <FRWrapper
       schema={schema}
       formData={formData}
       onChange={onChange}
