@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Wrapper } from '../App';
+import Wrapper from '../Wrapper';
 import { useGlobalProps, useStore } from '../hooks';
 import { widgets } from '../widgets/antd';
 import ELEMENT_LIST from '../Left/elementList';
