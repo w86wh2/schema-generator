@@ -19,6 +19,7 @@ const RenderField = ({
     showValidate,
     labelWidth,
     widgets,
+    mapping,
   } = useGlobalProps();
   const { type, title, description, required } = schema;
   const isRequired = required && required.length > 0;
@@ -41,7 +42,7 @@ const RenderField = ({
     onItemChange($id, newItem);
   };
 
-  let widgetName = getWidgetName(schema);
+  let widgetName = getWidgetName(schema, mapping);
   const customWidget = schema['ui:widget'];
   if (customWidget && widgets[customWidget]) {
     widgetName = customWidget;
@@ -97,17 +98,15 @@ const RenderField = ({
           </label>
         </div>
       ) : null}
-      {['list'].indexOf(widgetName) === -1 && (
-        <div className={contentClass}>
-          <Widget
-            value={data}
-            onChange={onChange}
-            schema={schema}
-            {...usefulWidgetProps}
-            children={children}
-          />
-        </div>
-      )}
+      <div className={contentClass}>
+        <Widget
+          value={data}
+          onChange={onChange}
+          schema={schema}
+          {...usefulWidgetProps}
+          children={children}
+        />
+      </div>
     </>
   );
 };

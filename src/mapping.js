@@ -20,7 +20,7 @@ export const mapping = {
   '*?readonly': 'text',
 };
 
-export function getWidgetName(schema) {
+export function getWidgetName(schema, _mapping = mapping) {
   const { type, format, enum: enums, readonly } = schema;
   const list = [];
   if (readonly) {
@@ -38,7 +38,7 @@ export function getWidgetName(schema) {
   list.push(type); // 放在最后兜底，其他都不match时使用type默认的组件
   let found = '';
   list.some((item) => {
-    found = mapping[item];
+    found = _mapping[item];
     return !!found;
   });
   return found;

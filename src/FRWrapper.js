@@ -32,6 +32,7 @@ const Wrapper = ({
   const { setState, preview } = globalProps;
   const _schema = combineSchema(schema.propsSchema, schema.uiSchema);
   const flatten = flattenSchema(_schema);
+  console.log(flatten);
   const flattenWithData = dataToFlatten(flatten, formData);
   // console.group('flatten');
   // console.log(flattenWithData);

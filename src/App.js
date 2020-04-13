@@ -3,6 +3,7 @@ import { useSet } from './hooks';
 // import SCHEMA from './json/basic.json';
 import FRWrapper from './FRWrapper';
 import { widgets } from './widgets/antd';
+import { mapping } from './mapping';
 import 'antd/dist/antd.css';
 import 'tachyons';
 import './App.css';
@@ -10,6 +11,22 @@ import './App.css';
 const SCHEMA = {
   propsSchema: {
     type: 'object',
+    properties: {
+      listName: {
+        title: '对象数组',
+        description: '对象数组嵌套功能',
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            inputName: {
+              title: '简单输入框',
+              type: 'string',
+            },
+          },
+        },
+      },
+    },
   },
   uiSchema: {},
   formData: {},
@@ -35,6 +52,8 @@ function App() {
     setState({ schema: result });
   };
 
+  const _mapping = preview ? mapping : { ...mapping, array: 'listEditor' };
+
   return (
     <FRWrapper
       schema={schema}
@@ -47,6 +66,7 @@ function App() {
       preview={preview}
       setState={setState}
       simple={false}
+      mapping={_mapping}
       {...rest}
     />
   );
