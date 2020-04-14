@@ -1,4 +1,5 @@
 import nanoid from 'nanoid';
+import deepClone from 'clone';
 
 // 克隆对象
 export function clone(data) {
@@ -208,7 +209,7 @@ export function isFunctionSchema(schema) {
 //   children: []
 // }
 export function flattenSchema(schema, name = '#', parent, result = {}) {
-  const _schema = { ...schema };
+  const _schema = deepClone(schema);
   if (!_schema.$id) {
     _schema.$id = name; // 给生成的schema添加一个唯一标识，方便从schema中直接读取
   }
@@ -251,13 +252,23 @@ export const changeKeyFromUniqueId = (uniqueId = '#', key = 'something') => {
   return arr.join('/');
 };
 
+const copyFlattenItem = (_item) => {
+  return {
+    parent: _item.parent,
+    schema: { ..._item.schema },
+    data: _item.data,
+    children: _item.children,
+  };
+};
+
 // final = true 用于最终的导出的输出
 // 几种特例：
 // 1. 删除时值删除了item，没有删除和parent的关联，也没有删除children，所以要在解析这步来兜住 (所有的解析都是)
 // 2. 修改$id的情况, 修改的是schema内的$id, 解析的时候要把schema.$id 作为真正的id (final = true的解析)
 export function idToSchema(flatten, id = '#', final = false) {
   let schema = {};
-  const item = flatten[id];
+  const _item = flatten[id];
+  const item = deepClone(_item);
   if (item) {
     schema = { ...item.schema };
     // 最终输出去掉 $id
@@ -354,13 +365,7 @@ export const copyItem = (flatten, $id) => {
     const siblings = newFlatten[item.parent].children;
     const idx = siblings.findIndex((x) => x === $id);
     siblings.splice(idx + 1, 0, newId);
-    // 直接copy会让两个元素指向同一个object
-    newFlatten[newId] = {
-      parent: newFlatten[$id].parent,
-      schema: { ...newFlatten[$id].schema },
-      data: newFlatten[$id].data,
-      children: newFlatten[$id].children,
-    };
+    newFlatten[newId] = deepClone(newFlatten[$id]);
     newFlatten[newId].schema.$id = newId;
     return [newFlatten, newId];
   } catch (error) {

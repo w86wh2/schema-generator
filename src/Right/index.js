@@ -37,7 +37,7 @@ export default function Right() {
     </div>
   );
 
-  const RightHidden = () => (
+  const HideRightArrow = () => (
     <div
       className="absolute right-0 top-0 h2 flex-center"
       style={{ width: 50 }}
@@ -51,7 +51,7 @@ export default function Right() {
       <ToggleIcon />
     </div>
   ) : (
-    <RightHidden />
+    <HideRightArrow />
   );
 
   if (selected && selected[0] === '0') return Placeholder;
@@ -85,7 +85,7 @@ export default function Right() {
   }
 
   return show ? (
-    <div className="right-layout relative">
+    <div className="right-layout relative pl2">
       <ToggleIcon />
       {itemSelected && (
         <FRWrapper
@@ -100,6 +100,6 @@ export default function Right() {
       )}
     </div>
   ) : (
-    <RightHidden />
+    <HideRightArrow />
   );
 }

@@ -14,7 +14,6 @@ const SCHEMA = {
     properties: {
       listName: {
         title: '对象数组',
-        description: '对象数组嵌套功能',
         type: 'array',
         items: {
           type: 'object',

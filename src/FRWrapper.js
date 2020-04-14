@@ -32,12 +32,9 @@ const Wrapper = ({
   const { setState, preview } = globalProps;
   const _schema = combineSchema(schema.propsSchema, schema.uiSchema);
   const flatten = flattenSchema(_schema);
-  console.log(flatten);
   const flattenWithData = dataToFlatten(flatten, formData);
-  // console.group('flatten');
-  // console.log(flattenWithData);
-  // console.groupEnd();
-  console.log('render');
+  console.log(flattenWithData);
+  console.log(idToSchema(flattenWithData));
 
   const onFlattenChange = (newFlatten) => {
     const newSchema = idToSchema(newFlatten);
@@ -81,11 +78,11 @@ const Wrapper = ({
 
   let displaySchemaString = '';
   try {
-    displaySchemaString = JSON.stringify(
-      idToSchema(flattenWithData, '#', true),
-      null,
-      2
-    );
+    // displaySchemaString = JSON.stringify(
+    //   idToSchema(flattenWithData, '#', true),
+    //   null,
+    //   2
+    // );
   } catch (error) {}
 
   if (simple) {
@@ -125,7 +122,7 @@ const Wrapper = ({
               </div>
               <FR preview={preview} />
             </div>
-            <Right />
+            {/* <Right /> */}
             <Modal
               visible={local.showModal}
               onOk={toggleModal}

@@ -147,7 +147,7 @@ const ELEMENT_LIST = [
   },
   {
     text: 'object',
-    name: 'objectName',
+    name: 'object',
     schema: {
       title: '对象',
       type: 'object',
@@ -155,6 +155,39 @@ const ELEMENT_LIST = [
     },
     widget: 'map',
     setting: {},
+  },
+  {
+    text: '列表',
+    name: 'list',
+    widget: 'list',
+    schema: {
+      title: '对象数组',
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {},
+      },
+    },
+    setting: {
+      minItems: {
+        title: '最小长度',
+        type: 'number',
+      },
+      maxItems: {
+        title: '最大长度',
+        type: 'number',
+      },
+      options: {
+        title: '选项',
+        type: 'object',
+        properties: {
+          foldable: {
+            title: '是否可折叠',
+            type: 'boolean',
+          },
+        },
+      },
+    },
   },
 ];
 

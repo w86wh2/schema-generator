@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function map({ children }) {
-  return <div className="w-100">{children}</div>;
+export default function listEditor(props) {
+  return <div className="w-100">{props.children}</div>;
 }

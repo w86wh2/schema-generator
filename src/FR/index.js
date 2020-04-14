@@ -84,7 +84,7 @@ const FR = ({ id = '#', preview = false }) => {
     return (
       <div className={containerClass}>
         <RenderField {...fieldProps}>
-          {schema.type === 'object' && childrenElement}
+          {(isObj || isList) && childrenElement}
         </RenderField>
       </div>
     );
@@ -94,7 +94,7 @@ const FR = ({ id = '#', preview = false }) => {
     <Wrapper $id={id} item={item}>
       <div className={containerClass}>
         <RenderField {...fieldProps}>
-          {schema.type === 'object' && (
+          {(isObj || isList) && (
             <Wrapper $id={id} item={item} inside>
               {childrenElement || <div className="h2" />}
             </Wrapper>
