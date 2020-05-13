@@ -33,15 +33,10 @@ const Wrapper = ({
   const _schema = combineSchema(schema.propsSchema, schema.uiSchema);
   const flatten = flattenSchema(_schema);
   const flattenWithData = dataToFlatten(flatten, formData);
-  console.log(flattenWithData);
-  console.log(idToSchema(flattenWithData));
 
-  const onFlattenChange = (newFlatten) => {
+  const onFlattenChange = newFlatten => {
     const newSchema = idToSchema(newFlatten);
     const newData = flattenToData(newFlatten);
-    // console.group('schema');
-    // console.log(flattenWithData, newData);
-    // console.groupEnd();
     // 判断只有schema变化时才调用，一般需求的用户不需要
     if (onSchemaChange) {
       onSchemaChange(newSchema);
@@ -101,22 +96,22 @@ const Wrapper = ({
     <Ctx.Provider value={setState}>
       <PropsCtx.Provider value={globalProps}>
         <InnerCtx.Provider value={store}>
-          <div className="flex vh-100 overflow-hidden">
+          <div className='flex vh-100 overflow-hidden'>
             <Left />
-            <div className="mid-layout pr2">
-              <div className="mv3 mh1">
-                <Button type="primary" className="mr2" onClick={toggleModal}>
+            <div className='mid-layout pr2'>
+              <div className='mv3 mh1'>
+                <Button type='primary' className='mr2' onClick={toggleModal}>
                   导出schema
                 </Button>
                 <Button
-                  className="mr2"
+                  className='mr2'
                   onClick={() => {
                     setState({ preview: !preview, selected: '#' });
                   }}
                 >
                   {preview ? '开始编辑' : '最终展示'}
                 </Button>
-                <Button className="mr2" onClick={clearSchema}>
+                <Button className='mr2' onClick={clearSchema}>
                   清空
                 </Button>
               </div>
@@ -128,7 +123,7 @@ const Wrapper = ({
               onOk={toggleModal}
               onCancel={toggleModal}
             >
-              <div className="mt3">
+              <div className='mt3'>
                 <TextArea
                   style={{ fontSize: 12 }}
                   value={displaySchemaString}

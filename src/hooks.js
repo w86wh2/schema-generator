@@ -32,7 +32,7 @@ export const useStore = () => {
 // export default logger;
 
 // 类似于class component的setState
-export const useSet = (initState) => {
+export const useSet = initState => {
   const [state, setState] = useReducer((state, newState) => {
     // console.group('action'); // TODO: give it a name
     // console.log('%cState:', 'color: #9E9E9E; font-weight: 700;', state);
@@ -118,7 +118,7 @@ export function usePrevious(value) {
   return ref.current;
 }
 
-export const useShowOnce = (localKey) => {
+export const useShowOnce = localKey => {
   // 从 localStorage 读取 key 值
   const [show, setShow] = useState(false);
   let localStr;
@@ -136,4 +136,9 @@ export const useModal = () => {
   const [show, setShow] = useState(false);
   const toggle = () => setShow(!show);
   return [show, toggle];
+};
+
+export const useWindowState = initState => {
+  const [state, setState] = useState(initState);
+  return [state, setState];
 };
