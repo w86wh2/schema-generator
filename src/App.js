@@ -42,33 +42,37 @@ function App() {
 
   const { schema, formData, preview, ...rest } = state;
 
-  const onChange = (data) => {
+  const onChange = data => {
     setState({ formData: data });
   };
 
-  const onSchemaChange = (newSchema) => {
+  const onSchemaChange = newSchema => {
     const result = { ...schema, propsSchema: newSchema };
     setState({ schema: result });
   };
 
   const _mapping = preview ? mapping : { ...mapping, array: 'listEditor' };
 
-  return (
-    <FRWrapper
-      schema={schema}
-      formData={formData}
-      onChange={onChange}
-      onSchemaChange={onSchemaChange}
-      displayType="row"
-      showDescIcon
-      widgets={widgets}
-      preview={preview}
-      setState={setState}
-      simple={false}
-      mapping={_mapping}
-      {...rest}
-    />
-  );
+  const globalProps = {
+    preview,
+    setState,
+    displayType: 'row',
+    showDescIcon: true,
+    widgets,
+    simple: false,
+    mapping: _mapping,
+    ...rest,
+  };
+
+  const FRProps = {
+    schema,
+    formData,
+    onChange,
+    onSchemaChange,
+    ...globalProps,
+  };
+
+  return <FRWrapper {...FRProps} />;
 }
 
 export default App;
