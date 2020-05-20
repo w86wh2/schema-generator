@@ -18,7 +18,7 @@ import FoldIcon from '../../components/foldIcon';
 import DescriptionList, { getDescription } from '../../components/descList';
 
 const DragHandle = SortableHandle(() => (
-  <span className="fr-move-icon">:::</span>
+  <span className='fr-move-icon'>:::</span>
 ));
 
 class listItem extends React.Component {
@@ -80,10 +80,10 @@ class listItem extends React.Component {
         )}
         {!readonly && <DragHandle />}
         {!((canFold && fold) || hideDelete || readonly) && (
-          <div className="self-end flex">
+          <div className='self-end flex'>
             <FrButton
-              type="dashed"
-              icon="delete"
+              type='dashed'
+              icon='delete'
               onClick={() => {
                 const value = [...p.value];
                 value.splice(name, 1);
@@ -98,8 +98,8 @@ class listItem extends React.Component {
                 return (
                   <FrButton
                     key={idx.toString()}
-                    className="ml2"
-                    type="dashed"
+                    className='ml2'
+                    type='dashed'
                     icon={btn.icon}
                     onClick={() => {
                       const value = [...p.value];
@@ -138,7 +138,6 @@ class fieldList extends React.Component {
 
   render() {
     const { p, foldList = [], toggleFoldItem } = this.props;
-    console.log(p, 'ppppppppppp');
     const { options = {}, extraButtons = {} } = p || {};
     // prefer ui:options/buttons to ui:extraButtons, but keep both for backwards compatibility
     const buttons = options.buttons || extraButtons || [];
@@ -147,7 +146,7 @@ class fieldList extends React.Component {
     const list = p.value || [];
     const canAdd = maxItems ? maxItems > list.length : true; // 当到达最大个数，新增按钮消失
     return (
-      <ul className="pl0 ma0">
+      <ul className='pl0 ma0'>
         {list.map((_, name) => (
           <SortableItem
             key={`item-${name}`}
@@ -160,9 +159,9 @@ class fieldList extends React.Component {
           />
         ))}
         {!readonly && (
-          <div className="tr">
+          <div className='tr'>
             {canAdd && (
-              <FrButton icon="add" onClick={this.handleAddClick}>
+              <FrButton icon='add' onClick={this.handleAddClick}>
                 新增
               </FrButton>
             )}
@@ -170,7 +169,7 @@ class fieldList extends React.Component {
               buttons.length > 0 &&
               buttons.map((item, i) => (
                 <FrButton
-                  className="ml2"
+                  className='ml2'
                   icon={item.icon}
                   key={i.toString()}
                   onClick={() => {
@@ -187,7 +186,7 @@ class fieldList extends React.Component {
                     }
                     if (typeof window[item.callback] === 'function') {
                       const value = [...p.value];
-                      const onChange = (value) => p.onChange(value);
+                      const onChange = value => p.onChange(value);
                       window[item.callback](value, onChange, p.newItem); // eslint-disable-line
                     }
                   }}
@@ -226,7 +225,7 @@ class list extends React.Component {
       foldList: [...this.state.foldList, 0],
     });
 
-  toggleFoldItem = (index) => {
+  toggleFoldItem = index => {
     const { foldList = [] } = this.state;
     foldList[index] = !foldList[index]; // TODO: need better solution for the weird behavior caused by setState being async
     this.setState({
@@ -252,8 +251,8 @@ class list extends React.Component {
         addUnfoldItem={this.addUnfoldItem}
         distance={6}
         useDragHandle
-        helperClass="fr-sort-help-class"
-        shouldCancelStart={(e) =>
+        helperClass='fr-sort-help-class'
+        shouldCancelStart={e =>
           e.toElement && e.toElement.className === 'fr-tooltip-container'
         }
         onSortEnd={this.handleSort}

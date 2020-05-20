@@ -51,7 +51,7 @@ function App() {
     setState({ schema: result });
   };
 
-  const _mapping = preview ? mapping : { ...mapping, array: 'listEditor' };
+  const _mapping = { ...mapping, array: 'listEditor' };
 
   const globalProps = {
     preview,

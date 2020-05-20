@@ -21,7 +21,9 @@ const commonSettings = {
   },
   labelWidth: {
     title: '标签宽度',
-    type: 'string',
+    type: 'number',
+    'ui:widget': 'slider',
+    max: 400,
     'ui:options': {
       placeholder: '默认值是 120',
     },
@@ -161,7 +163,7 @@ const ELEMENT_LIST = [
     name: 'list',
     widget: 'list',
     schema: {
-      title: '对象数组',
+      title: '数组',
       type: 'array',
       items: {
         type: 'object',
@@ -191,7 +193,7 @@ const ELEMENT_LIST = [
   },
 ];
 
-const result = ELEMENT_LIST.map((item) => ({
+const result = ELEMENT_LIST.map(item => ({
   ...item,
   setting: { ...commonSettings, ...item.setting },
 }));

@@ -69,6 +69,7 @@ const Wrapper = ({
     flatten: flattenWithData,
     onFlattenChange,
     onItemChange,
+    ...globalProps,
   };
 
   let displaySchemaString = '';
