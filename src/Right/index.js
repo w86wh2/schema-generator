@@ -1,45 +1,23 @@
-import React, { useState } from 'react';
-import FRWrapper from '../FRWrapper';
-import { useGlobalProps, useStore } from '../hooks';
-import { widgets } from '../widgets/antd';
-import ELEMENT_LIST from '../Left/elementList';
-import { getWidgetName } from '../mapping';
-import { getKeyFromUniqueId } from '../utils';
+import React, { useState, useEffect } from 'react';
+import { useGlobalProps } from '../hooks';
 import { RightOutlined } from '@ant-design/icons';
 import './index.css';
+import ItemSettings from './ItemSettings';
 
 export default function Right() {
   const [show, setShow] = useState(true);
-  const { flatten, onItemChange } = useStore();
   const { selected } = useGlobalProps();
 
-  let settingSchema = {};
-  let settingData = {};
-
-  const toggleRight = () => setShow((o) => !o);
-
-  const onDataChange = (newSchema) => {
-    if (selected) {
-      try {
-        const item = flatten[selected];
-        if (item && item.schema) {
-          onItemChange(selected, { ...item, schema: newSchema });
-        }
-      } catch (error) {
-        console.log(error, 'catch');
-      }
-    }
-  };
-
+  const toggleRight = () => setShow(o => !o);
   const ToggleIcon = () => (
-    <div className="absolute top-1 left-1 pointer" onClick={toggleRight}>
+    <div className='absolute top-1 left-1 pointer' onClick={toggleRight}>
       <RightOutlined />
     </div>
   );
 
   const HideRightArrow = () => (
     <div
-      className="absolute right-0 top-0 h2 flex-center"
+      className='absolute right-0 top-0 h2 flex-center'
       style={{ width: 50 }}
     >
       <ToggleIcon />
@@ -47,57 +25,26 @@ export default function Right() {
   );
 
   const Placeholder = show ? (
-    <div className="right-layout relative">
+    <div className='right-layout relative'>
       <ToggleIcon />
     </div>
   ) : (
     <HideRightArrow />
   );
 
-  if (selected && selected[0] === '0') return Placeholder;
-  if (selected === '#') return Placeholder;
-  let itemSelected;
-  let widgetName;
-  try {
-    itemSelected = flatten[selected];
-    if (itemSelected) {
-      widgetName = getWidgetName(itemSelected.schema);
+  // 如果没有选中任何item，或者是选中了根节点，object、list的内部，显示placeholder
+  useEffect(() => {
+    if ((selected && selected[0] === '0') || selected === '#' || !selected) {
+      setShow(false);
     } else {
-      return Placeholder;
+      setShow(true);
     }
-    if (widgetName) {
-      const name = getKeyFromUniqueId(selected);
-      const element = ELEMENT_LIST.find((e) => e.widget === widgetName);
-      const schemaNow = element.setting;
-      settingSchema = {
-        propsSchema: {
-          type: 'object',
-          properties: {
-            ...schemaNow,
-          },
-        },
-        uiSchema: {},
-      };
-      settingData = itemSelected.schema;
-    }
-  } catch (error) {
-    console.log(error);
-  }
+  }, [selected]);
 
   return show ? (
-    <div className="right-layout relative pl2">
+    <div className='right-layout relative pl2'>
       <ToggleIcon />
-      {itemSelected && (
-        <FRWrapper
-          schema={settingSchema}
-          formData={settingData}
-          onChange={onDataChange}
-          displayType="row"
-          showDescIcon
-          widgets={widgets}
-          preview={true}
-        />
-      )}
+      {show && <ItemSettings />}
     </div>
   ) : (
     <HideRightArrow />
