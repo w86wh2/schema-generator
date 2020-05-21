@@ -125,6 +125,85 @@ const ELEMENT_LIST = [
     setting: {},
   },
   {
+    text: '是否选择',
+    name: 'checkbox',
+    widget: 'checkbox',
+    schema: {
+      title: '是否选择',
+      type: 'boolean',
+    },
+    setting: {},
+  },
+  {
+    text: '是否switch',
+    name: 'checkbox',
+    widget: 'switch',
+    schema: {
+      title: '是否选择',
+      type: 'boolean',
+      'ui:widget': 'switch',
+    },
+    setting: {},
+  },
+  {
+    text: '下拉单选',
+    name: 'select',
+    widget: 'select',
+    schema: {
+      title: '单选',
+      type: 'string',
+      enum: ['a', 'b', 'c'],
+      enumNames: ['早', '中', '晚'],
+    },
+    setting: {},
+  },
+  {
+    text: '点击单选',
+    name: 'radio',
+    widget: 'radio',
+    schema: {
+      title: '单选',
+      type: 'string',
+      enum: ['a', 'b', 'c'],
+      enumNames: ['早', '中', '晚'],
+      'ui:widget': 'radio',
+    },
+    setting: {},
+  },
+  {
+    text: '下拉多选',
+    name: 'multiSelect',
+    widget: 'multiSelect',
+    schema: {
+      title: '多选',
+      description: '下拉多选',
+      type: 'array',
+      items: {
+        type: 'string',
+      },
+      enum: ['A', 'B', 'C', 'D'],
+      enumNames: ['杭州', '武汉', '湖州', '贵阳'],
+      'ui:widget': 'multiSelect',
+    },
+    setting: {},
+  },
+  {
+    text: '点击多选',
+    name: 'checkboxes',
+    widget: 'checkboxes',
+    schema: {
+      title: '多选',
+      description: '点击多选',
+      type: 'array',
+      items: {
+        type: 'string',
+      },
+      enum: ['A', 'B', 'C', 'D'],
+      enumNames: ['杭州', '武汉', '湖州', '贵阳'],
+    },
+    setting: {},
+  },
+  {
     text: 'date range',
     name: 'dateRange',
     widget: 'dateRange',
@@ -186,6 +265,50 @@ const ELEMENT_LIST = [
           foldable: {
             title: '是否可折叠',
             type: 'boolean',
+          },
+        },
+      },
+    },
+  },
+  {
+    text: '复杂结构',
+    name: 'something',
+    schema: {
+      title: '对象',
+      description: '这是一个对象类型',
+      type: 'object',
+      properties: {
+        inputName: {
+          title: '简单输入框',
+          type: 'string',
+        },
+        selectName: {
+          title: '单选',
+          type: 'string',
+          enum: ['a', 'b', 'c'],
+          enumNames: ['早', '中', '晚'],
+        },
+        dateName: {
+          title: '时间选择',
+          type: 'string',
+          format: 'date',
+        },
+        listName: {
+          title: '对象数组',
+          description: '对象数组嵌套功能',
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              rangeName: {
+                title: '日期/时间范围',
+                type: 'range',
+                format: 'date',
+                'ui:options': {
+                  placeholder: ['开始日期', '结束日期'],
+                },
+              },
+            },
           },
         },
       },

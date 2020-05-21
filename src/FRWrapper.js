@@ -118,7 +118,7 @@ const Wrapper = ({
               </div>
               <FR preview={preview} />
             </div>
-            {/* <Right /> */}
+            <Right />
             <Modal
               visible={local.showModal}
               onOk={toggleModal}
