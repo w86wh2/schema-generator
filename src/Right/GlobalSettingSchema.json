@@ -1,0 +1,20 @@
+{
+  "propsSchema": {
+    "type": "object",
+    "properties": {
+      "column": {
+        "title": "整体布局",
+        "type": "string",
+        "enum": [1, 2, 3],
+        "enumNames": ["一行一列", "一行二列", "一行三列"]
+      },
+      "numberName": {
+        "title": "标签宽度",
+        "type": "number",
+        "ui:widget": "slider"
+      }
+    },
+    "required": []
+  },
+  "formData": {}
+}

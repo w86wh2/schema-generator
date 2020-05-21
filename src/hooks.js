@@ -34,48 +34,31 @@ export const useStore = () => {
 // 类似于class component的setState
 export const useSet = initState => {
   const [state, setState] = useReducer((state, newState) => {
-    // console.group('action'); // TODO: give it a name
-    // console.log('%cState:', 'color: #9E9E9E; font-weight: 700;', state);
-    // console.log('%cAction:', 'color: #00A7F7; font-weight: 700;', newState);
-    // // console.log('%cNext:', 'color: #47B04B; font-weight: 700;', {
-    // //   ...state,
-    // //   ...newState,
-    // // });
-    // console.groupEnd();
-    return { ...state, ...newState };
+    let action = newState;
+    if (typeof newState === 'function') {
+      action = action(state);
+    }
+    if (newState.action && newState.payload) {
+      action = newState.payload;
+      if (typeof action === 'function') {
+        action = action(state);
+      }
+    }
+    const result = { ...state, ...action };
+    // if (newState.action !== 'no-log') {
+    //   console.group(newState.action || 'action'); // TODO: give it a name
+    //   console.log('%cState:', 'color: #9E9E9E; font-weight: 700;', state);
+    //   console.log('%cAction:', 'color: #00A7F7; font-weight: 700;', action);
+    //   console.log('%cNext:', 'color: #47B04B; font-weight: 700;', result);
+    //   console.groupEnd();
+    // } else {
+    // }
+    return result;
   }, initState);
   const setStateWithActionName = (state, actionName) => {
     setState(state);
   };
   return [state, setStateWithActionName];
-
-  // const setStateWithLogger = (action, actionName = 'Action') => {
-  //   setState(action);
-  //   const colors = {
-  //     prevState: '#9E9E9E',
-  //     action: '#03A9F4',
-  //     nextState: '#4CAF50',
-  //     error: '#F20404',
-  //   };
-  //   console.group(actionName);
-  //   console.log(
-  //     '%c state:',
-  //     `color: ${colors.prevState}; font-weight: bold;`,
-  //     state
-  //   );
-  //   console.log(
-  //     '%c action:',
-  //     `color: ${colors.action}; font-weight: bold`,
-  //     action
-  //   );
-  //   console.log('%c next:', `color: ${colors.nextState}; font-weight: bold`, {
-  //     ...state,
-  //     ...action,
-  //   });
-  //   console.groupEnd();
-  // };
-
-  // return [state, setState, setStateWithLogger];
 };
 
 // start: true 开始、false 暂停
