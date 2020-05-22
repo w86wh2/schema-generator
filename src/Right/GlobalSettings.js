@@ -1,17 +1,30 @@
 import React from 'react';
 import FRWrapper from '../FRWrapper';
 import SCHEMA from './GlobalSettingSchema.json';
-import { widgets } from '../widgets/antd';
+// import { widgets } from '../widgets/antd';
+import { useGlobalProps } from '../hooks';
 
 export default function ItemSettings() {
-  let settingData = {};
+  const globalProps = useGlobalProps();
 
-  const onDataChange = newSchema => {};
+  const {
+    hovering,
+    mapping,
+    preview,
+    selected,
+    setState,
+    widgets,
+    ...rest
+  } = globalProps;
+
+  const onDataChange = data => {
+    setState(state => ({ ...state, ...data }));
+  };
 
   return (
     <FRWrapper
       schema={SCHEMA}
-      formData={settingData}
+      formData={rest}
       onChange={onDataChange}
       displayType='row'
       showDescIcon

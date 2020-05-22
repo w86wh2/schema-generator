@@ -6,12 +6,23 @@
         "title": "整体布局",
         "type": "string",
         "enum": [1, 2, 3],
-        "enumNames": ["一行一列", "一行二列", "一行三列"]
+        "enumNames": ["一行一列", "一行二列", "一行三列"],
+        "ui:options": {
+          "placeholder": "默认一行一列"
+        }
       },
-      "numberName": {
+      "labelWidth": {
         "title": "标签宽度",
         "type": "number",
-        "ui:widget": "slider"
+        "ui:widget": "slider",
+        "max": 300,
+        "ui:options": {
+          "hideNumber": true
+        }
+      },
+      "readOnly": {
+        "title": "只读模式",
+        "type": "boolean"
       }
     },
     "required": []

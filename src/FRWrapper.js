@@ -29,7 +29,15 @@ const Wrapper = ({
   ...globalProps
 }) => {
   const [local, setLocal] = useSet({ showModal: false });
-  const { setState, preview } = globalProps;
+  const {
+    preview,
+    setState,
+    mapping,
+    widgets,
+    selected,
+    hovering,
+    ...rest
+  } = globalProps;
   const _schema = combineSchema(schema.propsSchema, schema.uiSchema);
   const flatten = flattenSchema(_schema);
   const flattenWithData = dataToFlatten(flatten, formData);
@@ -73,12 +81,13 @@ const Wrapper = ({
   };
 
   let displaySchemaString = '';
+
   try {
-    // displaySchemaString = JSON.stringify(
-    //   idToSchema(flattenWithData, '#', true),
-    //   null,
-    //   2
-    // );
+    displaySchemaString = JSON.stringify(
+      { ...idToSchema(flattenWithData, '#', true), ...rest },
+      null,
+      2
+    );
   } catch (error) {}
 
   if (simple) {
@@ -118,7 +127,7 @@ const Wrapper = ({
               </div>
               <FR preview={preview} />
             </div>
-            <Right />
+            <Right globalProps={rest} />
             <Modal
               visible={local.showModal}
               onOk={toggleModal}

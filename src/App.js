@@ -32,15 +32,21 @@ const SCHEMA = {
 };
 
 function App() {
+  const initGlobal = {
+    displayType: 'row',
+    showDescIcon: true,
+  };
+
   const [state, setState] = useSet({
     formData: SCHEMA.formData,
     schema: SCHEMA,
     selected: undefined,
     hovering: undefined,
     preview: false,
+    ...initGlobal,
   });
 
-  const { schema, formData, preview, ...rest } = state;
+  const { schema, formData, preview, selected, hovering, ...rest } = state;
 
   const onChange = data => {
     setState({ formData: data });
@@ -56,11 +62,11 @@ function App() {
   const globalProps = {
     preview,
     setState,
-    displayType: 'row',
-    showDescIcon: true,
-    widgets,
     simple: false,
     mapping: _mapping,
+    widgets,
+    selected,
+    hovering,
     ...rest,
   };
 
