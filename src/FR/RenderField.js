@@ -24,11 +24,13 @@ const RenderField = ({
   const { type, title, description, required } = schema;
   const isRequired = required && required.length > 0;
 
-  const _labelWidth = isLooselyNumber(labelWidth)
-    ? Number(labelWidth)
-    : isCssLength(labelWidth)
-    ? labelWidth
+  const effectiveLabelWidth = schema['ui:labelWidth'] || labelWidth;
+  const _labelWidth = isLooselyNumber(effectiveLabelWidth)
+    ? Number(effectiveLabelWidth)
+    : isCssLength(effectiveLabelWidth)
+    ? effectiveLabelWidth
     : 110; // 默认是 110px 的长度
+
   let labelStyle = { width: _labelWidth };
   if (type === 'boolean') {
     labelStyle = { flexGrow: 1 };
@@ -36,7 +38,7 @@ const RenderField = ({
     labelStyle = { flexGrow: 1 };
   }
 
-  const onChange = (value) => {
+  const onChange = value => {
     const newItem = { ...item };
     newItem.data = value;
     onItemChange($id, newItem);
@@ -72,7 +74,7 @@ const RenderField = ({
             }`} // boolean不带冒号
             title={title}
           >
-            {isRequired && <span className="fr-label-required"> *</span>}
+            {isRequired && <span className='fr-label-required'> *</span>}
             <span
               className={`${isComplex ? 'b' : ''} ${
                 displayType === 'column' ? 'flex-none' : ''
@@ -82,18 +84,18 @@ const RenderField = ({
             </span>
             {description &&
               (showDescIcon ? (
-                <span className="fr-tooltip-toggle" aria-label={description}>
-                  <i className="fr-tooltip-icon" />
-                  <div className="fr-tooltip-container">
-                    <i className="fr-tooltip-triangle" />
+                <span className='fr-tooltip-toggle' aria-label={description}>
+                  <i className='fr-tooltip-icon' />
+                  <div className='fr-tooltip-container'>
+                    <i className='fr-tooltip-triangle' />
                     {description}
                   </div>
                 </span>
               ) : (
-                <span className="fr-desc ml2">(&nbsp;{description}&nbsp;)</span>
+                <span className='fr-desc ml2'>(&nbsp;{description}&nbsp;)</span>
               ))}
             {displayType !== 'row' && showValidate && (
-              <span className="fr-validate">validation</span>
+              <span className='fr-validate'>validation</span>
             )}
           </label>
         </div>

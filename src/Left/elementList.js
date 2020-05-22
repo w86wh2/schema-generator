@@ -1,8 +1,10 @@
 // 只需写配置，方便可扩展
 const commonSettings = {
   $id: {
-    title: 'key',
+    title: 'ID',
+    description: '数据存储的名称，请写英文，不能为空',
     type: 'string',
+    'ui:widget': 'idInput',
   },
   title: {
     title: '标题',
@@ -12,20 +14,21 @@ const commonSettings = {
     title: '说明',
     type: 'string',
   },
-  width: {
+  'ui:width': {
     title: '元素宽度',
     type: 'string',
     'ui:options': {
       placeholder: "例如 '50%'",
     },
   },
-  labelWidth: {
+  'ui:labelWidth': {
     title: '标签宽度',
+    description: '默认值120',
     type: 'number',
     'ui:widget': 'slider',
     max: 400,
     'ui:options': {
-      placeholder: '默认值是 120',
+      hideNumber: true,
     },
   },
 };

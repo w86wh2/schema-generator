@@ -11,13 +11,13 @@ export default function Wrapper({ $id, item, inside = false, children }) {
   const { schema } = item;
   const { type } = schema;
 
-  const handleClick = (e) => {
+  const handleClick = e => {
     e.stopPropagation();
     const _id = inside ? '0' + $id : $id;
     setGlobal({ selected: _id });
   };
 
-  const deleteItem = (e) => {
+  const deleteItem = e => {
     e.stopPropagation();
     const newFlatten = { ...flatten };
     let newSelect = '#';
@@ -42,7 +42,7 @@ export default function Wrapper({ $id, item, inside = false, children }) {
     setGlobal({ selected: newSelect });
   };
 
-  const handleItemCopy = (e) => {
+  const handleItemCopy = e => {
     e.stopPropagation();
     const [newFlatten, newId] = copyItem(flatten, $id);
     onFlattenChange(newFlatten);
@@ -78,8 +78,8 @@ export default function Wrapper({ $id, item, inside = false, children }) {
     overwriteStyle = {
       ...overwriteStyle,
       borderColor: '#777',
-      marginLeft: 12,
-      padding: '8px 8px 0 0',
+      // marginLeft: 12,
+      padding: '8px 8px 0 8px',
       backgroundColor: '#fafafa',
     };
   } else if ($id === '#') {
@@ -107,13 +107,13 @@ export default function Wrapper({ $id, item, inside = false, children }) {
   return (
     <div
       style={overwriteStyle}
-      className={`field-wrapper relative`}
+      className={`field-wrapper relative w-100`}
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {!inside && (
-        <div className="absolute top-0 left-0 blue f7">
+        <div className='absolute top-0 left-0 blue f7'>
           {schema && schema.$id && schema.$id.substring(1)}
         </div>
       )}
