@@ -4,7 +4,13 @@ import { useGlobal, useGlobalProps, useStore } from '../hooks';
 import { copyItem } from '../utils';
 import { DeleteOutlined, CopyOutlined } from '@ant-design/icons';
 
-export default function Wrapper({ $id, item, inside = false, children }) {
+export default function Wrapper({
+  $id,
+  item,
+  inside = false,
+  children,
+  style,
+}) {
   const { flatten, onItemChange, onFlattenChange } = useStore();
   const setGlobal = useGlobal();
   const { selected, hovering } = useGlobalProps();
@@ -99,6 +105,12 @@ export default function Wrapper({ $id, item, inside = false, children }) {
       ...overwriteStyle,
       outline: '2px solid #409eff',
       borderColor: '#fff',
+    };
+  }
+  if (style && typeof style === 'object') {
+    overwriteStyle = {
+      ...overwriteStyle,
+      ...style,
     };
   }
 
