@@ -83,11 +83,8 @@ const Wrapper = ({
   let displaySchemaString = '';
 
   try {
-    displaySchemaString = JSON.stringify(
-      { ...idToSchema(flattenWithData, '#', true), ...rest },
-      null,
-      2
-    );
+    const propsSchema = idToSchema(flattenWithData, '#', true);
+    displaySchemaString = JSON.stringify({ propsSchema, ...rest }, null, 2);
   } catch (error) {}
 
   if (simple) {
