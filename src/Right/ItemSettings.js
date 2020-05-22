@@ -3,6 +3,7 @@ import FRWrapper from '../FRWrapper';
 import { useGlobalProps, useStore } from '../hooks';
 import { widgets } from '../widgets/antd';
 import IdInput from '../widgets/antd/idInput';
+import PercentSlider from '../widgets/antd/percentSlider';
 import ELEMENT_LIST from '../Left/elementList';
 import { getWidgetName } from '../mapping';
 import { getKeyFromUniqueId } from '../utils';
@@ -53,7 +54,11 @@ export default function ItemSettings() {
     console.log(error);
   }
 
-  const _widgets = { ...widgets, idInput: IdInput };
+  const _widgets = {
+    ...widgets,
+    idInput: IdInput,
+    percentSlider: PercentSlider,
+  };
 
   return (
     <FRWrapper

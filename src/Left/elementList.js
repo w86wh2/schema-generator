@@ -17,9 +17,7 @@ const commonSettings = {
   'ui:width': {
     title: '元素宽度',
     type: 'string',
-    'ui:options': {
-      placeholder: "例如 '50%'",
-    },
+    'ui:widget': 'percentSlider',
   },
   'ui:labelWidth': {
     title: '标签宽度',
