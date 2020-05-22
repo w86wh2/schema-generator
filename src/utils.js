@@ -427,7 +427,7 @@ export const getDataById = (data, idString) => {
       .split('/')
       .filter(id => id !== '#')
       .join('.');
-    const string = `data.${idConnectedByDots}`;
+    const string = `data["${idConnectedByDots}"]`;
     const a = `"use strict";
     const data = ${JSON.stringify(data)};
     return ${string}`;
@@ -447,6 +447,9 @@ export const getDataById = (data, idString) => {
 export const dataToFlatten = (flatten, data) => {
   if (!flatten || !data) return;
   Object.entries(flatten).forEach(([id, item]) => {
+    if (id === '#/ui:width') {
+      // debugger;
+    }
     const branchData = getDataById(data, id);
     flatten[id].data = branchData;
   });
