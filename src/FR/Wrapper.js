@@ -1,7 +1,7 @@
 import React from 'react';
 import './Wrapper.css';
 import { useGlobal, useGlobalProps, useStore } from '../hooks';
-import { copyItem } from '../utils';
+import { copyItem, getKeyFromUniqueId } from '../utils';
 import { DeleteOutlined, CopyOutlined } from '@ant-design/icons';
 
 export default function Wrapper({
@@ -125,8 +125,8 @@ export default function Wrapper({
       onMouseLeave={handleMouseLeave}
     >
       {!inside && (
-        <div className='absolute top-0 left-0 blue f7'>
-          {schema && schema.$id && schema.$id.substring(1)}
+        <div className='absolute top-0 right-1 blue f7'>
+          {schema && schema.$id && getKeyFromUniqueId($id)}
         </div>
       )}
       {children}
@@ -146,7 +146,7 @@ export default function Wrapper({
             alignItems: 'center',
           }}
         >
-          <div onClick={deleteItem}>
+          <div className='pointer' onClick={deleteItem}>
             <DeleteOutlined
               style={{
                 height: 16,
@@ -156,7 +156,7 @@ export default function Wrapper({
               }}
             />
           </div>
-          <div onClick={handleItemCopy}>
+          <div className='pointer' onClick={handleItemCopy}>
             <CopyOutlined
               style={{ height: 16, width: 16, marginRight: 12, color: '#fff' }}
             />
