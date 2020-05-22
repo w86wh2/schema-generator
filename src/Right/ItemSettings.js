@@ -2,6 +2,7 @@ import React from 'react';
 import FRWrapper from '../FRWrapper';
 import { useGlobalProps, useStore } from '../hooks';
 import { widgets } from '../widgets/antd';
+import IdInput from '../widgets/antd/idInput';
 import ELEMENT_LIST from '../Left/elementList';
 import { getWidgetName } from '../mapping';
 import { getKeyFromUniqueId } from '../utils';
@@ -35,7 +36,7 @@ export default function ItemSettings() {
       widgetName = getWidgetName(itemSelected.schema);
     }
     if (widgetName) {
-      const name = getKeyFromUniqueId(selected);
+      // const name = getKeyFromUniqueId(selected);
       const element = ELEMENT_LIST.find(e => e.widget === widgetName);
       const schemaNow = element.setting;
       settingSchema = {
@@ -45,13 +46,14 @@ export default function ItemSettings() {
             ...schemaNow,
           },
         },
-        uiSchema: {},
       };
       settingData = itemSelected.schema;
     }
   } catch (error) {
     console.log(error);
   }
+
+  const _widgets = { ...widgets, idInput: IdInput };
 
   return (
     <FRWrapper
@@ -60,7 +62,7 @@ export default function ItemSettings() {
       onChange={onDataChange}
       displayType='row'
       showDescIcon
-      widgets={widgets}
+      widgets={_widgets}
       preview={true}
     />
   );
