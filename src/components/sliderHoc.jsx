@@ -5,7 +5,7 @@
 
 import React from 'react';
 
-export default (SliderComponent, NumberComponent) => (p) => {
+export default (SliderComponent, NumberComponent) => p => {
   const style = p.invalid ? { borderColor: '#f5222d' } : {};
   const { max, min, step } = p.schema;
   let setting = {};
@@ -21,29 +21,36 @@ export default (SliderComponent, NumberComponent) => (p) => {
     setting = { ...setting, step };
   }
 
+  let hideNumber = false;
+  if (p.options && p.options.hideNumber) {
+    hideNumber = true;
+  }
+
+  const renderNumber = p.readonly ? (
+    <span style={{ width: '90px' }}>
+      {p.value === (undefined || '') ? '-' : p.value}
+    </span>
+  ) : (
+    <NumberComponent
+      {...p.options}
+      {...setting}
+      style={{ width: '90px', ...style }}
+      value={p.value}
+      disabled={p.disabled}
+      onChange={p.onChange}
+    />
+  );
+
   return (
-    <div className="fr-slider">
+    <div className='fr-slider'>
       <SliderComponent
-        style={{ flexGrow: 1, marginRight: 12 }}
+        style={{ flexGrow: 1, marginRight: hideNumber ? 0 : 12 }}
         {...setting}
         onChange={p.onChange}
         value={typeof p.value === 'number' ? p.value : min || 0}
         disabled={p.disabled || p.readonly}
       />
-      {p.readonly ? (
-        <span style={{ width: '90px' }}>
-          {p.value === (undefined || '') ? '-' : p.value}
-        </span>
-      ) : (
-        <NumberComponent
-          {...p.options}
-          {...setting}
-          style={{ width: '90px', ...style }}
-          value={p.value}
-          disabled={p.disabled}
-          onChange={p.onChange}
-        />
-      )}
+      {hideNumber ? null : renderNumber}
     </div>
   );
 };
