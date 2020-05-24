@@ -116,6 +116,10 @@ export default function Wrapper({
 
   if ($id === '#' && inside) return children;
 
+  // 展示的id
+  let shownId = schema && schema.$id && getKeyFromUniqueId(schema.$id);
+  if (shownId === '#') shownId = ''; // 根元素不展示了
+
   return (
     <div
       style={overwriteStyle}
@@ -125,9 +129,7 @@ export default function Wrapper({
       onMouseLeave={handleMouseLeave}
     >
       {!inside && (
-        <div className='absolute top-0 right-1 blue f7'>
-          {schema && schema.$id && getKeyFromUniqueId(schema.$id)}
-        </div>
+        <div className='absolute top-0 right-1 blue f7'>{shownId}</div>
       )}
       {children}
       {isSelected && !inside && $id !== '#' && (

@@ -34,7 +34,6 @@ const SCHEMA = {
 function App() {
   const initGlobal = {
     displayType: 'row',
-    showDescIcon: true,
   };
 
   const [state, setState] = useSet({
@@ -47,6 +46,9 @@ function App() {
   });
 
   const { schema, formData, preview, selected, hovering, ...rest } = state;
+
+  const { displayType } = rest;
+  const showDescIcon = displayType === 'row' ? true : false;
 
   const onChange = data => {
     setState({ formData: data });
@@ -68,6 +70,7 @@ function App() {
     selected,
     hovering,
     ...rest,
+    showDescIcon,
   };
 
   const FRProps = {

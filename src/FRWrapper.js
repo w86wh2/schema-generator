@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useSet } from './hooks';
 import Left from './Left';
 import Right from './Right';
