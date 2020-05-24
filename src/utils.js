@@ -489,3 +489,21 @@ export const flattenToData = (flatten, id = '#') => {
     return undefined;
   }
 };
+
+// 例如当前item的id = '#/obj/input'  propName: 'ui:labelWidth'
+export const getParentProps = (propName, id, flatten) => {
+  try {
+    const item = flatten[id];
+    if (item.schema[propName] !== undefined) return item.schema[propName];
+    if (item && item.parent) {
+      const parentSchema = flatten[item.parent].schema;
+      if (parentSchema[propName] !== undefined) {
+        return parentSchema[propName];
+      } else {
+        return getParentProps(propName, item.parent, flatten);
+      }
+    }
+  } catch (error) {
+    return undefined;
+  }
+};

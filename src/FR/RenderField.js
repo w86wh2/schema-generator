@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGlobalProps, useStore } from '../hooks';
-import { isLooselyNumber, isCssLength } from '../utils';
+import { isLooselyNumber, isCssLength, getParentProps } from '../utils';
 import { getWidgetName } from '../mapping';
 
 const RenderField = ({
@@ -11,7 +11,7 @@ const RenderField = ({
   isComplex,
   children,
 }) => {
-  const { onItemChange } = useStore();
+  const { onItemChange, flatten } = useStore();
   const { schema, data } = item;
   const {
     displayType,
@@ -24,7 +24,9 @@ const RenderField = ({
   const { type, title, description, required } = schema;
   const isRequired = required && required.length > 0;
 
-  const effectiveLabelWidth = schema['ui:labelWidth'] || labelWidth;
+  // 真正有效的label宽度需要从现在所在item开始一直往上回溯（设计成了继承关系），找到的第一个有值的 ui:labelWidth
+  const effectiveLabelWidth =
+    getParentProps('ui:labelWidth', $id, flatten) || labelWidth;
   const _labelWidth = isLooselyNumber(effectiveLabelWidth)
     ? Number(effectiveLabelWidth)
     : isCssLength(effectiveLabelWidth)
