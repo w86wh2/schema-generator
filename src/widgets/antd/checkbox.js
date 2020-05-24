@@ -1,12 +1,16 @@
 import React from 'react';
 import { Checkbox } from 'antd';
 
-export default function radio(p) {
+export default function radio({ value, onChange, disabled, readonly }) {
+  const handleChange = e => {
+    onChange(e.target.checked);
+  };
+
   return (
     <Checkbox
-      disabled={p.disabled || p.readonly}
-      onChange={(e) => p.onChange(e.target.checked)}
-      checked={p.value}
+      disabled={disabled || readonly}
+      onChange={handleChange}
+      checked={value}
     />
   );
 }
