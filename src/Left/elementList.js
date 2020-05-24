@@ -259,7 +259,7 @@ const ELEMENT_LIST = [
         title: '最大长度',
         type: 'number',
       },
-      options: {
+      'ui:options': {
         title: '选项',
         type: 'object',
         properties: {

@@ -469,7 +469,7 @@ export const flattenToData = (flatten, id = '#') => {
     if (childrenIds && childrenIds.length > 0) {
       if (result === undefined) {
         // TODO: 这个是简化的逻辑，在编辑器模型下，list和object都是object结构
-        if (['object', 'array'].indexOf(flatten[id].schema.type)) {
+        if (['object', 'array'].indexOf(flatten[id].schema.type) > -1) {
           result = {};
         }
       }
