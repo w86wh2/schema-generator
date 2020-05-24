@@ -126,7 +126,7 @@ export default function Wrapper({
     >
       {!inside && (
         <div className='absolute top-0 right-1 blue f7'>
-          {schema && schema.$id && getKeyFromUniqueId($id)}
+          {schema && schema.$id && getKeyFromUniqueId(schema.$id)}
         </div>
       )}
       {children}
