@@ -426,8 +426,9 @@ export const getDataById = (data, idString) => {
     const idConnectedByDots = idString
       .split('/')
       .filter(id => id !== '#')
-      .join('.');
-    const string = `data["${idConnectedByDots}"]`;
+      .map(id => `["${id}"]`)
+      .join('');
+    const string = `data${idConnectedByDots}`;
     const a = `"use strict";
     const data = ${JSON.stringify(data)};
     return ${string}`;
@@ -447,9 +448,6 @@ export const getDataById = (data, idString) => {
 export const dataToFlatten = (flatten, data) => {
   if (!flatten || !data) return;
   Object.entries(flatten).forEach(([id, item]) => {
-    if (id === '#/ui:width') {
-      // debugger;
-    }
     const branchData = getDataById(data, id);
     flatten[id].data = branchData;
   });
@@ -470,11 +468,15 @@ export const flattenToData = (flatten, id = '#') => {
     });
     if (childrenIds && childrenIds.length > 0) {
       if (result === undefined) {
-        // TODO: 是不是要兜undefined？
+        // TODO: 这个是简化的逻辑，在编辑器模型下，list和object都是object结构
+        if (['object', 'array'].indexOf(flatten[id].schema.type)) {
+          result = {};
+        }
       }
       childrenIds.forEach(c => {
         const lengthOfId = id.split('/').length;
         const lengthOfChild = c.split('/').length;
+        // 只比他长1，是直属的child
         if (lengthOfChild === lengthOfId + 1) {
           const cData = flattenToData(flatten, c);
           const cKey = getKeyFromUniqueId(c);
