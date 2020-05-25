@@ -11,21 +11,7 @@ import './App.css';
 const SCHEMA = {
   propsSchema: {
     type: 'object',
-    properties: {
-      listName: {
-        title: '对象数组',
-        type: 'array',
-        items: {
-          type: 'object',
-          properties: {
-            inputName: {
-              title: '简单输入框',
-              type: 'string',
-            },
-          },
-        },
-      },
-    },
+    properties: {},
   },
   uiSchema: {},
   formData: {},

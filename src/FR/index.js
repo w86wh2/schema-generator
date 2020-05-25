@@ -104,6 +104,19 @@ const FR = ({ id = '#', preview = false }) => {
     );
   }
 
+  const isEmpty = Object.keys(flatten).length < 2; // 只有一个根元素 # 的情况
+  if (isEmpty) {
+    return (
+      <Wrapper style={columnStyle} $id={id} item={item}>
+        <div
+          className={`${containerClass} h-100 f5 black-40 flex items-center justify-center`}
+        >
+          点击左侧栏的组件进行添加
+        </div>
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper style={columnStyle} $id={id} item={item}>
       <div className={containerClass}>
