@@ -85,8 +85,8 @@ export default function Wrapper({
       ...overwriteStyle,
       borderColor: '#777',
       // marginLeft: 12,
-      padding: '8px 8px 0 8px',
-      backgroundColor: '#fafafa',
+      padding: '12px 12px 0',
+      backgroundColor: '#f6f5f6',
     };
   } else if ($id === '#') {
     overwriteStyle = {
@@ -95,7 +95,7 @@ export default function Wrapper({
       padding: 12,
       height: 'calc(100vh - 80px)',
       overflow: 'auto',
-      backgroundColor: '#fafafa',
+      backgroundColor: '#f6f5f6',
     };
   } else if (type === 'object') {
     overwriteStyle = { ...overwriteStyle, paddingTop: 12 };
