@@ -29,6 +29,14 @@ const commonSettings = {
       hideNumber: true,
     },
   },
+  default: {
+    title: '默认值',
+    type: 'string',
+  },
+  'ui:readonly': {
+    title: '置灰',
+    type: 'boolean',
+  },
 };
 
 const ELEMENT_LIST = [
@@ -41,6 +49,34 @@ const ELEMENT_LIST = [
       type: 'string',
     },
     setting: {
+      'ui:options': {
+        title: '选项',
+        type: 'object',
+        'ui:labelWidth': 80,
+        properties: {
+          allowClear: {
+            title: '是否带清除按钮',
+            description: '填写内容后才会出现x哦',
+            type: 'boolean',
+          },
+          addonBefore: {
+            title: '前tab',
+            type: 'string',
+          },
+          addonAfter: {
+            title: '后tab',
+            type: 'string',
+          },
+          prefix: {
+            title: '前缀',
+            type: 'string',
+          },
+          suffix: {
+            title: '后缀',
+            type: 'string',
+          },
+        },
+      },
       minLength: {
         title: '最短字数',
         type: 'number',
@@ -48,6 +84,13 @@ const ELEMENT_LIST = [
       maxLength: {
         title: '最长字数',
         type: 'number',
+      },
+      pattern: {
+        title: '校验正则表达式',
+        type: 'string',
+        'ui:options': {
+          placeholder: '填写正则表达式',
+        },
       },
     },
   },
@@ -61,6 +104,21 @@ const ELEMENT_LIST = [
       format: 'textarea',
     },
     setting: {
+      'ui:options': {
+        title: '选项',
+        type: 'object',
+        'ui:labelWidth': 80,
+        properties: {
+          autoSize: {
+            title: '高度自动',
+            type: 'boolean',
+          },
+          row: {
+            title: '指定高度',
+            type: 'number',
+          },
+        },
+      },
       minLength: {
         title: '最短字数',
         type: 'number',
@@ -68,6 +126,13 @@ const ELEMENT_LIST = [
       maxLength: {
         title: '最长字数',
         type: 'number',
+      },
+      pattern: {
+        title: '校验正则表达式',
+        type: 'string',
+        'ui:options': {
+          placeholder: '填写正则表达式',
+        },
       },
     },
   },
@@ -91,12 +156,19 @@ const ELEMENT_LIST = [
       type: 'string',
       format: 'date',
     },
-    setting: {},
+    setting: {
+      format: {
+        title: '格式',
+        type: 'string',
+        enum: ['dateTime', 'date', 'time'],
+        enumNames: ['日期时间', '日期', '时间'],
+      },
+    },
   },
   {
     text: '图片展示',
     name: 'image',
-    widget: 'input',
+    // widget: 'input',
     schema: {
       title: '图片展示',
       type: 'string',
@@ -133,7 +205,12 @@ const ELEMENT_LIST = [
       title: '是否选择',
       type: 'boolean',
     },
-    setting: {},
+    setting: {
+      default: {
+        title: '默认是否',
+        type: 'boolean',
+      },
+    },
   },
   {
     text: '是否switch',
@@ -144,7 +221,12 @@ const ELEMENT_LIST = [
       type: 'boolean',
       'ui:widget': 'switch',
     },
-    setting: {},
+    setting: {
+      default: {
+        title: '默认是否',
+        type: 'boolean',
+      },
+    },
   },
   {
     text: '下拉单选',
@@ -156,7 +238,26 @@ const ELEMENT_LIST = [
       enum: ['a', 'b', 'c'],
       enumNames: ['早', '中', '晚'],
     },
-    setting: {},
+    setting: {
+      enum: {
+        title: '选项字段',
+        type: 'array',
+        enum: [],
+        'ui:widget': 'select',
+        'ui:options': {
+          mode: 'tags',
+        },
+      },
+      enumNames: {
+        title: '选项名称',
+        type: 'array',
+        enum: [],
+        'ui:widget': 'select',
+        'ui:options': {
+          mode: 'tags',
+        },
+      },
+    },
   },
   {
     text: '点击单选',
@@ -169,7 +270,26 @@ const ELEMENT_LIST = [
       enumNames: ['早', '中', '晚'],
       'ui:widget': 'radio',
     },
-    setting: {},
+    setting: {
+      enum: {
+        title: '选项字段',
+        type: 'array',
+        enum: [],
+        'ui:widget': 'select',
+        'ui:options': {
+          mode: 'tags',
+        },
+      },
+      enumNames: {
+        title: '选项名称',
+        type: 'array',
+        enum: [],
+        'ui:widget': 'select',
+        'ui:options': {
+          mode: 'tags',
+        },
+      },
+    },
   },
   {
     text: '下拉多选',
@@ -186,7 +306,26 @@ const ELEMENT_LIST = [
       enumNames: ['杭州', '武汉', '湖州', '贵阳'],
       'ui:widget': 'multiSelect',
     },
-    setting: {},
+    setting: {
+      enum: {
+        title: '选项字段',
+        type: 'array',
+        enum: [],
+        'ui:widget': 'select',
+        'ui:options': {
+          mode: 'tags',
+        },
+      },
+      enumNames: {
+        title: '选项名称',
+        type: 'array',
+        enum: [],
+        'ui:widget': 'select',
+        'ui:options': {
+          mode: 'tags',
+        },
+      },
+    },
   },
   {
     text: '点击多选',
@@ -202,7 +341,26 @@ const ELEMENT_LIST = [
       enum: ['A', 'B', 'C', 'D'],
       enumNames: ['杭州', '武汉', '湖州', '贵阳'],
     },
-    setting: {},
+    setting: {
+      enum: {
+        title: '选项字段',
+        type: 'array',
+        enum: [],
+        'ui:widget': 'select',
+        'ui:options': {
+          mode: 'tags',
+        },
+      },
+      enumNames: {
+        title: '选项名称',
+        type: 'array',
+        enum: [],
+        'ui:widget': 'select',
+        'ui:options': {
+          mode: 'tags',
+        },
+      },
+    },
   },
   {
     text: 'date range',
@@ -217,13 +375,11 @@ const ELEMENT_LIST = [
       },
     },
     setting: {
-      minLength: {
-        title: '最短字数',
-        type: 'number',
-      },
-      maxLength: {
-        title: '最长字数',
-        type: 'number',
+      format: {
+        title: '类型',
+        type: 'string',
+        enum: ['dateTime', 'date'],
+        enumNames: ['日期时间', '日期'],
       },
     },
   },
