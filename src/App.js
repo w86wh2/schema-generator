@@ -1,182 +1,87 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useSet } from './hooks';
-import Left from './Left';
-import Right from './Right';
-import {
-  flattenSchema,
-  idToSchema,
-  combineSchema,
-  dataToFlatten,
-  flattenToData,
-} from './utils';
-import { Ctx, PropsCtx, InnerCtx } from './context';
 // import SCHEMA from './json/basic.json';
-import FR from './FR';
-import { Modal, Input } from 'antd';
+import FRWrapper from './FRWrapper';
 import { widgets } from './widgets/antd';
-import { Button } from 'antd';
+import { mapping } from './mapping';
 import 'antd/dist/antd.css';
 import 'tachyons';
 import './App.css';
 
-const { TextArea } = Input;
-
 const SCHEMA = {
   propsSchema: {
     type: 'object',
+    properties: {
+      listName: {
+        title: '对象数组',
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            inputName: {
+              title: '简单输入框',
+              type: 'string',
+            },
+          },
+        },
+      },
+    },
   },
   uiSchema: {},
   formData: {},
 };
 
 function App() {
+  const initGlobal = {
+    displayType: 'row',
+  };
+
   const [state, setState] = useSet({
     formData: SCHEMA.formData,
     schema: SCHEMA,
     selected: undefined,
     hovering: undefined,
     preview: false,
+    ...initGlobal,
   });
 
-  const { schema, formData, selected, preview, hovering } = state;
+  const { schema, formData, preview, selected, hovering, ...rest } = state;
 
-  const onChange = (data) => {
+  const { displayType } = rest;
+  const showDescIcon = displayType === 'row' ? true : false;
+
+  const onChange = data => {
     setState({ formData: data });
   };
 
-  const onSchemaChange = (newSchema) => {
+  const onSchemaChange = newSchema => {
     const result = { ...schema, propsSchema: newSchema };
     setState({ schema: result });
   };
 
-  return (
-    <Wrapper
-      schema={schema}
-      formData={formData}
-      onChange={onChange}
-      onSchemaChange={onSchemaChange}
-      displayType="row"
-      showDescIcon
-      widgets={widgets}
-      selected={selected}
-      hovering={hovering}
-      preview={preview}
-      setState={setState}
-      simple={false}
-    />
-  );
+  const _mapping = { ...mapping, array: 'listEditor' };
+
+  const globalProps = {
+    preview,
+    setState,
+    simple: false,
+    mapping: _mapping,
+    widgets,
+    selected,
+    hovering,
+    ...rest,
+    showDescIcon,
+  };
+
+  const FRProps = {
+    schema,
+    formData,
+    onChange,
+    onSchemaChange,
+    ...globalProps,
+  };
+
+  return <FRWrapper {...FRProps} />;
 }
 
 export default App;
-
-export const Wrapper = ({
-  simple = true,
-  schema,
-  formData,
-  onChange,
-  onSchemaChange,
-  ...globalProps
-}) => {
-  const [local, setLocal] = useSet({ showModal: false });
-  const { setState, preview } = globalProps;
-  const _schema = combineSchema(schema.propsSchema, schema.uiSchema);
-  const flatten = flattenSchema(_schema);
-  const flattenWithData = dataToFlatten(flatten, formData);
-  // console.group('flatten');
-  // console.log(flattenWithData);
-  // console.groupEnd();
-  console.log('render');
-
-  const onFlattenChange = (newFlatten) => {
-    const newSchema = idToSchema(newFlatten);
-    const newData = flattenToData(newFlatten);
-    // console.group('schema');
-    // console.log(flattenWithData, newData);
-    // console.groupEnd();
-    // 判断只有schema变化时才调用，一般需求的用户不需要
-    if (onSchemaChange) {
-      onSchemaChange(newSchema);
-    }
-    onChange(newData);
-  };
-
-  const onItemChange = (key, value) => {
-    flattenWithData[key] = value;
-    onFlattenChange(flattenWithData);
-  };
-
-  const toggleModal = () => setLocal({ showModal: !local.showModal });
-
-  // TODO: flatten是频繁在变的，应该和其他两个函数分开
-  const store = {
-    flatten: flattenWithData,
-    onFlattenChange,
-    onItemChange,
-  };
-
-  let displaySchemaString = '';
-  try {
-    displaySchemaString = JSON.stringify(
-      idToSchema(flattenWithData, '#', true),
-      null,
-      2
-    );
-  } catch (error) {}
-
-  if (simple) {
-    return (
-      <Ctx.Provider value={setState}>
-        <PropsCtx.Provider value={globalProps}>
-          <InnerCtx.Provider value={store}>
-            <FR preview={true} />
-          </InnerCtx.Provider>
-        </PropsCtx.Provider>
-      </Ctx.Provider>
-    );
-  }
-
-  return (
-    <Ctx.Provider value={setState}>
-      <PropsCtx.Provider value={globalProps}>
-        <InnerCtx.Provider value={store}>
-          <div className="flex vh-100 overflow-hidden">
-            <Left />
-            <div className="mid-layout pr2">
-              <div className="mv3 mh1">
-                <Button type="primary" className="mr2" onClick={toggleModal}>
-                  导出schema
-                </Button>
-                <Button
-                  onClick={() => {
-                    setState({ preview: !preview, selected: '#' });
-                  }}
-                >
-                  {preview ? '开始编辑' : '最终展示'}
-                </Button>
-              </div>
-              <FR preview={preview} />
-            </div>
-            <Right />
-            <Modal
-              visible={local.showModal}
-              onOk={toggleModal}
-              onCancel={toggleModal}
-            >
-              <div className="mt3">
-                <TextArea
-                  style={{ fontSize: 12 }}
-                  value={displaySchemaString}
-                  autoSize={{ minRows: 10, maxRows: 30 }}
-                />
-              </div>
-            </Modal>
-          </div>
-        </InnerCtx.Provider>
-      </PropsCtx.Provider>
-    </Ctx.Provider>
-  );
-};
-
-Wrapper.defaultProps = {
-  labelWidth: 120,
-};

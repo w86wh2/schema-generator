@@ -20,8 +20,14 @@ export const mapping = {
   '*?readonly': 'text',
 };
 
-export function getWidgetName(schema) {
+export function getWidgetName(schema, _mapping = mapping) {
   const { type, format, enum: enums, readonly } = schema;
+
+  // 如果已经注明了渲染widget，那最好
+  if (schema['ui:widget']) {
+    return schema['ui:widget'];
+  }
+
   const list = [];
   if (readonly) {
     list.push(`${type}?readonly`);
@@ -37,8 +43,8 @@ export function getWidgetName(schema) {
   }
   list.push(type); // 放在最后兜底，其他都不match时使用type默认的组件
   let found = '';
-  list.some((item) => {
-    found = mapping[item];
+  list.some(item => {
+    found = _mapping[item];
     return !!found;
   });
   return found;

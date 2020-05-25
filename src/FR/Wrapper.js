@@ -1,23 +1,29 @@
 import React from 'react';
 import './Wrapper.css';
 import { useGlobal, useGlobalProps, useStore } from '../hooks';
-import { copyItem } from '../utils';
+import { copyItem, getKeyFromUniqueId } from '../utils';
 import { DeleteOutlined, CopyOutlined } from '@ant-design/icons';
 
-export default function Wrapper({ $id, item, inside = false, children }) {
+export default function Wrapper({
+  $id,
+  item,
+  inside = false,
+  children,
+  style,
+}) {
   const { flatten, onItemChange, onFlattenChange } = useStore();
   const setGlobal = useGlobal();
   const { selected, hovering } = useGlobalProps();
   const { schema } = item;
   const { type } = schema;
 
-  const handleClick = (e) => {
+  const handleClick = e => {
     e.stopPropagation();
     const _id = inside ? '0' + $id : $id;
     setGlobal({ selected: _id });
   };
 
-  const deleteItem = (e) => {
+  const deleteItem = e => {
     e.stopPropagation();
     const newFlatten = { ...flatten };
     let newSelect = '#';
@@ -42,7 +48,7 @@ export default function Wrapper({ $id, item, inside = false, children }) {
     setGlobal({ selected: newSelect });
   };
 
-  const handleItemCopy = (e) => {
+  const handleItemCopy = e => {
     e.stopPropagation();
     const [newFlatten, newId] = copyItem(flatten, $id);
     onFlattenChange(newFlatten);
@@ -78,8 +84,8 @@ export default function Wrapper({ $id, item, inside = false, children }) {
     overwriteStyle = {
       ...overwriteStyle,
       borderColor: '#777',
-      marginLeft: 12,
-      padding: '8px 8px 0 0',
+      // marginLeft: 12,
+      padding: '8px 8px 0 8px',
       backgroundColor: '#fafafa',
     };
   } else if ($id === '#') {
@@ -101,21 +107,29 @@ export default function Wrapper({ $id, item, inside = false, children }) {
       borderColor: '#fff',
     };
   }
+  if (style && typeof style === 'object') {
+    overwriteStyle = {
+      ...overwriteStyle,
+      ...style,
+    };
+  }
 
   if ($id === '#' && inside) return children;
+
+  // 展示的id
+  let shownId = schema && schema.$id && getKeyFromUniqueId(schema.$id);
+  if (shownId === '#') shownId = ''; // 根元素不展示了
 
   return (
     <div
       style={overwriteStyle}
-      className={`field-wrapper relative`}
+      className={`field-wrapper relative w-100`}
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {!inside && (
-        <div className="absolute top-0 left-0 blue f7">
-          {schema && schema.$id && schema.$id.substring(1)}
-        </div>
+        <div className='absolute top-0 right-1 blue f7'>{shownId}</div>
       )}
       {children}
       {isSelected && !inside && $id !== '#' && (
@@ -134,7 +148,7 @@ export default function Wrapper({ $id, item, inside = false, children }) {
             alignItems: 'center',
           }}
         >
-          <div onClick={deleteItem}>
+          <div className='pointer' onClick={deleteItem}>
             <DeleteOutlined
               style={{
                 height: 16,
@@ -144,7 +158,7 @@ export default function Wrapper({ $id, item, inside = false, children }) {
               }}
             />
           </div>
-          <div onClick={handleItemCopy}>
+          <div className='pointer' onClick={handleItemCopy}>
             <CopyOutlined
               style={{ height: 16, width: 16, marginRight: 12, color: '#fff' }}
             />

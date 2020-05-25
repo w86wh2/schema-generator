@@ -4,6 +4,7 @@ import color from './color';
 import date from './date';
 import dateRange from './dateRange';
 import list from './list';
+import listEditor from './listEditor';
 import map from './map';
 import multiSelect from './multiSelect';
 import number from './number';
@@ -23,6 +24,7 @@ export const widgets = {
   dateRange,
   input,
   list,
+  listEditor,
   map,
   multiSelect, // 下拉多选
   number,

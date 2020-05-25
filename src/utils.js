@@ -1,4 +1,5 @@
 import nanoid from 'nanoid';
+import deepClone from 'clone';
 
 // 克隆对象
 export function clone(data) {
@@ -75,7 +76,7 @@ export function getFormat(format) {
 export function hasRepeat(list) {
   return list.find(
     (x, i, self) =>
-      i !== self.findIndex((y) => JSON.stringify(x) === JSON.stringify(y))
+      i !== self.findIndex(y => JSON.stringify(x) === JSON.stringify(y))
   );
 }
 
@@ -84,7 +85,7 @@ export function hasRepeat(list) {
 // 合并propsSchema和UISchema。由于两者的逻辑相关性，合并为一个大schema能简化内部处理
 export function combineSchema(propsSchema = {}, uiSchema = {}) {
   const propList = getChildren(propsSchema);
-  const newList = propList.map((p) => {
+  const newList = propList.map(p => {
     const { name } = p;
     const { type, enum: options, properties, items } = p.schema;
     const isObj = type === 'object' && properties;
@@ -107,12 +108,12 @@ export function combineSchema(propsSchema = {}, uiSchema = {}) {
   });
 
   const newObj = {};
-  newList.forEach((s) => {
+  newList.forEach(s => {
     newObj[s.name] = s.schema;
   });
 
   const topLevelUi = {};
-  Object.keys(uiSchema).forEach((key) => {
+  Object.keys(uiSchema).forEach(key => {
     if (typeof key === 'string' && key.substring(0, 3) === 'ui:') {
       topLevelUi[key] = uiSchema[key];
     }
@@ -147,7 +148,7 @@ function getChildren(schema) {
   if (type === 'array') {
     schemaSubs = items;
   }
-  return Object.keys(schemaSubs).map((name) => ({
+  return Object.keys(schemaSubs).map(name => ({
     schema: schemaSubs[name],
     name,
   }));
@@ -157,7 +158,7 @@ function getChildren(schema) {
 export function combine() {}
 
 // 代替eval的函数
-export const parseString = (string) =>
+export const parseString = string =>
   Function('"use strict";return (' + string + ')')();
 
 // 解析函数字符串值
@@ -188,7 +189,7 @@ export function isFunction(func) {
 
 // 判断schema中是否有属性值是函数表达式
 export function isFunctionSchema(schema) {
-  return Object.keys(schema).some((key) => {
+  return Object.keys(schema).some(key => {
     if (typeof schema[key] === 'function') {
       return true;
     } else if (typeof schema[key] === 'string') {
@@ -208,7 +209,7 @@ export function isFunctionSchema(schema) {
 //   children: []
 // }
 export function flattenSchema(schema, name = '#', parent, result = {}) {
-  const _schema = { ...schema };
+  const _schema = deepClone(schema);
   if (!_schema.$id) {
     _schema.$id = name; // 给生成的schema添加一个唯一标识，方便从schema中直接读取
   }
@@ -251,13 +252,23 @@ export const changeKeyFromUniqueId = (uniqueId = '#', key = 'something') => {
   return arr.join('/');
 };
 
+const copyFlattenItem = _item => {
+  return {
+    parent: _item.parent,
+    schema: { ..._item.schema },
+    data: _item.data,
+    children: _item.children,
+  };
+};
+
 // final = true 用于最终的导出的输出
 // 几种特例：
 // 1. 删除时值删除了item，没有删除和parent的关联，也没有删除children，所以要在解析这步来兜住 (所有的解析都是)
 // 2. 修改$id的情况, 修改的是schema内的$id, 解析的时候要把schema.$id 作为真正的id (final = true的解析)
 export function idToSchema(flatten, id = '#', final = false) {
   let schema = {};
-  const item = flatten[id];
+  const _item = flatten[id];
+  const item = deepClone(_item);
   if (item) {
     schema = { ...item.schema };
     // 最终输出去掉 $id
@@ -265,7 +276,7 @@ export function idToSchema(flatten, id = '#', final = false) {
       schema.$id && delete schema.$id;
     }
     if (item.children.length > 0) {
-      item.children.forEach((child) => {
+      item.children.forEach(child => {
         let childId = child;
         // TODO: 这个情况会出现吗？return会有问题吗？
         if (!flatten[child]) {
@@ -352,15 +363,9 @@ export const copyItem = (flatten, $id) => {
     const item = flatten[$id];
     const newId = $id + nanoid(6);
     const siblings = newFlatten[item.parent].children;
-    const idx = siblings.findIndex((x) => x === $id);
+    const idx = siblings.findIndex(x => x === $id);
     siblings.splice(idx + 1, 0, newId);
-    // 直接copy会让两个元素指向同一个object
-    newFlatten[newId] = {
-      parent: newFlatten[$id].parent,
-      schema: { ...newFlatten[$id].schema },
-      data: newFlatten[$id].data,
-      children: newFlatten[$id].children,
-    };
+    newFlatten[newId] = deepClone(newFlatten[$id]);
     newFlatten[newId].schema.$id = newId;
     return [newFlatten, newId];
   } catch (error) {
@@ -381,7 +386,7 @@ export const addSchema = ({ id, key, schema, subSchema }) => {
     if (parent && parent in flatten) {
       const children = flatten[parent].children;
       try {
-        const idx = children.findIndex((x) => x === id);
+        const idx = children.findIndex(x => x === id);
         children.splice(idx + 1, 0, newId);
       } catch (error) {
         console.error(error.message);
@@ -414,14 +419,16 @@ export const addSchema = ({ id, key, schema, subSchema }) => {
 // };
 
 // 解析函数字符串值
+// TODO: 没有考虑list的情况
 export const getDataById = (data, idString) => {
   if (idString === '#') return data;
   try {
     const idConnectedByDots = idString
       .split('/')
-      .filter((id) => id !== '#')
-      .join('.');
-    const string = `data.${idConnectedByDots}`;
+      .filter(id => id !== '#')
+      .map(id => `["${id}"]`)
+      .join('');
+    const string = `data${idConnectedByDots}`;
     const a = `"use strict";
     const data = ${JSON.stringify(data)};
     return ${string}`;
@@ -437,6 +444,7 @@ export const getDataById = (data, idString) => {
   }
 };
 
+// TODO: 没有考虑list的情况
 export const dataToFlatten = (flatten, data) => {
   if (!flatten || !data) return;
   Object.entries(flatten).forEach(([id, item]) => {
@@ -446,22 +454,29 @@ export const dataToFlatten = (flatten, data) => {
   return flatten;
 };
 
-export const onChangeById = (onChange) => (id, value) => {};
+export const onChangeById = onChange => (id, value) => {};
 
+// TODO: 没有考虑list的情况
 export const flattenToData = (flatten, id = '#') => {
   try {
     let result = flatten[id].data;
     const ids = Object.keys(flatten);
-    const childrenIds = ids.filter((item) => {
+    const childrenIds = ids.filter(item => {
       const lengthOfId = id.split('/').length;
       const lengthOfChild = item.split('/').length;
       return item.indexOf(id) > -1 && lengthOfChild > lengthOfId;
     });
     if (childrenIds && childrenIds.length > 0) {
-      if (result === undefined) result = {}; // TODO: 是不是就兜undefined？
-      childrenIds.forEach((c) => {
+      if (result === undefined) {
+        // TODO: 这个是简化的逻辑，在编辑器模型下，list和object都是object结构
+        if (['object', 'array'].indexOf(flatten[id].schema.type) > -1) {
+          result = {};
+        }
+      }
+      childrenIds.forEach(c => {
         const lengthOfId = id.split('/').length;
         const lengthOfChild = c.split('/').length;
+        // 只比他长1，是直属的child
         if (lengthOfChild === lengthOfId + 1) {
           const cData = flattenToData(flatten, c);
           const cKey = getKeyFromUniqueId(c);
@@ -470,6 +485,24 @@ export const flattenToData = (flatten, id = '#') => {
       });
     }
     return result;
+  } catch (error) {
+    return undefined;
+  }
+};
+
+// 例如当前item的id = '#/obj/input'  propName: 'ui:labelWidth'
+export const getParentProps = (propName, id, flatten) => {
+  try {
+    const item = flatten[id];
+    if (item.schema[propName] !== undefined) return item.schema[propName];
+    if (item && item.parent) {
+      const parentSchema = flatten[item.parent].schema;
+      if (parentSchema[propName] !== undefined) {
+        return parentSchema[propName];
+      } else {
+        return getParentProps(propName, item.parent, flatten);
+      }
+    }
   } catch (error) {
     return undefined;
   }

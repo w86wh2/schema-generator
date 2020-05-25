@@ -6,7 +6,7 @@ import Wrapper from './Wrapper';
 
 const FR = ({ id = '#', preview = false }) => {
   const { onItemChange, onFlattenChange, flatten } = useStore();
-  const { displayType } = useGlobalProps();
+  const { displayType, column } = useGlobalProps();
   const item = flatten[id];
   if (!item) return null;
 
@@ -14,9 +14,23 @@ const FR = ({ id = '#', preview = false }) => {
   const isObj = schema.type === 'object';
   const isList = schema.type === 'array' && schema.enum === undefined;
   const isComplex = isObj || isList;
+  const width = schema['ui:width'];
   let containerClass = `fr-field w-100 ${isComplex ? 'fr-field-complex' : ''}`;
   let labelClass = 'fr-label mb2';
   let contentClass = 'fr-content';
+
+  let columnStyle = {};
+  if (!isComplex && width) {
+    columnStyle = {
+      width,
+      paddingRight: '12px',
+    };
+  } else if (!isComplex && column > 1) {
+    columnStyle = {
+      width: `calc(100% /${column})`,
+      paddingRight: '12px',
+    };
+  }
 
   switch (schema.type) {
     case 'object':
@@ -74,29 +88,32 @@ const FR = ({ id = '#', preview = false }) => {
 
   const childrenElement =
     item.children && item.children.length > 0 ? (
-      <ul className={`${id === '#' ? 'pl0' : 'pl3'}`}>
+      <ul className={`flex flex-wrap pl0`}>
         <RenderChildren {...childrenProps} />
       </ul>
     ) : null;
 
+  // TODO: list 也要算进去
   if (preview) {
     return (
-      <div className={containerClass}>
-        <RenderField {...fieldProps} />
-        {schema.type === 'object' && childrenElement}
+      <div style={columnStyle} className={containerClass}>
+        <RenderField {...fieldProps}>
+          {(isObj || isList) && childrenElement}
+        </RenderField>
       </div>
     );
   }
 
   return (
-    <Wrapper $id={id} item={item}>
+    <Wrapper style={columnStyle} $id={id} item={item}>
       <div className={containerClass}>
-        <RenderField {...fieldProps} />
-        {schema.type === 'object' && (
-          <Wrapper $id={id} item={item} inside>
-            {childrenElement || <div className="h2" />}
-          </Wrapper>
-        )}
+        <RenderField {...fieldProps}>
+          {(isObj || isList) && (
+            <Wrapper $id={id} item={item} inside>
+              {childrenElement || <div className='h2' />}
+            </Wrapper>
+          )}
+        </RenderField>
       </div>
     </Wrapper>
   );

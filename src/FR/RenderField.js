@@ -1,10 +1,17 @@
 import React from 'react';
 import { useGlobalProps, useStore } from '../hooks';
-import { isLooselyNumber, isCssLength } from '../utils';
+import { isLooselyNumber, isCssLength, getParentProps } from '../utils';
 import { getWidgetName } from '../mapping';
 
-const RenderField = ({ $id, item, labelClass, contentClass, isComplex }) => {
-  const { onItemChange } = useStore();
+const RenderField = ({
+  $id,
+  item,
+  labelClass,
+  contentClass,
+  isComplex,
+  children,
+}) => {
+  const { onItemChange, flatten } = useStore();
   const { schema, data } = item;
   const {
     displayType,
@@ -12,15 +19,20 @@ const RenderField = ({ $id, item, labelClass, contentClass, isComplex }) => {
     showValidate,
     labelWidth,
     widgets,
+    mapping,
   } = useGlobalProps();
   const { type, title, description, required } = schema;
   const isRequired = required && required.length > 0;
 
-  const _labelWidth = isLooselyNumber(labelWidth)
-    ? Number(labelWidth)
-    : isCssLength(labelWidth)
-    ? labelWidth
+  // 真正有效的label宽度需要从现在所在item开始一直往上回溯（设计成了继承关系），找到的第一个有值的 ui:labelWidth
+  const effectiveLabelWidth =
+    getParentProps('ui:labelWidth', $id, flatten) || labelWidth;
+  const _labelWidth = isLooselyNumber(effectiveLabelWidth)
+    ? Number(effectiveLabelWidth)
+    : isCssLength(effectiveLabelWidth)
+    ? effectiveLabelWidth
     : 110; // 默认是 110px 的长度
+
   let labelStyle = { width: _labelWidth };
   if (type === 'boolean') {
     labelStyle = { flexGrow: 1 };
@@ -28,13 +40,13 @@ const RenderField = ({ $id, item, labelClass, contentClass, isComplex }) => {
     labelStyle = { flexGrow: 1 };
   }
 
-  const onChange = (value) => {
+  const onChange = value => {
     const newItem = { ...item };
     newItem.data = value;
     onItemChange($id, newItem);
   };
 
-  let widgetName = getWidgetName(schema);
+  let widgetName = getWidgetName(schema, mapping);
   const customWidget = schema['ui:widget'];
   if (customWidget && widgets[customWidget]) {
     widgetName = customWidget;
@@ -43,6 +55,10 @@ const RenderField = ({ $id, item, labelClass, contentClass, isComplex }) => {
   // if (widgetName === 'multiSelect') {
   //   console.log(schema['ui:widget'], customWidget, Widget);
   // }
+  let contentStyle = {};
+  if (widgetName === 'checkbox') {
+    contentStyle.marginLeft = effectiveLabelWidth;
+  }
 
   // TODO: useMemo
   const usefulWidgetProps = {
@@ -64,7 +80,7 @@ const RenderField = ({ $id, item, labelClass, contentClass, isComplex }) => {
             }`} // boolean不带冒号
             title={title}
           >
-            {isRequired && <span className="fr-label-required"> *</span>}
+            {isRequired && <span className='fr-label-required'> *</span>}
             <span
               className={`${isComplex ? 'b' : ''} ${
                 displayType === 'column' ? 'flex-none' : ''
@@ -74,32 +90,31 @@ const RenderField = ({ $id, item, labelClass, contentClass, isComplex }) => {
             </span>
             {description &&
               (showDescIcon ? (
-                <span className="fr-tooltip-toggle" aria-label={description}>
-                  <i className="fr-tooltip-icon" />
-                  <div className="fr-tooltip-container">
-                    <i className="fr-tooltip-triangle" />
+                <span className='fr-tooltip-toggle' aria-label={description}>
+                  <i className='fr-tooltip-icon' />
+                  <div className='fr-tooltip-container'>
+                    <i className='fr-tooltip-triangle' />
                     {description}
                   </div>
                 </span>
               ) : (
-                <span className="fr-desc ml2">(&nbsp;{description}&nbsp;)</span>
+                <span className='fr-desc ml2'>(&nbsp;{description}&nbsp;)</span>
               ))}
             {displayType !== 'row' && showValidate && (
-              <span className="fr-validate">validation</span>
+              <span className='fr-validate'>validation</span>
             )}
           </label>
         </div>
       ) : null}
-      {['list'].indexOf(widgetName) === -1 && (
-        <div className={contentClass}>
-          <Widget
-            value={data}
-            onChange={onChange}
-            schema={schema}
-            {...usefulWidgetProps}
-          />
-        </div>
-      )}
+      <div className={contentClass} style={contentStyle}>
+        <Widget
+          value={data}
+          onChange={onChange}
+          schema={schema}
+          {...usefulWidgetProps}
+          children={children}
+        />
+      </div>
     </>
   );
 };
