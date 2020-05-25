@@ -61,14 +61,16 @@ export default function ItemSettings() {
   };
 
   return (
-    <FRWrapper
-      schema={settingSchema}
-      formData={settingData}
-      onChange={onDataChange}
-      displayType='row'
-      showDescIcon
-      widgets={_widgets}
-      preview={true}
-    />
+    <div style={{ paddingRight: 24, height: 700, overflow: 'auto' }}>
+      <FRWrapper
+        schema={settingSchema}
+        formData={settingData}
+        onChange={onDataChange}
+        displayType='row'
+        showDescIcon
+        widgets={_widgets}
+        preview={true}
+      />
+    </div>
   );
 }

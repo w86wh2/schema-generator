@@ -55,6 +55,10 @@ const RenderField = ({
   // if (widgetName === 'multiSelect') {
   //   console.log(schema['ui:widget'], customWidget, Widget);
   // }
+  let contentStyle = {};
+  if (widgetName === 'checkbox') {
+    contentStyle.marginLeft = effectiveLabelWidth;
+  }
 
   // TODO: useMemo
   const usefulWidgetProps = {
@@ -102,7 +106,7 @@ const RenderField = ({
           </label>
         </div>
       ) : null}
-      <div className={contentClass}>
+      <div className={contentClass} style={contentStyle}>
         <Widget
           value={data}
           onChange={onChange}
