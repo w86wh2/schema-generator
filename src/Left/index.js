@@ -1,28 +1,49 @@
 import React from 'react';
-import ELEMENT_LIST from './elementList';
+import allSettings from './elementList';
 import './index.css';
 import { useGlobal, useGlobalProps, useStore } from '../hooks';
 import nanoid from 'nanoid';
 
-const ELEMENT_LIST2 = [];
+const [elements, advancedElements, layouts, saves] = allSettings;
+console.log(allSettings, 'allse');
 
-const Left = (props) => (
-  <div className="left-layout">
-    <p className="f6 b">基础组件</p>
-    <ul className="pl0">
-      {ELEMENT_LIST.map((ele, idx) => {
+const Left = props => (
+  <div className='left-layout'>
+    <p className='f6 b'>基础组件</p>
+    <ul className='pl0'>
+      {elements.map((ele, idx) => {
         return (
-          <li key={idx.toString()} className="left-item">
+          <li key={idx.toString()} className='left-item'>
             <Element {...ele} {...props} key={idx.toString()} />
           </li>
         );
       })}
     </ul>
-    <p className="f6 b">定制组件</p>
-    <ul className="pl0">
-      {ELEMENT_LIST2.map((ele, idx) => {
+    <p className='f6 b'>复杂组件</p>
+    <ul className='pl0'>
+      {advancedElements.map((ele, idx) => {
         return (
-          <li key={idx.toString()} className="left-item">
+          <li key={idx.toString()} className='left-item'>
+            <Element {...ele} {...props} key={idx.toString()} />
+          </li>
+        );
+      })}
+    </ul>
+    <p className='f6 b'>布局组件</p>
+    <ul className='pl0'>
+      {layouts.map((ele, idx) => {
+        return (
+          <li key={idx.toString()} className='left-item'>
+            <Element {...ele} {...props} key={idx.toString()} />
+          </li>
+        );
+      })}
+    </ul>
+    <p className='f6 b'>存档</p>
+    <ul className='pl0'>
+      {saves.map((ele, idx) => {
+        return (
+          <li key={idx.toString()} className='left-item'>
             <Element {...ele} {...props} key={idx.toString()} />
           </li>
         );
@@ -77,7 +98,7 @@ const Element = ({ text, name, schema }) => {
       const newFlatten = { ...flatten };
       const item = newFlatten[selected];
       const siblings = newFlatten[item.parent].children;
-      const idx = siblings.findIndex((x) => x === selected);
+      const idx = siblings.findIndex(x => x === selected);
       siblings.splice(idx + 1, 0, newId);
       const newItem = {
         parent: item.parent,
@@ -94,7 +115,7 @@ const Element = ({ text, name, schema }) => {
   };
 
   return (
-    <div className="left-element" onClick={handleElementClick}>
+    <div className='left-element' onClick={handleElementClick}>
       {text}
     </div>
   );

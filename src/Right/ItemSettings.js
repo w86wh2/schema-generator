@@ -4,9 +4,11 @@ import { useGlobalProps, useStore } from '../hooks';
 import { widgets } from '../widgets/antd';
 import IdInput from '../widgets/antd/idInput';
 import PercentSlider from '../widgets/antd/percentSlider';
-import ELEMENT_LIST from '../Left/elementList';
+import ALL from '../Left/elementList';
 import { getWidgetName } from '../mapping';
 import { getKeyFromUniqueId } from '../utils';
+
+const elements = [...ALL[0], ...ALL[1], ...ALL[2]]; // 前三项是所有的组件
 
 export default function ItemSettings() {
   const { flatten, onItemChange } = useStore();
@@ -38,7 +40,7 @@ export default function ItemSettings() {
     }
     if (widgetName) {
       // const name = getKeyFromUniqueId(selected);
-      const element = ELEMENT_LIST.find(e => e.widget === widgetName);
+      const element = elements.find(e => e.widget === widgetName);
       const schemaNow = element.setting;
       settingSchema = {
         propsSchema: {

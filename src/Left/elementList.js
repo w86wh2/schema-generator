@@ -39,13 +39,13 @@ const commonSettings = {
   },
 };
 
-const ELEMENT_LIST = [
+const elements = [
   {
-    text: 'input',
+    text: '输入框',
     name: 'input',
     widget: 'input',
     schema: {
-      title: '简单输入框',
+      title: '输入框',
       type: 'string',
     },
     setting: {
@@ -95,11 +95,11 @@ const ELEMENT_LIST = [
     },
   },
   {
-    text: 'textarea',
+    text: '大输入框',
     name: 'textarea',
     widget: 'textarea',
     schema: {
-      title: '文本编辑框',
+      title: '编辑框',
       type: 'string',
       format: 'textarea',
     },
@@ -136,17 +136,7 @@ const ELEMENT_LIST = [
       },
     },
   },
-  {
-    text: '颜色选择',
-    name: 'color',
-    widget: 'color',
-    schema: {
-      title: '颜色选择',
-      type: 'string',
-      format: 'color',
-    },
-    setting: {},
-  },
+
   {
     text: '日期选择',
     name: 'date',
@@ -166,34 +156,12 @@ const ELEMENT_LIST = [
     },
   },
   {
-    text: '图片展示',
-    name: 'image',
-    // widget: 'input',
-    schema: {
-      title: '图片展示',
-      type: 'string',
-      format: 'image',
-    },
-    setting: {},
-  },
-  {
     text: '数字输入框',
     name: 'number',
     widget: 'number',
     schema: {
       title: '数字输入框',
       type: 'number',
-    },
-    setting: {},
-  },
-  {
-    text: '数字（slider）',
-    name: 'slider',
-    widget: 'slider',
-    schema: {
-      title: '带滑动条',
-      type: 'number',
-      'ui:widget': 'slider',
     },
     setting: {},
   },
@@ -362,8 +330,11 @@ const ELEMENT_LIST = [
       },
     },
   },
+];
+
+const advancedElements = [
   {
-    text: 'date range',
+    text: '日期范围',
     name: 'dateRange',
     widget: 'dateRange',
     schema: {
@@ -383,6 +354,42 @@ const ELEMENT_LIST = [
       },
     },
   },
+  {
+    text: '数字（slider）',
+    name: 'slider',
+    widget: 'slider',
+    schema: {
+      title: '带滑动条',
+      type: 'number',
+      'ui:widget': 'slider',
+    },
+    setting: {},
+  },
+  {
+    text: '图片展示',
+    name: 'image',
+    // widget: 'input',
+    schema: {
+      title: '图片展示',
+      type: 'string',
+      format: 'image',
+    },
+    setting: {},
+  },
+  {
+    text: '颜色选择',
+    name: 'color',
+    widget: 'color',
+    schema: {
+      title: '颜色选择',
+      type: 'string',
+      format: 'color',
+    },
+    setting: {},
+  },
+];
+
+const layouts = [
   {
     text: 'object',
     name: 'object',
@@ -427,8 +434,11 @@ const ELEMENT_LIST = [
       },
     },
   },
+];
+
+const saves = [
   {
-    text: '复杂结构',
+    text: '复杂结构样例',
     name: 'something',
     schema: {
       title: '对象',
@@ -473,9 +483,13 @@ const ELEMENT_LIST = [
   },
 ];
 
-const result = ELEMENT_LIST.map(item => ({
-  ...item,
-  setting: { ...commonSettings, ...item.setting },
-}));
+let result = [elements, advancedElements, layouts, saves];
+
+result = result.map(list =>
+  list.map(item => ({
+    ...item,
+    setting: { ...commonSettings, ...item.setting },
+  }))
+);
 
 export default result;
