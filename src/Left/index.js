@@ -5,7 +5,6 @@ import { useGlobal, useGlobalProps, useStore } from '../hooks';
 import nanoid from 'nanoid';
 
 const [elements, advancedElements, layouts, saves] = allSettings;
-console.log(allSettings, 'allse');
 
 const Left = props => (
   <div className='left-layout'>
