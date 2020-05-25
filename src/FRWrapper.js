@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSet } from './hooks';
+import copyTOClipboard from 'copy-text-to-clipboard';
 import Left from './Left';
 import Right from './Right';
 import {
@@ -12,7 +13,7 @@ import {
 import { Ctx, PropsCtx, InnerCtx } from './context';
 // import SCHEMA from './json/basic.json';
 import FR from './FR';
-import { Modal, Input } from 'antd';
+import { Modal, Input, message } from 'antd';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import 'tachyons';
@@ -28,7 +29,12 @@ const Wrapper = ({
   onSchemaChange,
   ...globalProps
 }) => {
-  const [local, setLocal] = useSet({ showModal: false });
+  const [local, setLocal] = useSet({
+    showModal: false,
+    showModal2: false,
+    showModal3: false,
+    schemaForImport: '',
+  });
   const {
     preview,
     setState,
@@ -58,6 +64,8 @@ const Wrapper = ({
   };
 
   const toggleModal = () => setLocal({ showModal: !local.showModal });
+  const toggleModal2 = () => setLocal({ showModal2: !local.showModal2 });
+  const toggleModal3 = () => setLocal({ showModal3: !local.showModal3 });
 
   const clearSchema = () => {
     setState({
@@ -72,12 +80,26 @@ const Wrapper = ({
     });
   };
 
-  // TODO: flatten是频繁在变的，应该和其他两个函数分开
-  const store = {
-    flatten: flattenWithData,
-    onFlattenChange,
-    onItemChange,
-    ...globalProps,
+  const onTextareaChange = e => {
+    setLocal({ schemaForImport: e.target.value });
+  };
+
+  const importSchema = () => {
+    try {
+      const info = JSON.parse(local.schemaForImport);
+      const { propsSchema, ...rest } = info;
+      setState({
+        schema: {
+          propsSchema,
+        },
+        formData: {},
+        selected: undefined,
+        ...rest,
+      });
+    } catch (error) {
+      message.info('格式不对哦，请重新尝试'); // 可以加个格式哪里不对的提示
+    }
+    toggleModal2();
   };
 
   let displaySchemaString = '';
@@ -86,6 +108,19 @@ const Wrapper = ({
     const propsSchema = idToSchema(flattenWithData, '#', true);
     displaySchemaString = JSON.stringify({ propsSchema, ...rest }, null, 2);
   } catch (error) {}
+
+  const copySchema = () => {
+    copyTOClipboard(displaySchemaString);
+    message.info('复制成功');
+  };
+
+  // TODO: flatten是频繁在变的，应该和其他两个函数分开
+  const store = {
+    flatten: flattenWithData,
+    onFlattenChange,
+    onItemChange,
+    ...globalProps,
+  };
 
   if (simple) {
     return (
@@ -107,9 +142,6 @@ const Wrapper = ({
             <Left />
             <div className='mid-layout pr2'>
               <div className='mv3 mh1'>
-                <Button type='primary' className='mr2' onClick={toggleModal}>
-                  导出schema
-                </Button>
                 <Button
                   className='mr2'
                   onClick={() => {
@@ -121,14 +153,25 @@ const Wrapper = ({
                 <Button className='mr2' onClick={clearSchema}>
                   清空
                 </Button>
+                <Button className='mr2' onClick={toggleModal3}>
+                  保存
+                </Button>
+                <Button className='mr2' onClick={toggleModal2}>
+                  导入
+                </Button>
+                <Button type='primary' className='mr2' onClick={toggleModal}>
+                  导出schema
+                </Button>
               </div>
               <FR preview={preview} />
             </div>
             <Right globalProps={rest} />
             <Modal
               visible={local.showModal}
-              onOk={toggleModal}
+              onOk={copySchema}
               onCancel={toggleModal}
+              okText='复制'
+              cancelText='取消'
             >
               <div className='mt3'>
                 <TextArea
@@ -137,6 +180,32 @@ const Wrapper = ({
                   autoSize={{ minRows: 10, maxRows: 30 }}
                 />
               </div>
+            </Modal>
+            <Modal
+              visible={local.showModal2}
+              okText='导入'
+              cancelText='取消'
+              onOk={importSchema}
+              onCancel={toggleModal2}
+            >
+              <div className='mt3'>
+                <TextArea
+                  style={{ fontSize: 12 }}
+                  value={local.schemaForImport}
+                  placeholder='贴入需要导入的schema，模样可点击导出schema参考'
+                  onChange={onTextareaChange}
+                  autoSize={{ minRows: 10, maxRows: 30 }}
+                />
+              </div>
+            </Modal>
+            <Modal
+              visible={local.showModal3}
+              okText='确定'
+              cancelText='取消'
+              onOk={toggleModal3}
+              onCancel={toggleModal3}
+            >
+              <div className='mt3'>开发中，请期待</div>
             </Modal>
           </div>
         </InnerCtx.Provider>
