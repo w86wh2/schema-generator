@@ -125,3 +125,25 @@ export const useWindowState = initState => {
   const [state, setState] = useState(initState);
   return [state, setState];
 };
+
+export const useStorageState = (initState = {}, searchKey = 'SAVES') => {
+  // 从 localStorage 读取 search 值
+  const readSearchFromStorage = () => {
+    const searchStr = localStorage.getItem(searchKey);
+    if (searchStr) {
+      try {
+        return JSON.parse(searchStr);
+      } catch (error) {
+        return initState;
+      }
+    }
+    return initState;
+  };
+  const [data, setData] = useState(readSearchFromStorage());
+  // 存储搜索值到 localStorage
+  const setSearchWithStorage = search => {
+    setData(search);
+    localStorage.setItem(searchKey, JSON.stringify(search));
+  };
+  return [data, setSearchWithStorage];
+};

@@ -507,3 +507,18 @@ export const getParentProps = (propName, id, flatten) => {
     return undefined;
   }
 };
+
+export const getSaveNumber = () => {
+  const searchStr = localStorage.getItem('SAVES');
+  if (searchStr) {
+    try {
+      const saves = JSON.parse(searchStr);
+      const length = saves.length;
+      if (length) return length + 1;
+    } catch (error) {
+      return 1;
+    }
+  } else {
+    return 1;
+  }
+};
