@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSet } from './hooks';
+import React, { useRef } from 'react';
+import { useSet, useStorageState } from './hooks';
 import copyTOClipboard from 'copy-text-to-clipboard';
 import Left from './Left';
 import Right from './Right';
@@ -9,6 +9,7 @@ import {
   combineSchema,
   dataToFlatten,
   flattenToData,
+  getSaveNumber,
 } from './utils';
 import { Ctx, PropsCtx, InnerCtx } from './context';
 // import SCHEMA from './json/basic.json';
@@ -35,6 +36,11 @@ const Wrapper = ({
     showModal3: false,
     schemaForImport: '',
   });
+
+  const [saveList, setSaveList] = useStorageState([]);
+
+  const saveNameRef = useRef();
+
   const {
     preview,
     setState,
@@ -114,6 +120,18 @@ const Wrapper = ({
     message.info('复制成功');
   };
 
+  const saveSchema = () => {
+    try {
+      const text = saveNameRef.current.state.value;
+      const name = 'save' + getSaveNumber();
+      const schema = idToSchema(flattenWithData, '#', true);
+      setSaveList([...saveList, { text, name, schema }]);
+      toggleModal3();
+    } catch (error) {
+      message.error('保存失败');
+    }
+  };
+
   // TODO: flatten是频繁在变的，应该和其他两个函数分开
   const store = {
     flatten: flattenWithData,
@@ -139,7 +157,7 @@ const Wrapper = ({
       <PropsCtx.Provider value={globalProps}>
         <InnerCtx.Provider value={store}>
           <div className='flex vh-100 overflow-hidden'>
-            <Left />
+            <Left saveList={saveList} setSaveList={setSaveList} />
             <div className='mid-layout pr2'>
               <div className='mv3 mh1'>
                 <Button
@@ -202,10 +220,18 @@ const Wrapper = ({
               visible={local.showModal3}
               okText='确定'
               cancelText='取消'
-              onOk={toggleModal3}
+              onOk={saveSchema}
               onCancel={toggleModal3}
             >
-              <div className='mt3'>开发中，请期待</div>
+              <div className='mt4 flex items-center'>
+                <div style={{ width: 100 }}>保存名称：</div>
+                <div style={{ width: 280 }}>
+                  <Input
+                    defaultValue={'存档' + getSaveNumber()}
+                    ref={saveNameRef}
+                  />
+                </div>
+              </div>
             </Modal>
           </div>
         </InnerCtx.Provider>
