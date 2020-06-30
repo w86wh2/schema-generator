@@ -129,7 +129,7 @@ export default function Wrapper({
       onMouseLeave={handleMouseLeave}
     >
       {!inside && (
-        <div className='absolute top-0 right-1 blue f7'>{shownId}</div>
+        <div className="absolute top-0 right-1 blue f7">{shownId}</div>
       )}
       {children}
       {isSelected && !inside && $id !== '#' && (
@@ -148,7 +148,7 @@ export default function Wrapper({
             alignItems: 'center',
           }}
         >
-          <div className='pointer' onClick={deleteItem}>
+          <div className="pointer" onClick={deleteItem}>
             <DeleteOutlined
               style={{
                 height: 16,
@@ -158,7 +158,7 @@ export default function Wrapper({
               }}
             />
           </div>
-          <div className='pointer' onClick={handleItemCopy}>
+          <div className="pointer" onClick={handleItemCopy}>
             <CopyOutlined
               style={{ height: 16, width: 16, marginRight: 12, color: '#fff' }}
             />
