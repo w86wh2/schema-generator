@@ -408,6 +408,109 @@ export const addSchema = ({ id, key, schema, subSchema }) => {
   return [idToSchema(flatten), newId];
 };
 
+// Left 点击添加 item
+export const addItem = ({ selected, name, schema, flatten }) => {
+  let _selected = selected || '#';
+  let newId;
+  // string第一个是0，说明点击了object、list的里侧
+  if ((_selected && _selected[0] === '0') || _selected === '#') {
+    const newFlatten = { ...flatten };
+    try {
+      let oldId = _selected.substring(1);
+      newId = oldId + '/' + name + '_' + nanoid(6);
+      if (_selected === '#') {
+        newId = '#/' + name + '_' + nanoid(6);
+        oldId = '#';
+      }
+      const siblings = newFlatten[oldId].children;
+      siblings.push(newId);
+      const newItem = {
+        parent: oldId,
+        schema: { ...schema, $id: newId },
+        data: undefined,
+        children: [],
+      };
+      newFlatten[newId] = newItem;
+    } catch (error) {
+      console.error(error, 'catch');
+    }
+    return { newId, newFlatten };
+  }
+  let _name = name + '_' + nanoid(6);
+  const idArr = selected.split('/');
+  idArr.pop();
+  idArr.push(_name);
+  newId = idArr.join('/');
+  const newFlatten = { ...flatten };
+  try {
+    const item = newFlatten[selected];
+    const siblings = newFlatten[item.parent].children;
+    const idx = siblings.findIndex(x => x === selected);
+    siblings.splice(idx + 1, 0, newId);
+    const newItem = {
+      parent: item.parent,
+      schema: { ...schema, $id: newId },
+      data: undefined,
+      children: [],
+    };
+    newFlatten[newId] = newItem;
+  } catch (error) {
+    console.error(error);
+  }
+  return { newId, newFlatten };
+};
+
+// position 代表 drop 在元素的哪里: 'up' 上 'down' 下 'inside' 内部
+export const dropItem = ({ dragId, dropId, position, flatten }) => {
+  const _position = dropId === '#' ? 'inside' : position;
+  let newFlatten = { ...flatten };
+  // 会动到三块数据，dragItem, dragParent, dropParent. 其中dropParent可能就是dropItem（inside的情况）
+  const dragItem = newFlatten[dragId];
+  const dropItem = newFlatten[dropId];
+  let dropParent = dropItem;
+  if (_position !== 'inside') {
+    const parentId = dropItem.parent;
+    dropParent = newFlatten[parentId];
+  }
+  // TODO: 这块的体验，现在这样兜底了，但是drag起一个元素了，应该让原本变空
+  if (dropId.indexOf(dragId) > -1) {
+    return newFlatten;
+  }
+  // dragParent 的 children 删除 dragId
+  try {
+    const dragParent = newFlatten[dragItem.parent];
+    const idx = dragParent.children.indexOf(dragId);
+    dragParent.children.splice(idx, 1);
+  } catch (error) {
+    console.error(error);
+  }
+  try {
+    // dropParent 的 children 添加 dragId
+    const newChildren = dropParent.children || []; // 要考虑children为空，inside的情况
+    const idx = newChildren.indexOf(dropId);
+    switch (_position) {
+      case 'up':
+        newChildren.splice(idx, 0, dragId);
+        break;
+      case 'down':
+        newChildren.splice(idx + 1, 0, dragId);
+        break;
+      default:
+        // inside 作为 default 情况
+        newChildren.push(dragId);
+        break;
+    }
+    // console.log(newChildren, dropParent, 'dropParent');
+    dropParent.children = newChildren;
+  } catch (error) {
+    console.error(error);
+  }
+
+  dragItem.parent = dropParent.$id;
+  return newFlatten;
+};
+// TODO: 是不是要考虑如果drag前，已经有id和schema.id不一致的情况，会不会有问题？
+
 // export const changeSubSchema = ({ id, schema, subSchema }) => {
 //   const flatten = flattenSchema(schema);
 //   if (id in flatten) {

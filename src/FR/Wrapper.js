@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import './Wrapper.css';
 import { useGlobal, useGlobalProps, useStore } from '../hooks';
-import { copyItem, getKeyFromUniqueId } from '../utils';
-import { DeleteOutlined, CopyOutlined } from '@ant-design/icons';
+import { copyItem, getKeyFromUniqueId, dropItem } from '../utils';
+import { DeleteOutlined, CopyOutlined, DragOutlined } from '@ant-design/icons';
+import { useDrag, useDrop } from 'react-dnd';
 
 export default function Wrapper({
   $id,
@@ -11,11 +12,84 @@ export default function Wrapper({
   children,
   style,
 }) {
+  const [position, setPosition] = useState();
   const { flatten, onItemChange, onFlattenChange } = useStore();
   const setGlobal = useGlobal();
   const { selected, hovering } = useGlobalProps();
   const { schema } = item;
   const { type } = schema;
+  const boxRef = useRef(null);
+
+  const [{ isDragging }, dragRef, dragPreview] = useDrag({
+    item: { type: 'box', $id: inside ? 0 + $id : $id },
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult();
+      if (item && dropResult) {
+        // alert(`You dropped into ${dropResult.name}!`);
+      }
+    },
+    collect: monitor => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const [{ canDrop, isOver }, dropRef] = useDrop({
+    accept: 'box',
+    drop: (item, monitor) => {
+      // 如果children已经作为了drop target，不处理
+      const didDrop = monitor.didDrop();
+      if (didDrop) {
+        return;
+      }
+      const newFlatten = dropItem({
+        dragId: item.$id,
+        dropId: $id,
+        position,
+        flatten,
+      });
+      onFlattenChange(newFlatten);
+      return;
+    },
+    hover: (item, monitor) => {
+      // 只检查被hover的最小元素
+      const didHover = monitor.isOver({ shallow: true });
+      if (didHover) {
+        // Determine rectangle on screen
+        const hoverBoundingRect =
+          boxRef.current && boxRef.current.getBoundingClientRect();
+        // Get vertical middle
+        const hoverMiddleY =
+          (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+        // Determine mouse position
+        // const clientOffset = monitor.getClientOffset();
+        const dragOffset = monitor.getSourceClientOffset();
+        // Get pixels to the top
+        const hoverClientY = dragOffset.y - hoverBoundingRect.top;
+        // Only perform the move when the mouse has crossed half of the items height
+        // When dragging downwards, only move when the cursor is below 50%
+        // When dragging upwards, only move when the cursor is above 50%
+        // Dragging downwards
+        if (inside) {
+          setPosition('inside');
+        } else {
+          if (hoverClientY <= hoverMiddleY) {
+            setPosition('up');
+          }
+          // Dragging upwards
+          if (hoverClientY > hoverMiddleY) {
+            setPosition('down');
+          }
+        }
+      }
+    },
+    collect: monitor => ({
+      isOver: monitor.isOver({ shallow: true }),
+      canDrop: monitor.canDrop(),
+    }),
+  });
+
+  const isActive = canDrop && isOver;
+  dragPreview(dropRef(boxRef));
 
   const handleClick = e => {
     e.stopPropagation();
@@ -79,6 +153,7 @@ export default function Wrapper({
 
   let overwriteStyle = {
     backgroundColor: hovering === hoverId ? '#ecf5ff' : '#fff',
+    opacity: isDragging ? 0 : 1,
   };
   if (inside) {
     overwriteStyle = {
@@ -99,6 +174,24 @@ export default function Wrapper({
     };
   } else if (type === 'object') {
     overwriteStyle = { ...overwriteStyle, paddingTop: 12 };
+  }
+  if (isActive) {
+    if (inside) {
+      overwriteStyle = {
+        ...overwriteStyle,
+        boxShadow: '0 -3px 0 red',
+      };
+    } else if (position === 'up') {
+      overwriteStyle = {
+        ...overwriteStyle,
+        boxShadow: '0 -3px 0 red',
+      };
+    } else if (position === 'down') {
+      overwriteStyle = {
+        ...overwriteStyle,
+        boxShadow: '0 3px 0 red',
+      };
+    }
   }
   if (isSelected) {
     overwriteStyle = {
@@ -122,16 +215,34 @@ export default function Wrapper({
 
   return (
     <div
+      ref={boxRef}
       style={overwriteStyle}
-      className={`field-wrapper relative w-100`}
+      className={`field-wrapper relative w-100 ${isActive ? 'debug-grid' : ''}`}
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
+      {!inside && isSelected && $id !== '#' && (
+        <div
+          style={{
+            position: 'absolute',
+            top: -2,
+            left: -2,
+            height: 24,
+            width: 24,
+            backgroundColor: '#409eff',
+            padding: '2px 0 0 4px',
+          }}
+          ref={dragRef}
+        >
+          <DragOutlined style={{ color: '#fff' }} />
+        </div>
+      )}
       {!inside && (
         <div className="absolute top-0 right-1 blue f7">{shownId}</div>
       )}
       {children}
+
       {isSelected && !inside && $id !== '#' && (
         <div
           style={{
@@ -160,7 +271,12 @@ export default function Wrapper({
           </div>
           <div className="pointer" onClick={handleItemCopy}>
             <CopyOutlined
-              style={{ height: 16, width: 16, marginRight: 12, color: '#fff' }}
+              style={{
+                height: 16,
+                width: 16,
+                marginRight: 12,
+                color: '#fff',
+              }}
             />
           </div>
         </div>
