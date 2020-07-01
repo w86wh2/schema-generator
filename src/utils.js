@@ -476,6 +476,13 @@ export const dropItem = ({ dragId, dropId, position, flatten }) => {
   if (dropId.indexOf(dragId) > -1) {
     return newFlatten;
   }
+
+  let newId = dragId;
+  try {
+    const newParentId = dropParent.schema.$id;
+    newId = newId.replace(dragItem.parent, newParentId);
+  } catch (error) {}
+
   // dragParent 的 children 删除 dragId
   try {
     const dragParent = newFlatten[dragItem.parent];
@@ -507,7 +514,7 @@ export const dropItem = ({ dragId, dropId, position, flatten }) => {
   }
 
   dragItem.parent = dropParent.$id;
-  return newFlatten;
+  return [newFlatten, newId];
 };
 // TODO: 是不是要考虑如果drag前，已经有id和schema.id不一致的情况，会不会有问题？
 

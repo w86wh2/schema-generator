@@ -41,13 +41,14 @@ export default function Wrapper({
       if (didDrop) {
         return;
       }
-      const newFlatten = dropItem({
+      const [newFlatten, newId] = dropItem({
         dragId: item.$id,
         dropId: $id,
         position,
         flatten,
       });
       onFlattenChange(newFlatten);
+      setGlobal({ selected: newId });
       return;
     },
     hover: (item, monitor) => {
@@ -217,7 +218,7 @@ export default function Wrapper({
     <div
       ref={boxRef}
       style={overwriteStyle}
-      className={`field-wrapper relative w-100 ${isActive ? 'debug-grid' : ''}`}
+      className={`field-wrapper relative w-100`}
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -232,6 +233,7 @@ export default function Wrapper({
             width: 24,
             backgroundColor: '#409eff',
             padding: '2px 0 0 4px',
+            cursor: 'move',
           }}
           ref={dragRef}
         >
