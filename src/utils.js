@@ -461,11 +461,15 @@ export const addItem = ({ selected, name, schema, flatten }) => {
 };
 
 // position 代表 drop 在元素的哪里: 'up' 上 'down' 下 'inside' 内部
-export const dropItem = ({ dragId, dropId, position, flatten }) => {
+export const dropItem = ({ dragId, dragItem, dropId, position, flatten }) => {
   const _position = dropId === '#' ? 'inside' : position;
   let newFlatten = { ...flatten };
   // 会动到三块数据，dragItem, dragParent, dropParent. 其中dropParent可能就是dropItem（inside的情况）
-  const dragItem = newFlatten[dragId];
+  if (dragItem) {
+    newFlatten[dragId] = dragItem;
+  }
+  const _dragItem = dragItem || newFlatten[dragId];
+
   const dropItem = newFlatten[dropId];
   let dropParent = dropItem;
   if (_position !== 'inside') {
@@ -480,14 +484,16 @@ export const dropItem = ({ dragId, dropId, position, flatten }) => {
   let newId = dragId;
   try {
     const newParentId = dropParent.schema.$id;
-    newId = newId.replace(dragItem.parent, newParentId);
+    newId = newId.replace(_dragItem.parent, newParentId);
   } catch (error) {}
 
   // dragParent 的 children 删除 dragId
   try {
-    const dragParent = newFlatten[dragItem.parent];
+    const dragParent = newFlatten[_dragItem.parent];
     const idx = dragParent.children.indexOf(dragId);
-    dragParent.children.splice(idx, 1);
+    if (idx > -1) {
+      dragParent.children.splice(idx, 1);
+    }
   } catch (error) {
     console.error(error);
   }
@@ -513,7 +519,7 @@ export const dropItem = ({ dragId, dropId, position, flatten }) => {
     console.error(error);
   }
 
-  dragItem.parent = dropParent.$id;
+  _dragItem.parent = dropParent.$id;
   return [newFlatten, newId];
 };
 // TODO: 是不是要考虑如果drag前，已经有id和schema.id不一致的情况，会不会有问题？

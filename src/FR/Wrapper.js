@@ -41,8 +41,10 @@ export default function Wrapper({
       if (didDrop) {
         return;
       }
+      console.log(item.dragItem, 'tems');
       const [newFlatten, newId] = dropItem({
-        dragId: item.$id,
+        dragId: item.$id, // 内部拖拽用dragId
+        dragItem: item.dragItem, // 从左边栏过来的，用dragItem
         dropId: $id,
         position,
         flatten,

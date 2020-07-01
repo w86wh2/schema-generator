@@ -8,42 +8,52 @@ import 'antd/dist/antd.css';
 import 'tachyons';
 import './App.css';
 
+// const SCHEMA = {
+//   propsSchema: {
+//     type: 'object',
+//     properties: {
+//       obj1: {
+//         title: '对象',
+//         type: 'object',
+//       },
+//       obj2: {
+//         title: '对象',
+//         type: 'object',
+//         properties: {
+//           obj3: {
+//             title: '对象',
+//             type: 'object',
+//             properties: {
+//               col: {
+//                 title: '颜色选择',
+//                 type: 'string',
+//                 format: 'color',
+//               },
+//               img: {
+//                 title: '图片展示',
+//                 type: 'string',
+//                 format: 'image',
+//                 'ui:options': {},
+//               },
+//             },
+//           },
+//         },
+//       },
+//     },
+//   },
+//   uiSchema: {},
+//   formData: {},
+// };
+
 const SCHEMA = {
   propsSchema: {
     type: 'object',
-    properties: {
-      obj1: {
-        title: '对象',
-        type: 'object',
-      },
-      obj2: {
-        title: '对象',
-        type: 'object',
-        properties: {
-          obj3: {
-            title: '对象',
-            type: 'object',
-            properties: {
-              col: {
-                title: '颜色选择',
-                type: 'string',
-                format: 'color',
-              },
-              img: {
-                title: '图片展示',
-                type: 'string',
-                format: 'image',
-                'ui:options': {},
-              },
-            },
-          },
-        },
-      },
-    },
+    properties: {},
   },
   uiSchema: {},
   formData: {},
 };
+
 // TODO: formData 不存在的时候会报错：can't find # of undefined
 
 function App() {
