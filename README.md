@@ -1,5 +1,5 @@
 ## FR 可视化 schema 编辑器
 
-<img src="https://gw.alipayobjects.com/zos/demos_resources/n64ecc/fr-flow-short-par1.gif?raw=true" width="750px"/>
+<img src="https://gw.alipayobjects.com/mdn/rms_e18934/afts/img/A*4QYNTbKU6xAAAAAAAAAAAABkARQnAQ?raw=true" width="750px"/>
 
-<img src="https://gw.alipayobjects.com/zos/demos_resources/5ay8d5/fr-flow-short-par2.gif?raw=true" alt="schema编辑器" width='750px' />
+<img src="https://gw.alipayobjects.com/mdn/rms_e18934/afts/img/A*FfTuRYjRd1AAAAAAAAAAAABkARQnAQ?raw=true" alt="schema编辑器" width='750px' />
