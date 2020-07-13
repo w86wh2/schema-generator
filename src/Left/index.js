@@ -6,9 +6,9 @@ import Element from './Element';
 const [elements, advancedElements, layouts, saves] = allSettings;
 
 const Left = ({ saveList, setSaveList, ...rest }) => {
-  useEffect(() => {
-    setSaveList(saves);
-  }, []); // eslint-disable-line
+  // useEffect(() => {
+  //   setSaveList(saves);
+  // }, []); // eslint-disable-line
 
   return (
     <div className="left-layout">

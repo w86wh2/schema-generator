@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSet, useStorageState } from './hooks';
 import copyTOClipboard from 'copy-text-to-clipboard';
 import Left from './Left';
@@ -18,7 +18,6 @@ import { Modal, Input, message } from 'antd';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import 'tachyons';
-import './App.css';
 
 const { TextArea } = Input;
 
@@ -28,6 +27,7 @@ const Wrapper = ({
   formData,
   onChange,
   onSchemaChange,
+  saves,
   ...globalProps
 }) => {
   const [local, setLocal] = useSet({
@@ -37,7 +37,7 @@ const Wrapper = ({
     schemaForImport: '',
   });
 
-  const [saveList, setSaveList] = useStorageState([]);
+  const [saveList, setSaveList] = useState(saves || []);
 
   const saveNameRef = useRef();
 

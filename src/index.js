@@ -1,16 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import App from './App';
+import Main from './Main';
 import './index.css';
 
-const Root = () => {
+const Root = ({ defaultValue, saves }) => {
   return (
     <DndProvider backend={HTML5Backend}>
-      <App />
+      <Main defaultValue={defaultValue} saves={saves} />
     </DndProvider>
   );
 };
 
-ReactDOM.render(<Root />, document.getElementById('root'));
+export default Root;

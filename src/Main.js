@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSet } from './hooks';
 // import SCHEMA from './json/basic.json';
 import FRWrapper from './FRWrapper';
@@ -6,7 +6,7 @@ import { widgets } from './widgets/antd';
 import { mapping } from './mapping';
 import 'antd/dist/antd.css';
 import 'tachyons';
-import './App.css';
+import './Main.css';
 
 // const SCHEMA = {
 //   propsSchema: {
@@ -56,19 +56,27 @@ const SCHEMA = {
 
 // TODO: formData 不存在的时候会报错：can't find # of undefined
 
-function App() {
+function App({ defaultValue, saves }) {
   const initGlobal = {
     displayType: 'row',
   };
 
   const [state, setState] = useSet({
-    formData: SCHEMA.formData,
-    schema: SCHEMA,
+    formData: {},
+    schema: {},
     selected: undefined, // 被选中的$id, 如果object/array的内部，以首字母0标识
     hovering: undefined, // 目前没有用到
     preview: false, // preview = false 是编辑模式
     ...initGlobal, // form-render 的全局props等
   });
+
+  useEffect(() => {
+    const schema = defaultValue || SCHEMA;
+    setState({
+      schema,
+      formData: (schema && schema.formData) || {},
+    });
+  }, []);
 
   const { schema, formData, preview, selected, hovering, ...rest } = state;
 
@@ -103,6 +111,7 @@ function App() {
     formData,
     onChange,
     onSchemaChange,
+    saves,
     ...globalProps,
   };
 
