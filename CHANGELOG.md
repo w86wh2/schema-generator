@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.2.2
+
+- [!] fix dependencies bug
+
 ### 0.2.1
 
 - [!] 更新文档配置
