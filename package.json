@@ -6,7 +6,7 @@
     "docs:build": "dumi build",
     "build": "father-build",
     "prepare": "npm run build",
-    "postpublish": "git push --flags",
+    "postpublish": "git push --tags",
     "predeploy": "npm run docs:build",
     "deploy": "gh-pages -d docs-dist",
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
