@@ -32,7 +32,7 @@
     "antd": "^4.0.0"
   },
   "dependencies": {
-    "antd": "^4.0.3",
+    "antd": "^4.4.2",
     "clone": "^2.1.2",
     "copy-text-to-clipboard": "^2.2.0",
     "nanoid": "^2.1.11",
