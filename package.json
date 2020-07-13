@@ -1,6 +1,6 @@
 {
   "name": "fr-generator",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
