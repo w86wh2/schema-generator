@@ -61,7 +61,8 @@ const Demo = () => <Generator defaultValue={defaultValue} saves={saves} />;
 export default Demo;
 ```
 
+代码展示效果见 Demo。
 目前支持两个 props：`defaultValue` 和 `saves`：
 
-- defaultValue 的书写格式可以参考 schema 生成器的输出 schema
-- saves 参照上面代码：text 按钮文案，name 对应的字段
+- **defaultValue:** 默认一进入编辑器展示的表单对应的 schema。格式参考 schema 生成器的输出 schema
+- **saves:** 常用的 schema 模板，存档方便用户点击使用。格式参照上面代码：text 按钮文案，name 对应的字段
