@@ -28,6 +28,7 @@ const Wrapper = ({
   onChange,
   onSchemaChange,
   saves,
+  submit,
   ...globalProps
 }) => {
   const [local, setLocal] = useSet({
@@ -109,16 +110,22 @@ const Wrapper = ({
     toggleModal2();
   };
 
+  let displaySchema = {};
   let displaySchemaString = '';
 
   try {
     const propsSchema = idToSchema(flattenWithData, '#', true);
-    displaySchemaString = JSON.stringify({ propsSchema, ...rest }, null, 2);
+    displaySchema = { propsSchema, ...rest };
+    displaySchemaString = JSON.stringify(displaySchema, null, 2);
   } catch (error) {}
 
   const copySchema = () => {
     copyTOClipboard(displaySchemaString);
     message.info('复制成功');
+  };
+
+  const handleSubmit = () => {
+    submit(displaySchema);
   };
 
   const saveSchema = () => {
@@ -172,14 +179,17 @@ const Wrapper = ({
                 <Button className="mr2" onClick={clearSchema}>
                   清空
                 </Button>
-                <Button className="mr2" onClick={toggleModal3}>
+                {/* <Button className="mr2" onClick={toggleModal3}>
                   保存
-                </Button>
+                </Button> */}
                 <Button className="mr2" onClick={toggleModal2}>
                   导入
                 </Button>
                 <Button type="primary" className="mr2" onClick={toggleModal}>
                   导出schema
+                </Button>
+                <Button type="primary" className="mr2" onClick={handleSubmit}>
+                  保存
                 </Button>
               </div>
               <FR preview={preview} />

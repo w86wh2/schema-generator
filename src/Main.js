@@ -56,7 +56,7 @@ const SCHEMA = {
 
 // TODO: formData 不存在的时候会报错：can't find # of undefined
 
-function App({ defaultValue, saves }) {
+function App({ defaultValue, saves, submit }) {
   const initGlobal = {
     displayType: 'row',
   };
@@ -112,6 +112,7 @@ function App({ defaultValue, saves }) {
     onChange,
     onSchemaChange,
     saves,
+    submit,
     ...globalProps,
   };
 

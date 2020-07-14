@@ -4,10 +4,10 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import Main from './Main';
 import './index.css';
 
-const Root = ({ defaultValue, saves }) => {
+const Root = props => {
   return (
     <DndProvider backend={HTML5Backend}>
-      <Main defaultValue={defaultValue} saves={saves} />
+      <Main {...props} />
     </DndProvider>
   );
 };

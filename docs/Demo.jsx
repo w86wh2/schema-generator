@@ -45,6 +45,14 @@ const saves = [
   },
 ];
 
-const Demo = () => <Generator defaultValue={defaultValue} saves={saves} />;
+const Demo = () => {
+  const submit = schema => {
+    alert(JSON.stringify(schema));
+  };
+
+  return (
+    <Generator defaultValue={defaultValue} saves={saves} submit={submit} />
+  );
+};
 
 export default Demo;
