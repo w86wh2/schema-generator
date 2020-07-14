@@ -42,7 +42,7 @@ const Left = ({ saveList, setSaveList, ...rest }) => {
           );
         })}
       </ul>
-      <p className="f6 b">存档</p>
+      <p className="f6 b">模板</p>
       <ul className="pl0">
         {saveList.map((ele, idx) => {
           return (

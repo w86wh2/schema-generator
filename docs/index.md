@@ -27,9 +27,9 @@ const defaultValue = {
   labelWidth: 120,
 };
 
-const saves = [
+const templates = [
   {
-    text: '存档1',
+    text: '模板1',
     name: 'something',
     schema: {
       title: '对象',
@@ -56,13 +56,26 @@ const saves = [
   },
 ];
 
-const Demo = () => <Generator defaultValue={defaultValue} saves={saves} />;
+const Demo = () => {
+  const submit = schema => {
+    alert(JSON.stringify(schema));
+  };
+
+  return (
+    <Generator
+      defaultValue={defaultValue}
+      templates={templates}
+      submit={submit}
+    />
+  );
+};
 
 export default Demo;
 ```
 
 代码展示效果见 Demo。
-目前支持两个 props：`defaultValue` 和 `saves`：
+目前支持 3 个 props：`defaultValue`，`templates` 和 `submit`
 
 - **defaultValue:** 默认一进入编辑器展示的表单对应的 schema。格式参考 schema 生成器的输出 schema
-- **saves:** 常用的 schema 模板，存档方便用户点击使用。格式参照上面代码：text 按钮文案，name 对应的字段
+- **templates:** 常用的 schema 模板，模板方便用户点击使用。格式参照上面代码：text 按钮文案，name 对应的字段
+- **submit:** 提交按钮的 callback，入参是导出的 schema

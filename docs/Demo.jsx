@@ -16,9 +16,9 @@ const defaultValue = {
   labelWidth: 120,
 };
 
-const saves = [
+const templates = [
   {
-    text: '存档1',
+    text: '模板1',
     name: 'something',
     schema: {
       title: '对象',
@@ -51,7 +51,11 @@ const Demo = () => {
   };
 
   return (
-    <Generator defaultValue={defaultValue} saves={saves} submit={submit} />
+    <Generator
+      defaultValue={defaultValue}
+      templates={templates}
+      submit={submit}
+    />
   );
 };
 

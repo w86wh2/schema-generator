@@ -27,7 +27,7 @@ const Wrapper = ({
   formData,
   onChange,
   onSchemaChange,
-  saves,
+  templates,
   submit,
   ...globalProps
 }) => {
@@ -38,7 +38,7 @@ const Wrapper = ({
     schemaForImport: '',
   });
 
-  const [saveList, setSaveList] = useState(saves || []);
+  const [saveList, setSaveList] = useState(templates || []);
 
   const saveNameRef = useRef();
 
