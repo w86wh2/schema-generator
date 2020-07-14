@@ -1,5 +1,10 @@
 # Change Log
 
+### 0.3.0
+
+- [+] 添加 submit 入参，作为“保存”按钮的回调函数，入参是导出的 schema
+- [!] 模板（templates）代替存档（saves）概念
+
 ### 0.2.2
 
 - [!] fix dependencies bug
