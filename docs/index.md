@@ -1,4 +1,15 @@
-# Getting started
+---
+hero:
+  title: table-render
+  desc: 协议驱动search-table生成器
+  actions:
+    - text: 在线Demo
+      link: /_demos/playground
+    - text: 开始使用
+      link: /components
+---
+
+# Getting Started
 
 ### 安装
 
@@ -79,3 +90,5 @@ export default Demo;
 - **defaultValue:** 默认一进入编辑器展示的表单对应的 schema。格式参考 schema 生成器的输出 schema
 - **templates:** 常用的 schema 模板，模板方便用户点击使用。格式参照上面代码：text 按钮文案，name 对应的字段
 - **submit:** 提交按钮的 callback，入参是导出的 schema
+
+<code src='./Playground.jsx' className='hide-demo' />

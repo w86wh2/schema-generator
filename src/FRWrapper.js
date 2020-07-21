@@ -188,9 +188,9 @@ const Wrapper = ({
                 <Button type="primary" className="mr2" onClick={toggleModal}>
                   导出schema
                 </Button>
-                <Button type="primary" className="mr2" onClick={handleSubmit}>
+                {/* <Button type="primary" className="mr2" onClick={handleSubmit}>
                   保存
-                </Button>
+                </Button> */}
               </div>
               <FR preview={preview} />
             </div>
