@@ -1,9 +1,11 @@
 .mid-layout {
   padding: 0 8px;
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   flex-shrink: 1;
-  height: 100vh;
-  overflow: auto;
+  height: 100%;
+  overflow: hidden;
   border-left: 1px solid #e0e0e0;
   border-right: 1px solid #e0e0e0;
 }
@@ -12,4 +14,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.fr-container {
+  display: flex;
+  overflow: hidden;
+  height: 100%;
+}
+
+.dnd-container {
+  flex-grow: 1;
+  overflow-y: auto;
 }

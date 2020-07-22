@@ -171,7 +171,7 @@ export default function Wrapper({
       ...overwriteStyle,
       borderColor: '#777',
       padding: 12,
-      height: 'calc(100vh - 80px)',
+      height: '100%',
       overflow: 'auto',
       backgroundColor: '#f6f5f6',
     };
