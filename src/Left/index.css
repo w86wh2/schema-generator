@@ -1,7 +1,7 @@
 .left-layout {
   flex-shrink: 0;
-  width: 300px;
   padding: 16px 0 0 8px;
+  overflow-y: auto;
 }
 
 .left-layout ul {
@@ -11,7 +11,7 @@
 }
 
 .left-item {
-  width: 140px;
+  width: 126px;
   height: 40px;
   display: flex;
   padding: 4px;

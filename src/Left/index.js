@@ -11,7 +11,7 @@ const Left = ({ saveList, setSaveList, ...rest }) => {
   // }, []); // eslint-disable-line
 
   return (
-    <div className="left-layout">
+    <div className="left-layout w5-l w4">
       <p className="f6 b">基础组件</p>
       <ul className="pl0">
         {elements.map((ele, idx) => {

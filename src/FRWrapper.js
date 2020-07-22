@@ -186,7 +186,6 @@ function Wrapper(
             <div className="mid-layout pr2">
               <div className="mv2 mh1">
                 <Button
-                  size="small"
                   className="mr2 mb1"
                   onClick={() => {
                     setState({ preview: !preview, selected: '#' });
@@ -194,21 +193,16 @@ function Wrapper(
                 >
                   {preview ? '开始编辑' : '最终展示'}
                 </Button>
-                <Button size="small" className="mr2" onClick={clearSchema}>
+                <Button className="mr2" onClick={clearSchema}>
                   清空
                 </Button>
                 {/* <Button className="mr2" onClick={toggleModal3}>
                   保存
                 </Button> */}
-                <Button size="small" className="mr2" onClick={toggleModal2}>
+                <Button className="mr2" onClick={toggleModal2}>
                   导入
                 </Button>
-                <Button
-                  size="small"
-                  type="primary"
-                  className="mr2"
-                  onClick={toggleModal}
-                >
+                <Button type="primary" className="" onClick={toggleModal}>
                   导出schema
                 </Button>
                 {/* <Button type="primary" className="mr2" onClick={handleSubmit}>

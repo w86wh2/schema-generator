@@ -63,12 +63,12 @@ export default function ItemSettings() {
   };
 
   return (
-    <div style={{ paddingRight: 24, height: 700, overflow: 'auto' }}>
+    <div style={{ paddingRight: 24 }}>
       <FRWrapper
         schema={settingSchema}
         formData={settingData}
         onChange={onDataChange}
-        displayType='row'
+        displayType="row"
         showDescIcon
         widgets={_widgets}
         preview={true}
