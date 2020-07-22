@@ -68,27 +68,23 @@ const templates = [
 ];
 
 const Demo = () => {
-  const submit = schema => {
-    alert(JSON.stringify(schema));
-  };
-
   return (
-    <Generator
-      defaultValue={defaultValue}
-      templates={templates}
-      submit={submit}
-    />
+    <div style={{ height: '100vh' }}>
+      <Generator defaultValue={defaultValue} templates={templates} />
+    </div>
   );
 };
 
 export default Demo;
 ```
 
-代码展示效果见 Demo。
-目前支持 3 个 props：`defaultValue`，`templates` 和 `submit`
+1. 代码展示效果见 Demo。
+2. 目前支持 2 个 props：`defaultValue`，`templates`
 
 - **defaultValue:** 默认一进入编辑器展示的表单对应的 schema。格式参考 schema 生成器的输出 schema
 - **templates:** 常用的 schema 模板，模板方便用户点击使用。格式参照上面代码：text 按钮文案，name 对应的字段
-- **submit:** 提交按钮的 callback，入参是导出的 schema
+
+3. 可以从 ref 中取到 getValue 方法，获取导出的 schema 值，详见“开始使用”中的现实样例
+4. 注意外层要包裹的 div **一定要给一个高度**，否则会默认 min-height: 30vh
 
 <code src='./Playground.jsx' className='hide-demo' />

@@ -69,8 +69,10 @@ const Demo = () => {
         visible={show}
         onCancel={toggle}
         onOk={handleOk}
+        okText="保存"
+        cancelText="关闭"
         width="90%"
-        bodyStyle={{ height: '40vh' }}
+        bodyStyle={{ height: '80vh' }}
       >
         <Generator ref={genRef} defaultValue={schema} templates={templates} />
       </Modal>

@@ -13,7 +13,11 @@ const defaultValue = {
 };
 
 const Demo = () => {
-  return <Generator defaultValue={defaultValue} />;
+  return (
+    <div style={{ height: '100vh' }}>
+      <Generator defaultValue={defaultValue} />
+    </div>
+  );
 };
 
 export default Demo;
