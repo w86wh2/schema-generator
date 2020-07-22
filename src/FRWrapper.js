@@ -15,6 +15,7 @@ import {
   dataToFlatten,
   flattenToData,
   getSaveNumber,
+  looseJsonParse,
 } from './utils';
 import { Ctx, PropsCtx, InnerCtx } from './context';
 // import SCHEMA from './json/basic.json';
@@ -102,7 +103,7 @@ function Wrapper(
 
   const importSchema = () => {
     try {
-      const info = JSON.parse(local.schemaForImport);
+      const info = looseJsonParse(local.schemaForImport);
       const { propsSchema, ...rest } = info;
       setState({
         schema: {

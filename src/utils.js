@@ -76,7 +76,7 @@ export function getFormat(format) {
 export function hasRepeat(list) {
   return list.find(
     (x, i, self) =>
-      i !== self.findIndex(y => JSON.stringify(x) === JSON.stringify(y))
+      i !== self.findIndex(y => JSON.stringify(x) === JSON.stringify(y)),
   );
 }
 
@@ -638,3 +638,7 @@ export const getSaveNumber = () => {
     return 1;
   }
 };
+
+export function looseJsonParse(obj) {
+  return Function('"use strict";return (' + obj + ')')();
+}

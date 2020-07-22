@@ -50,7 +50,7 @@ const templates = [
 const Demo = () => {
   const [show, setShow] = useState(false);
   const [schema, setSchema] = useState(() => defaultValue);
-  const genRef = useRef(); // React.createRef() class组件的化
+  const genRef = useRef(); // class组件用 React.createRef()
 
   const toggle = () => setShow(o => !o);
 
