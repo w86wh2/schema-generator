@@ -51,7 +51,14 @@ const RenderField = ({
   if (customWidget && widgets[customWidget]) {
     widgetName = customWidget;
   }
-  const Widget = widgets[widgetName];
+  let Widget = widgets[widgetName];
+  // 如果不存在，比如有外部的自定义组件名称，使用默认展示组件
+  if (!Widget) {
+    const defaultSchema = { ...schema };
+    delete defaultSchema['ui:widget'];
+    widgetName = getWidgetName(defaultSchema, mapping);
+    Widget = widgets[widgetName] || 'input';
+  }
   // if (widgetName === 'multiSelect') {
   //   console.log(schema['ui:widget'], customWidget, Widget);
   // }
@@ -80,7 +87,7 @@ const RenderField = ({
             }`} // boolean不带冒号
             title={title}
           >
-            {isRequired && <span className='fr-label-required'> *</span>}
+            {isRequired && <span className="fr-label-required"> *</span>}
             <span
               className={`${isComplex ? 'b' : ''} ${
                 displayType === 'column' ? 'flex-none' : ''
@@ -90,18 +97,18 @@ const RenderField = ({
             </span>
             {description &&
               (showDescIcon ? (
-                <span className='fr-tooltip-toggle' aria-label={description}>
-                  <i className='fr-tooltip-icon' />
-                  <div className='fr-tooltip-container'>
-                    <i className='fr-tooltip-triangle' />
+                <span className="fr-tooltip-toggle" aria-label={description}>
+                  <i className="fr-tooltip-icon" />
+                  <div className="fr-tooltip-container">
+                    <i className="fr-tooltip-triangle" />
                     {description}
                   </div>
                 </span>
               ) : (
-                <span className='fr-desc ml2'>(&nbsp;{description}&nbsp;)</span>
+                <span className="fr-desc ml2">(&nbsp;{description}&nbsp;)</span>
               ))}
             {displayType !== 'row' && showValidate && (
-              <span className='fr-validate'>validation</span>
+              <span className="fr-validate">validation</span>
             )}
           </label>
         </div>
