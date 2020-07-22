@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import Generator from 'fr-generator';
+import { Button, Modal, Input } from 'antd';
+const { TextArea } = Input;
 
 const defaultValue = {
   propsSchema: {
@@ -46,16 +48,38 @@ const templates = [
 ];
 
 const Demo = () => {
-  const submit = schema => {
-    alert(JSON.stringify(schema));
+  const [show, setShow] = useState(false);
+  const [schema, setSchema] = useState(() => defaultValue);
+  const genRef = useRef(); // React.createRef() class组件的化
+
+  const toggle = () => setShow(o => !o);
+
+  const handleOk = () => {
+    const value = genRef.current && genRef.current.getValue();
+    setSchema(value);
+    toggle();
   };
 
   return (
-    <Generator
-      defaultValue={defaultValue}
-      templates={templates}
-      submit={submit}
-    />
+    <div>
+      <Button type="primary" onClick={toggle} style={{ marginBottom: 12 }}>
+        配置schema
+      </Button>
+      <Modal
+        visible={show}
+        onCancel={toggle}
+        onOk={handleOk}
+        width="90%"
+        bodyStyle={{ height: '40vh' }}
+      >
+        <Generator ref={genRef} defaultValue={schema} templates={templates} />
+      </Modal>
+      <TextArea
+        autoSize
+        value={JSON.stringify(schema, null, 2)}
+        onChange={() => {}}
+      />
+    </div>
   );
 };
 

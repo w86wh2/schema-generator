@@ -1,4 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, {
+  useRef,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from 'react';
 import { useSet, useStorageState } from './hooks';
 import copyTOClipboard from 'copy-text-to-clipboard';
 import Left from './Left';
@@ -21,16 +26,19 @@ import 'tachyons';
 
 const { TextArea } = Input;
 
-const Wrapper = ({
-  simple = true,
-  schema,
-  formData,
-  onChange,
-  onSchemaChange,
-  templates,
-  submit,
-  ...globalProps
-}) => {
+function Wrapper(
+  {
+    simple = true,
+    schema,
+    formData,
+    onChange,
+    onSchemaChange,
+    templates,
+    submit,
+    ...globalProps
+  },
+  ref,
+) {
   const [local, setLocal] = useSet({
     showModal: false,
     showModal2: false,
@@ -124,9 +132,18 @@ const Wrapper = ({
     message.info('复制成功');
   };
 
-  const handleSubmit = () => {
-    submit(displaySchema);
+  // const handleSubmit = () => {
+  //   submit(displaySchema);
+  // };
+
+  const getValue = () => {
+    console.log(displaySchema);
+    return displaySchema;
   };
+
+  useImperativeHandle(ref, () => ({
+    getValue,
+  }));
 
   const saveSchema = () => {
     try {
@@ -164,35 +181,43 @@ const Wrapper = ({
     <Ctx.Provider value={setState}>
       <PropsCtx.Provider value={globalProps}>
         <InnerCtx.Provider value={store}>
-          <div className="flex vh-100 overflow-hidden">
+          <div className="fr-container">
             <Left saveList={saveList} setSaveList={setSaveList} />
             <div className="mid-layout pr2">
-              <div className="mv3 mh1">
+              <div className="mv2 mh1">
                 <Button
-                  className="mr2"
+                  size="small"
+                  className="mr2 mb1"
                   onClick={() => {
                     setState({ preview: !preview, selected: '#' });
                   }}
                 >
                   {preview ? '开始编辑' : '最终展示'}
                 </Button>
-                <Button className="mr2" onClick={clearSchema}>
+                <Button size="small" className="mr2" onClick={clearSchema}>
                   清空
                 </Button>
                 {/* <Button className="mr2" onClick={toggleModal3}>
                   保存
                 </Button> */}
-                <Button className="mr2" onClick={toggleModal2}>
+                <Button size="small" className="mr2" onClick={toggleModal2}>
                   导入
                 </Button>
-                <Button type="primary" className="mr2" onClick={toggleModal}>
+                <Button
+                  size="small"
+                  type="primary"
+                  className="mr2"
+                  onClick={toggleModal}
+                >
                   导出schema
                 </Button>
                 {/* <Button type="primary" className="mr2" onClick={handleSubmit}>
                   保存
                 </Button> */}
               </div>
-              <FR preview={preview} />
+              <div className="dnd-container">
+                <FR preview={preview} />
+              </div>
             </div>
             <Right globalProps={rest} />
             <Modal
@@ -249,10 +274,12 @@ const Wrapper = ({
       </PropsCtx.Provider>
     </Ctx.Provider>
   );
-};
+}
 
-Wrapper.defaultProps = {
+const FRWrapper = forwardRef(Wrapper);
+
+FRWrapper.defaultProps = {
   labelWidth: 120,
 };
 
-export default Wrapper;
+export default FRWrapper;

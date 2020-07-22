@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, forwardRef } from 'react';
 import { useSet } from './hooks';
 // import SCHEMA from './json/basic.json';
 import FRWrapper from './FRWrapper';
@@ -56,7 +56,7 @@ const SCHEMA = {
 
 // TODO: formData 不存在的时候会报错：can't find # of undefined
 
-function App({ defaultValue, templates, submit }) {
+function App({ defaultValue, templates, submit }, ref) {
   const initGlobal = {
     displayType: 'row',
   };
@@ -116,7 +116,7 @@ function App({ defaultValue, templates, submit }) {
     ...globalProps,
   };
 
-  return <FRWrapper {...FRProps} />;
+  return <FRWrapper ref={ref} {...FRProps} />;
 }
 
-export default App;
+export default forwardRef(App);
