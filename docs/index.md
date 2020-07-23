@@ -1,7 +1,7 @@
 ---
 hero:
-  title: table-render
-  desc: 协议驱动search-table生成器
+  title: FormRender Generator
+  desc: form-render 的表单设计器
   actions:
     - text: 在线Demo
       link: /_demos/playground
