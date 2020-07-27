@@ -56,10 +56,21 @@ const SCHEMA = {
 
 // TODO: formData 不存在的时候会报错：can't find # of undefined
 
-function App({ defaultValue, templates, submit }, ref) {
+function App({ defaultValue, templates, submit, transformer }, ref) {
   const initGlobal = {
     displayType: 'row',
   };
+
+  let transformFrom = a => a;
+  let transformTo = a => a;
+  try {
+    if (typeof transformer.from === 'function') {
+      transformFrom = transformer.from;
+    }
+    if (typeof transformer.to === 'function') {
+      transformTo = transformer.to;
+    }
+  } catch (error) {}
 
   const [state, setState] = useSet({
     formData: {},
@@ -71,7 +82,7 @@ function App({ defaultValue, templates, submit }, ref) {
   });
 
   useEffect(() => {
-    const schema = defaultValue || SCHEMA;
+    const schema = defaultValue ? transformFrom(defaultValue) : SCHEMA;
     setState({
       schema,
       formData: (schema && schema.formData) || {},
@@ -113,6 +124,8 @@ function App({ defaultValue, templates, submit }, ref) {
     onSchemaChange,
     templates,
     submit,
+    transformFrom,
+    transformTo,
     ...globalProps,
   };
 

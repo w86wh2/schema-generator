@@ -36,6 +36,8 @@ function Wrapper(
     onSchemaChange,
     templates,
     submit,
+    transformFrom,
+    transformTo,
     ...globalProps
   },
   ref,
@@ -103,7 +105,7 @@ function Wrapper(
 
   const importSchema = () => {
     try {
-      const info = looseJsonParse(local.schemaForImport);
+      const info = transformFrom(looseJsonParse(local.schemaForImport));
       const { propsSchema, ...rest } = info;
       setState({
         schema: {
@@ -124,7 +126,9 @@ function Wrapper(
 
   try {
     const propsSchema = idToSchema(flattenWithData, '#', true);
-    displaySchema = { propsSchema, ...rest };
+    console.log('haha', { propsSchema, ...rest });
+    displaySchema = transformTo({ propsSchema, ...rest });
+    console.log('haha2', displaySchema);
     displaySchemaString = JSON.stringify(displaySchema, null, 2);
   } catch (error) {}
 
@@ -138,7 +142,6 @@ function Wrapper(
   // };
 
   const getValue = () => {
-    console.log(displaySchema);
     return displaySchema;
   };
 

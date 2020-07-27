@@ -12,4 +12,5 @@ const Root = (props, ref) => {
   );
 };
 
+export { fromFormily, toFormily } from './utils';
 export default forwardRef(Root);
