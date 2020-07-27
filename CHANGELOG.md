@@ -1,5 +1,10 @@
 # Change Log
 
+### 0.4.0
+
+- [+] 添加 transformer 参数
+- [!] 大幅升级文档，添加 formily 的支持 demo
+
 ### 0.3.4
 
 - [!] 左栏统一到 rem，确保展示正确
