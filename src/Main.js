@@ -56,7 +56,10 @@ const SCHEMA = {
 
 // TODO: formData 不存在的时候会报错：can't find # of undefined
 
-function App({ defaultValue, templates, submit, transformer }, ref) {
+function App(
+  { defaultValue, templates, submit, transformer, extraButtons },
+  ref,
+) {
   const initGlobal = {
     displayType: 'row',
   };
@@ -126,6 +129,7 @@ function App({ defaultValue, templates, submit, transformer }, ref) {
     submit,
     transformFrom,
     transformTo,
+    extraButtons,
     ...globalProps,
   };
 

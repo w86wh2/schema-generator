@@ -38,6 +38,7 @@ function Wrapper(
     submit,
     transformFrom,
     transformTo,
+    extraButtons = [],
     ...globalProps
   },
   ref,
@@ -135,6 +136,7 @@ function Wrapper(
   const copySchema = () => {
     copyTOClipboard(displaySchemaString);
     message.info('复制成功');
+    toggleModal();
   };
 
   // const handleSubmit = () => {
@@ -145,8 +147,30 @@ function Wrapper(
     return displaySchema;
   };
 
+  const setValue = value => {
+    try {
+      const schema = { propsSchema: value.propsSchema };
+      delete value.propsSchema;
+      setState(state => ({
+        ...state,
+        schema,
+        formData: {},
+        selected: undefined,
+        ...value,
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const copyValue = () => {
+    copyTOClipboard(displaySchemaString);
+  };
+
   useImperativeHandle(ref, () => ({
     getValue,
+    setValue,
+    copyValue,
   }));
 
   const saveSchema = () => {
@@ -206,9 +230,22 @@ function Wrapper(
                 <Button className="mr2" onClick={toggleModal2}>
                   导入
                 </Button>
-                <Button type="primary" className="" onClick={toggleModal}>
+                <Button type="primary" className="mr2" onClick={toggleModal}>
                   导出schema
                 </Button>
+                {extraButtons && Array.isArray(extraButtons)
+                  ? extraButtons.map((item, idx) => {
+                      return (
+                        <Button
+                          key={idx.toString()}
+                          className="mr2"
+                          onClick={item.onClick}
+                        >
+                          {item.text}
+                        </Button>
+                      );
+                    })
+                  : null}
                 {/* <Button type="primary" className="mr2" onClick={handleSubmit}>
                   保存
                 </Button> */}

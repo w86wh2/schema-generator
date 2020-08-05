@@ -1,5 +1,10 @@
 # Change Log
 
+### 0.5.0
+
+- [+] 添加 `setValue` （注入 schema） 和 `copyValue`（拷贝到剪切板） 方法，可以通过 ref 调用
+- [+] 新增 props `extraButtons` 用于添加更多定制按钮到顶栏
+
 ### 0.4.0
 
 - [+] 添加 transformer 参数

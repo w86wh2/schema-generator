@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Generator from 'fr-generator';
 import './index.css';
 
@@ -13,9 +13,20 @@ const defaultValue = {
 };
 
 const Demo = () => {
+  const ref = useRef();
+
+  const onClick = () => {
+    ref.current.copyValue();
+    window.open('https://www.taobao.com');
+  };
+
   return (
     <div style={{ height: '100vh' }}>
-      <Generator defaultValue={defaultValue} />
+      <Generator
+        ref={ref}
+        defaultValue={defaultValue}
+        extraButtons={[{ text: '去playground验证', onClick }]}
+      />
     </div>
   );
 };
