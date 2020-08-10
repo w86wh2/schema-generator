@@ -127,9 +127,7 @@ function Wrapper(
 
   try {
     const propsSchema = idToSchema(flattenWithData, '#', true);
-    console.log('haha', { propsSchema, ...rest });
     displaySchema = transformTo({ propsSchema, ...rest });
-    console.log('haha2', displaySchema);
     displaySchemaString = JSON.stringify(displaySchema, null, 2);
   } catch (error) {}
 
