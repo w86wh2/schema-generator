@@ -1,1 +1,2 @@
-includes: ['/_demos']
+includes:
+  - _demos/
