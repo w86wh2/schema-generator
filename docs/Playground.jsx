@@ -17,7 +17,7 @@ const Demo = () => {
 
   const onClick = () => {
     ref.current.copyValue();
-    window.open('https://alibaba.github.io/form-render/_demos/index');
+    window.open('https://alibaba.github.io/form-render');
   };
 
   return (

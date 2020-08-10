@@ -4,7 +4,7 @@ hero:
   desc: form-render 的表单设计器
   actions:
     - text: 在线Demo
-      link: /_demos/playground
+      link: /demo/playground
     - text: Formily
       link: /_demos/formily-pg
     - text: 开始使用
@@ -78,5 +78,5 @@ const Demo = () => {
 export default Demo;
 ```
 
-<code src='./Playground.jsx' className='hide-demo' />
+<!-- <code src='./Playground.jsx' className='hide-demo' /> -->
 <code src='./FormilyPG.jsx' className='hide-demo' />
