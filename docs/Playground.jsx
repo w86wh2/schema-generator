@@ -3,7 +3,7 @@ import Generator from 'fr-generator';
 import './index.css';
 
 const defaultValue = {
-  propsSchema: {
+  schema: {
     type: 'object',
     properties: {},
   },

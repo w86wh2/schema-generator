@@ -24,7 +24,7 @@ import React from 'react';
 import Generator from 'fr-generator';
 
 const defaultValue = {
-  propsSchema: {
+  schema: {
     type: 'object',
     properties: {
       inputName: {

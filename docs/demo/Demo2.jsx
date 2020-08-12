@@ -99,7 +99,7 @@ const Demo = () => {
 };
 
 // const b = {
-//   propsSchema: {
+//   schema: {
 //     type: 'object',
 //     properties: {
 //       array: {

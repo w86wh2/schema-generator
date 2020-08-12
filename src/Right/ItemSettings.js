@@ -43,7 +43,7 @@ export default function ItemSettings() {
       const element = elements.find(e => e.widget === widgetName);
       const schemaNow = element.setting;
       settingSchema = {
-        propsSchema: {
+        schema: {
           type: 'object',
           properties: {
             ...schemaNow,

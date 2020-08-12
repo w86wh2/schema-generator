@@ -90,7 +90,7 @@ function Wrapper(
   const clearSchema = () => {
     setState({
       schema: {
-        propsSchema: {
+        schema: {
           type: 'object',
           properties: {},
         },

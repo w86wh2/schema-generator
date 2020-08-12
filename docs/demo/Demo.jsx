@@ -4,7 +4,7 @@ import { Button, Modal, Input } from 'antd';
 const { TextArea } = Input;
 
 const defaultValue = {
-  propsSchema: {
+  schema: {
     type: 'object',
     properties: {
       inputName: {
