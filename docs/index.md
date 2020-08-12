@@ -4,7 +4,7 @@ hero:
   desc: form-render 的表单设计器
   actions:
     - text: 在线Demo
-      link: /demo/playground
+      link: /playground
     - text: Formily
       link: /_demos/formily-pg
     - text: 开始使用

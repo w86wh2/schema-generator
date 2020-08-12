@@ -17,7 +17,7 @@ const Demo = () => {
 
   const onClick = () => {
     ref.current.copyValue();
-    window.open('https://alibaba.github.io/form-render');
+    window.open('https://x-render.gitee.io/form-render/playground');
   };
 
   return (
