@@ -22,8 +22,6 @@ import { Ctx, PropsCtx, InnerCtx } from './context';
 import FR from './FR';
 import { Modal, Input, message } from 'antd';
 import { Button } from 'antd';
-import 'antd/dist/antd.css';
-import 'tachyons';
 
 const { TextArea } = Input;
 
@@ -239,7 +237,7 @@ function Wrapper(
     <Ctx.Provider value={setState}>
       <PropsCtx.Provider value={globalProps}>
         <InnerCtx.Provider value={store}>
-          <div className="fr-container">
+          <div className="fr-wrapper">
             <Left saveList={saveList} setSaveList={setSaveList} />
             <div className="mid-layout pr2">
               <div className="mv2 mh1">

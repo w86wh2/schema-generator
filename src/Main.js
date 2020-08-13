@@ -4,9 +4,9 @@ import { useSet } from './hooks';
 import FRWrapper from './FRWrapper';
 import { widgets } from './widgets/antd';
 import { mapping } from './mapping';
-import 'antd/dist/antd.css';
-import 'tachyons';
+import './atom.css';
 import './Main.css';
+import 'antd/dist/antd.css';
 
 // const SCHEMA = {
 //   schema: {
