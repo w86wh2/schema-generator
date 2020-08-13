@@ -9,7 +9,7 @@ import 'tachyons';
 import './Main.css';
 
 // const SCHEMA = {
-//   propsSchema: {
+//   schema: {
 //     type: 'object',
 //     properties: {
 //       obj1: {
@@ -45,8 +45,8 @@ import './Main.css';
 //   formData: {},
 // };
 
-const SCHEMA = {
-  propsSchema: {
+const DEFAULT_SCHEMA = {
+  schema: {
     type: 'object',
     properties: {},
   },
@@ -85,7 +85,7 @@ function App(
   });
 
   useEffect(() => {
-    const schema = defaultValue ? transformFrom(defaultValue) : SCHEMA;
+    const schema = defaultValue ? transformFrom(defaultValue) : DEFAULT_SCHEMA;
     setState({
       schema,
       formData: (schema && schema.formData) || {},
@@ -102,7 +102,13 @@ function App(
   };
 
   const onSchemaChange = newSchema => {
-    const result = { ...schema, propsSchema: newSchema };
+    const result = { ...schema };
+    // 兼容 propsSchema
+    if (result.propsSchema) {
+      result.propsSchema = newSchema;
+    } else {
+      result.schema = newSchema;
+    }
     setState({ schema: result });
   };
 

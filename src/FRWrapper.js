@@ -63,7 +63,12 @@ function Wrapper(
     hovering,
     ...rest
   } = globalProps;
-  const _schema = combineSchema(schema.propsSchema, schema.uiSchema);
+  let _schema = {};
+  if (schema && schema.propsSchema) {
+    _schema = combineSchema(schema.propsSchema, schema.uiSchema);
+  } else {
+    _schema = combineSchema(schema.schema, schema.uiSchema);
+  }
   const flatten = flattenSchema(_schema);
   const flattenWithData = dataToFlatten(flatten, formData);
   // console.log(flatten);
@@ -88,13 +93,23 @@ function Wrapper(
   const toggleModal3 = () => setLocal({ showModal3: !local.showModal3 });
 
   const clearSchema = () => {
-    setState({
+    // 兼容旧版的propsSchema
+    let defaultSchema = {
       schema: {
-        schema: {
+        type: 'object',
+        properties: {},
+      },
+    };
+    if (schema && schema.propsSchema) {
+      defaultSchema = {
+        propsSchema: {
           type: 'object',
           properties: {},
         },
-      },
+      };
+    }
+    setState({
+      ...defaultSchema,
       formData: {},
       selected: undefined,
     });
@@ -107,15 +122,26 @@ function Wrapper(
   const importSchema = () => {
     try {
       const info = transformFrom(looseJsonParse(local.schemaForImport));
-      const { propsSchema, ...rest } = info;
-      setState({
+      const { propsSchema, schema, ...rest } = info;
+      const result = {
         schema: {
-          propsSchema,
+          schema,
         },
         formData: {},
         selected: undefined,
         ...rest,
-      });
+      };
+      if (propsSchema) {
+        result = {
+          schema: {
+            propsSchema,
+          },
+          formData: {},
+          selected: undefined,
+          ...rest,
+        };
+      }
+      setState(result);
     } catch (error) {
       message.info('格式不对哦，请重新尝试'); // 可以加个格式哪里不对的提示
     }
@@ -124,10 +150,13 @@ function Wrapper(
 
   let displaySchema = {};
   let displaySchemaString = '';
-
   try {
     const propsSchema = idToSchema(flattenWithData, '#', true);
-    displaySchema = transformTo({ propsSchema, ...rest });
+    if (schema.propsSchema) {
+      displaySchema = transformTo({ propsSchema, ...rest });
+    } else {
+      displaySchema = transformTo({ schema: propsSchema, ...rest });
+    }
     displaySchemaString = JSON.stringify(displaySchema, null, 2);
   } catch (error) {}
 
@@ -147,14 +176,17 @@ function Wrapper(
 
   const setValue = value => {
     try {
-      const schema = { propsSchema: value.propsSchema };
-      delete value.propsSchema;
+      const { schema, propsSchema, ...rest } = value;
+      let _schema = { schema };
+      if (propsSchema) {
+        _schema = { propsSchema };
+      }
       setState(state => ({
         ...state,
-        schema,
+        schema: _schema,
         formData: {},
         selected: undefined,
-        ...value,
+        ...rest,
       }));
     } catch (error) {
       console.error(error);
