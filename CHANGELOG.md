@@ -1,5 +1,13 @@
 # Change Log
 
+### 0.5.1
+
+- [!] propsSchema 和 schema 字段兼容
+- [!] 非常长的 description 在 tooltip 模式下正常展示
+- [!] 解决样式入侵问题 ([#8](https://github.com/form-render/schema-generator/issues/8))
+- [!] 解决了 switch 组件展示丑的问题
+- [!] 官网大幅翻新，demo 可直接跳转到 form-render 的 playground 方便验证
+
 ### 0.5.0
 
 - [+] 添加 `setValue` （注入 schema） 和 `copyValue`（拷贝到剪切板） 方法，可以通过 ref 调用
