@@ -24,28 +24,6 @@ const RenderField = ({
   const { type, title, description, required } = schema;
   const isRequired = required && required.length > 0;
 
-  // 真正有效的label宽度需要从现在所在item开始一直往上回溯（设计成了继承关系），找到的第一个有值的 ui:labelWidth
-  const effectiveLabelWidth =
-    getParentProps('ui:labelWidth', $id, flatten) || labelWidth;
-  const _labelWidth = isLooselyNumber(effectiveLabelWidth)
-    ? Number(effectiveLabelWidth)
-    : isCssLength(effectiveLabelWidth)
-    ? effectiveLabelWidth
-    : 110; // 默认是 110px 的长度
-
-  let labelStyle = { width: _labelWidth };
-  if (type === 'boolean') {
-    labelStyle = { flexGrow: 1 };
-  } else if (isComplex || displayType === 'column') {
-    labelStyle = { flexGrow: 1 };
-  }
-
-  const onChange = value => {
-    const newItem = { ...item };
-    newItem.data = value;
-    onItemChange($id, newItem);
-  };
-
   let widgetName = getWidgetName(schema, mapping);
   const customWidget = schema['ui:widget'];
   if (customWidget && widgets[customWidget]) {
@@ -62,8 +40,30 @@ const RenderField = ({
   // if (widgetName === 'multiSelect') {
   //   console.log(schema['ui:widget'], customWidget, Widget);
   // }
-  let contentStyle = {};
+  // 真正有效的label宽度需要从现在所在item开始一直往上回溯（设计成了继承关系），找到的第一个有值的 ui:labelWidth
+  const effectiveLabelWidth =
+    getParentProps('ui:labelWidth', $id, flatten) || labelWidth;
+  const _labelWidth = isLooselyNumber(effectiveLabelWidth)
+    ? Number(effectiveLabelWidth)
+    : isCssLength(effectiveLabelWidth)
+    ? effectiveLabelWidth
+    : 110; // 默认是 110px 的长度
+
+  let labelStyle = { width: _labelWidth };
   if (widgetName === 'checkbox') {
+    labelStyle = { flexGrow: 1 };
+  } else if (isComplex || displayType === 'column') {
+    labelStyle = { flexGrow: 1 };
+  }
+
+  const onChange = value => {
+    const newItem = { ...item };
+    newItem.data = value;
+    onItemChange($id, newItem);
+  };
+
+  let contentStyle = {};
+  if (widgetName === 'checkbox' && displayType === 'row') {
     contentStyle.marginLeft = effectiveLabelWidth;
   }
 
@@ -83,8 +83,10 @@ const RenderField = ({
         <div className={labelClass} style={labelStyle}>
           <label
             className={`fr-label-title ${
-              type === 'boolean' || displayType === 'column' ? 'no-colon' : ''
-            }`} // boolean不带冒号
+              widgetName === 'checkbox' || displayType === 'column'
+                ? 'no-colon'
+                : ''
+            }`} // checkbox不带冒号
             title={title}
           >
             {isRequired && <span className="fr-label-required"> *</span>}
