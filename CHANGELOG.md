@@ -1,5 +1,9 @@
 # Change Log
 
+### 0.5.2
+
+- [!] 解决了乱输入 schema 的时候会 crash 页面的问题
+
 ### 0.5.1
 
 - [!] propsSchema 和 schema 字段兼容
