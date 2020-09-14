@@ -543,33 +543,33 @@ export const dropItem = ({ dragId, dragItem, dropId, position, flatten }) => {
 
 // 解析函数字符串值
 // TODO: 没有考虑list的情况
-export const getDataById = (data, idString) => {
-  if (idString === '#') return data;
-  try {
-    const idConnectedByDots = idString
-      .split('/')
-      .filter(id => id !== '#')
-      .map(id => `["${id}"]`)
-      .join('');
-    const string = `data${idConnectedByDots}`;
-    const a = `"use strict";
-    const data = ${JSON.stringify(data)};
-    return ${string}`;
-    return Function(a)();
-    // TODO: can be better
-    // let result = { ...data };
-    // idConnectedByDots.forEach((item) => {
-    //   result = result[item];
-    // });
-    // return result;
-  } catch (error) {
-    return undefined;
-  }
-};
+// export const getDataById = (data, idString) => {
+//   if (idString === '#') return data;
+//   try {
+//     const idConnectedByDots = idString
+//       .split('/')
+//       .filter(id => id !== '#')
+//       .map(id => `["${id}"]`)
+//       .join('');
+//     const string = `data${idConnectedByDots}`;
+//     const a = `"use strict";
+//     const data = ${JSON.stringify(data)};
+//     return ${string}`;
+//     return Function(a)();
+//     // TODO: can be better
+//     // let result = { ...data };
+//     // idConnectedByDots.forEach((item) => {
+//     //   result = result[item];
+//     // });
+//     // return result;
+//   } catch (error) {
+//     return undefined;
+//   }
+// };
 
 // TODO: 没有考虑list的情况
 export const dataToFlatten = (flatten, data) => {
-  if (!flatten || !data) return;
+  if (!flatten || !data) return {};
   Object.entries(flatten).forEach(([id, item]) => {
     const branchData = getDataById(data, id);
     flatten[id].data = branchData;
@@ -803,3 +803,51 @@ export const toFormily = schema => {
   const frSchema = schema.propsSchema;
   return transformTo(frSchema);
 };
+
+// 解析函数字符串值
+// TODO: 没有考虑list的情况
+// getDataById(formData, '#/a/b/c')
+export function getDataById(object, path) {
+  path = castPath(path, object);
+
+  let index = 0;
+  const length = path.length;
+
+  while (object != null && index < length) {
+    object = object[toKey(path[index++])];
+  }
+  return index && index == length ? object : undefined;
+}
+
+function castPath(value, object) {
+  if (Array.isArray(value)) {
+    return value;
+  }
+  return isKey(value, object) ? [value] : value.match(/([^\.\/\[\]#"']+)/g);
+}
+
+function toKey(value) {
+  if (typeof value === 'string') {
+    return value;
+  }
+  const result = `${value}`;
+  return result == '0' && 1 / value == -INFINITY ? '-0' : result;
+}
+
+const reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/;
+const reIsPlainProp = /^\w*$/;
+
+function isKey(value, object) {
+  if (Array.isArray(value)) {
+    return false;
+  }
+  const type = typeof value;
+  if (type === 'number' || type === 'boolean' || value == null) {
+    return true;
+  }
+  return (
+    reIsPlainProp.test(value) ||
+    !reIsDeepProp.test(value) ||
+    (object != null && value in Object(object))
+  );
+}

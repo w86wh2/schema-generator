@@ -62,10 +62,9 @@ function Wrapper(
     ...rest
   } = globalProps;
   let _schema = {};
-  if (schema && schema.propsSchema) {
-    _schema = combineSchema(schema.propsSchema, schema.uiSchema);
-  } else {
-    _schema = combineSchema(schema.schema, schema.uiSchema);
+  if (schema) {
+    const jsonSchema = schema.schema || schema.propsSchema || {};
+    _schema = combineSchema(jsonSchema, schema.uiSchema);
   }
   const flatten = flattenSchema(_schema);
   const flattenWithData = dataToFlatten(flatten, formData);
