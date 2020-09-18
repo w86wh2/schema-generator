@@ -16,6 +16,7 @@ import {
   flattenToData,
   getSaveNumber,
   looseJsonParse,
+  isObject,
 } from './utils';
 import { Ctx, PropsCtx, InnerCtx } from './context';
 // import SCHEMA from './json/basic.json';
@@ -220,6 +221,12 @@ function Wrapper(
     ...globalProps,
   };
 
+  const _extraButtons = Array.isArray(extraButtons) ? extraButtons : [];
+  const _showDefaultBtns = _extraButtons.filter(
+    item => item === true || item === false,
+  );
+  const _extraBtns = _extraButtons.filter(item => isObject(item) && item.text);
+
   if (simple) {
     return (
       <Ctx.Provider value={setState}>
@@ -240,39 +247,45 @@ function Wrapper(
             <Left saveList={saveList} setSaveList={setSaveList} />
             <div className="mid-layout pr2">
               <div className="mv2 mh1">
-                <Button
-                  className="mr2 mb1"
-                  onClick={() => {
-                    setState({ preview: !preview, selected: '#' });
-                  }}
-                >
-                  {preview ? '开始编辑' : '最终展示'}
-                </Button>
-                <Button className="mr2" onClick={clearSchema}>
-                  清空
-                </Button>
+                {_showDefaultBtns[0] !== false && (
+                  <Button
+                    className="mr2 mb1"
+                    onClick={() => {
+                      setState({ preview: !preview, selected: '#' });
+                    }}
+                  >
+                    {preview ? '开始编辑' : '最终展示'}
+                  </Button>
+                )}
+                {_showDefaultBtns[1] !== false && (
+                  <Button className="mr2" onClick={clearSchema}>
+                    清空
+                  </Button>
+                )}
                 {/* <Button className="mr2" onClick={toggleModal3}>
                   保存
                 </Button> */}
-                <Button className="mr2" onClick={toggleModal2}>
-                  导入
-                </Button>
-                <Button type="primary" className="mr2" onClick={toggleModal}>
-                  导出schema
-                </Button>
-                {extraButtons && Array.isArray(extraButtons)
-                  ? extraButtons.map((item, idx) => {
-                      return (
-                        <Button
-                          key={idx.toString()}
-                          className="mr2"
-                          onClick={item.onClick}
-                        >
-                          {item.text}
-                        </Button>
-                      );
-                    })
-                  : null}
+                {_showDefaultBtns[2] !== false && (
+                  <Button className="mr2" onClick={toggleModal2}>
+                    导入
+                  </Button>
+                )}
+                {_showDefaultBtns[3] !== false && (
+                  <Button type="primary" className="mr2" onClick={toggleModal}>
+                    导出schema
+                  </Button>
+                )}
+                {_extraBtns.map((item, idx) => {
+                  return (
+                    <Button
+                      key={idx.toString()}
+                      className="mr2"
+                      onClick={item.onClick}
+                    >
+                      {item.text}
+                    </Button>
+                  );
+                })}
                 {/* <Button type="primary" className="mr2" onClick={handleSubmit}>
                   保存
                 </Button> */}
