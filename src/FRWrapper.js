@@ -17,6 +17,8 @@ import {
   getSaveNumber,
   looseJsonParse,
   isObject,
+  oldSchemaToNew,
+  newSchemaToOld,
 } from './utils';
 import { Ctx, PropsCtx, InnerCtx } from './context';
 // import SCHEMA from './json/basic.json';
@@ -60,16 +62,15 @@ function Wrapper(
     widgets,
     selected,
     hovering,
+    isNewVersion,
     ...rest
   } = globalProps;
   let _schema = {};
   if (schema) {
-    const jsonSchema = schema.schema || schema.propsSchema || {};
-    _schema = combineSchema(jsonSchema, schema.uiSchema);
+    _schema = combineSchema(schema.schema, schema.uiSchema); // TODO: 要不要判断是否都是object
   }
   const flatten = flattenSchema(_schema);
   const flattenWithData = dataToFlatten(flatten, formData);
-  // console.log(flatten);
 
   const onFlattenChange = newFlatten => {
     const newSchema = idToSchema(newFlatten);
@@ -91,23 +92,12 @@ function Wrapper(
   const toggleModal3 = () => setLocal({ showModal3: !local.showModal3 });
 
   const clearSchema = () => {
-    // 兼容旧版的propsSchema
-    let defaultSchema = {
-      schema: {
-        type: 'object',
-        properties: {},
-      },
-    };
-    if (schema && schema.propsSchema) {
-      defaultSchema = {
-        propsSchema: {
-          type: 'object',
-          properties: {},
-        },
-      };
-    }
     setState({
-      ...defaultSchema,
+      schema: {
+        schema: {
+          type: 'object',
+        },
+      },
       formData: {},
       selected: undefined,
     });
@@ -117,10 +107,16 @@ function Wrapper(
     setLocal({ schemaForImport: e.target.value });
   };
 
+  // 在这里统一收口 propsSchema 到 schema 的转换（一共就两个地方，一个是defaultValue，一个是importSchema）
   const importSchema = () => {
     try {
       const info = transformFrom(looseJsonParse(local.schemaForImport));
-      const { propsSchema, schema, ...rest } = info;
+      let _isNewVersion = true;
+      if (info && info.propsSchema) {
+        _isNewVersion = false;
+      }
+      const _info = oldSchemaToNew(info);
+      const { schema, ...rest } = _info;
       const result = {
         schema: {
           schema,
@@ -128,17 +124,8 @@ function Wrapper(
         formData: {},
         selected: undefined,
         ...rest,
+        isNewVersion: _isNewVersion,
       };
-      if (propsSchema) {
-        result = {
-          schema: {
-            propsSchema,
-          },
-          formData: {},
-          selected: undefined,
-          ...rest,
-        };
-      }
       setState(result);
     } catch (error) {
       message.info('格式不对哦，请重新尝试'); // 可以加个格式哪里不对的提示
@@ -149,11 +136,11 @@ function Wrapper(
   let displaySchema = {};
   let displaySchemaString = '';
   try {
-    const propsSchema = idToSchema(flattenWithData, '#', true);
-    if (schema.propsSchema) {
-      displaySchema = transformTo({ propsSchema, ...rest });
-    } else {
-      displaySchema = transformTo({ schema: propsSchema, ...rest });
+    const _schema = idToSchema(flattenWithData, '#', true);
+    displaySchema = transformTo({ schema: _schema, ...rest });
+    console.log(displaySchema);
+    if (!isNewVersion) {
+      displaySchema = newSchemaToOld(displaySchema);
     }
     displaySchemaString = JSON.stringify(displaySchema, null, 2);
   } catch (error) {}
@@ -174,11 +161,8 @@ function Wrapper(
 
   const setValue = value => {
     try {
-      const { schema, propsSchema, ...rest } = value;
+      const { schema, ...rest } = value;
       let _schema = { schema };
-      if (propsSchema) {
-        _schema = { propsSchema };
-      }
       setState(state => ({
         ...state,
         schema: _schema,
@@ -277,12 +261,8 @@ function Wrapper(
                 )}
                 {_extraBtns.map((item, idx) => {
                   return (
-                    <Button
-                      key={idx.toString()}
-                      className="mr2"
-                      onClick={item.onClick}
-                    >
-                      {item.text}
+                    <Button key={idx.toString()} className="mr2" {...item}>
+                      {item.text || item.children}
                     </Button>
                   );
                 })}

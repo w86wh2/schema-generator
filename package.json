@@ -1,11 +1,12 @@
 {
   "name": "fr-generator",
-  "version": "0.5.3-beta.0",
+  "version": "0.5.3",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
     "build": "father-build",
     "prepare": "npm run build",
+    "beta": "npm publish --tag beta",
     "postpublish": "git push --tags",
     "predeploy": "npm run docs:build",
     "deploy": "gh-pages -d docs-dist",

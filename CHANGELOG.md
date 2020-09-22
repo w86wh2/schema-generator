@@ -1,5 +1,19 @@
 # Change Log
 
+### 0.5.3
+
+- [+] `extraButtons` 这个数组的 item 的值可以是 true/false，用于去掉默认按钮，例如
+
+```js
+extraButtons: [false, false, false, true, { text: '测试' }];
+```
+
+只会展示默认展示的 4 个按钮中的最后一个（导出 schema），以及一个新按钮“测试”
+
+- [!] `extraButtons` 现在支持配置各种 antd button 的 props
+- [!] 修复了 propsSchema 和 schema 兼容在各个入口和出口处理上的不一致导致的 bug，现在统一收口
+- [!] fix 了 id 展示的样式丢失的 bug
+
 ### 0.5.2
 
 - [!] 解决了乱输入 schema 的时候会 crash 页面的问题

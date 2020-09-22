@@ -7,6 +7,7 @@ import { mapping } from './mapping';
 import './atom.css';
 import './Main.css';
 import 'antd/dist/antd.css';
+import { oldSchemaToNew } from './utils';
 
 // const SCHEMA = {
 //   schema: {
@@ -78,21 +79,36 @@ function App(
   const [state, setState] = useSet({
     formData: {},
     schema: {},
+    isNewVersion: true, // 用schema字段，还是用propsSchema字段，这是一个问题
     selected: undefined, // 被选中的$id, 如果object/array的内部，以首字母0标识
     hovering: undefined, // 目前没有用到
     preview: false, // preview = false 是编辑模式
     ...initGlobal, // form-render 的全局props等
   });
 
+  // 在这里统一收口 propsSchema 到 schema 的转换
   useEffect(() => {
     const schema = defaultValue ? transformFrom(defaultValue) : DEFAULT_SCHEMA;
+    if (schema && schema.propsSchema) {
+      setState({ isNewVersion: false });
+    } else {
+      setState({ isNewVersion: true });
+    }
     setState({
-      schema,
+      schema: oldSchemaToNew(schema), // 旧的转新的，新的不变
       formData: (schema && schema.formData) || {},
     });
-  }, []);
+  }, [defaultValue]);
 
-  const { schema, formData, preview, selected, hovering, ...rest } = state;
+  const {
+    schema,
+    formData,
+    preview,
+    selected,
+    hovering,
+    isNewVersion,
+    ...rest
+  } = state;
 
   const { displayType } = rest;
   const showDescIcon = displayType === 'row' ? true : false;
@@ -103,12 +119,7 @@ function App(
 
   const onSchemaChange = newSchema => {
     const result = { ...schema };
-    // 兼容 propsSchema
-    if (result.propsSchema) {
-      result.propsSchema = newSchema;
-    } else {
-      result.schema = newSchema;
-    }
+    result.schema = newSchema;
     setState({ schema: result });
   };
 
@@ -135,6 +146,7 @@ function App(
     submit,
     transformFrom,
     transformTo,
+    isNewVersion,
     extraButtons,
     ...globalProps,
   };

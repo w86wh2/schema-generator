@@ -364,6 +364,9 @@
 .fr-wrapper .mh7 { margin-left: 16rem; margin-right: 16rem; }
 .fr-wrapper .mh0 { margin-left: 0; margin-right: 0; }
 
+.fr-wrapper .blue { color: #357edd; }
+.fr-wrapper .f7 { font-size: .75rem; }
+
  .debug * { outline: 1px solid gold; }
  .debug-white * { outline: 1px solid white; }
  .debug-black * { outline: 1px solid black; }

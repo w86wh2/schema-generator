@@ -35,6 +35,8 @@ export function isCssLength(str) {
 export function isDeepEqual(param1, param2) {
   if (param1 === undefined && param2 === undefined) return true;
   else if (param1 === undefined || param2 === undefined) return false;
+  if (param1 === null && param2 === null) return true;
+  else if (param1 === null || param2 === null) return false;
   else if (param1.constructor !== param2.constructor) return false;
 
   if (param1.constructor === Array) {
@@ -735,7 +737,7 @@ const transformFrom = (mySchema, parent = null) => {
 export const fromFormily = schema => {
   const frSchema = transformFrom(schema);
   return {
-    propsSchema: frSchema,
+    schema: frSchema,
   };
 };
 
@@ -800,7 +802,7 @@ const transformTo = (frSchema, parent = null, key = null) => {
 };
 
 export const toFormily = schema => {
-  const frSchema = schema.propsSchema;
+  const frSchema = schema.schema;
   return transformTo(frSchema);
 };
 
@@ -851,3 +853,19 @@ function isKey(value, object) {
     (object != null && value in Object(object))
   );
 }
+
+export const oldSchemaToNew = schema => {
+  if (schema && schema.propsSchema) {
+    const { propsSchema, ...rest } = schema;
+    return { schema: propsSchema, ...rest };
+  }
+  return schema;
+};
+
+export const newSchemaToOld = setting => {
+  if (setting && setting.schema) {
+    const { schema, ...rest } = setting;
+    return { propsSchema: schema, ...rest };
+  }
+  return setting;
+};
