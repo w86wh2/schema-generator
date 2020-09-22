@@ -1,4 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, {
+  useRef,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from 'react';
 import { useSet, useStorageState } from './hooks';
 import copyTOClipboard from 'copy-text-to-clipboard';
 import Left from './Left';
@@ -10,27 +15,35 @@ import {
   dataToFlatten,
   flattenToData,
   getSaveNumber,
+  looseJsonParse,
+  isObject,
+  oldSchemaToNew,
+  newSchemaToOld,
 } from './utils';
 import { Ctx, PropsCtx, InnerCtx } from './context';
 // import SCHEMA from './json/basic.json';
 import FR from './FR';
 import { Modal, Input, message } from 'antd';
 import { Button } from 'antd';
-import 'antd/dist/antd.css';
-import 'tachyons';
 
 const { TextArea } = Input;
 
-const Wrapper = ({
-  simple = true,
-  schema,
-  formData,
-  onChange,
-  onSchemaChange,
-  templates,
-  submit,
-  ...globalProps
-}) => {
+function Wrapper(
+  {
+    simple = true,
+    schema,
+    formData,
+    onChange,
+    onSchemaChange,
+    templates,
+    submit,
+    transformFrom,
+    transformTo,
+    extraButtons = [],
+    ...globalProps
+  },
+  ref,
+) {
   const [local, setLocal] = useSet({
     showModal: false,
     showModal2: false,
@@ -49,12 +62,15 @@ const Wrapper = ({
     widgets,
     selected,
     hovering,
+    isNewVersion,
     ...rest
   } = globalProps;
-  const _schema = combineSchema(schema.propsSchema, schema.uiSchema);
+  let _schema = {};
+  if (schema) {
+    _schema = combineSchema(schema.schema, schema.uiSchema); // TODO: 要不要判断是否都是object
+  }
   const flatten = flattenSchema(_schema);
   const flattenWithData = dataToFlatten(flatten, formData);
-  // console.log(flatten);
 
   const onFlattenChange = newFlatten => {
     const newSchema = idToSchema(newFlatten);
@@ -78,9 +94,8 @@ const Wrapper = ({
   const clearSchema = () => {
     setState({
       schema: {
-        propsSchema: {
+        schema: {
           type: 'object',
-          properties: {},
         },
       },
       formData: {},
@@ -92,18 +107,26 @@ const Wrapper = ({
     setLocal({ schemaForImport: e.target.value });
   };
 
+  // 在这里统一收口 propsSchema 到 schema 的转换（一共就两个地方，一个是defaultValue，一个是importSchema）
   const importSchema = () => {
     try {
-      const info = JSON.parse(local.schemaForImport);
-      const { propsSchema, ...rest } = info;
-      setState({
+      const info = transformFrom(looseJsonParse(local.schemaForImport));
+      let _isNewVersion = true;
+      if (info && info.propsSchema) {
+        _isNewVersion = false;
+      }
+      const _info = oldSchemaToNew(info);
+      const { schema, ...rest } = _info;
+      const result = {
         schema: {
-          propsSchema,
+          schema,
         },
         formData: {},
         selected: undefined,
         ...rest,
-      });
+        isNewVersion: _isNewVersion,
+      };
+      setState(result);
     } catch (error) {
       message.info('格式不对哦，请重新尝试'); // 可以加个格式哪里不对的提示
     }
@@ -112,21 +135,55 @@ const Wrapper = ({
 
   let displaySchema = {};
   let displaySchemaString = '';
-
   try {
-    const propsSchema = idToSchema(flattenWithData, '#', true);
-    displaySchema = { propsSchema, ...rest };
+    const _schema = idToSchema(flattenWithData, '#', true);
+    displaySchema = transformTo({ schema: _schema, ...rest });
+    console.log(displaySchema);
+    if (!isNewVersion) {
+      displaySchema = newSchemaToOld(displaySchema);
+    }
     displaySchemaString = JSON.stringify(displaySchema, null, 2);
   } catch (error) {}
 
   const copySchema = () => {
     copyTOClipboard(displaySchemaString);
     message.info('复制成功');
+    toggleModal();
   };
 
-  const handleSubmit = () => {
-    submit(displaySchema);
+  // const handleSubmit = () => {
+  //   submit(displaySchema);
+  // };
+
+  const getValue = () => {
+    return displaySchema;
   };
+
+  const setValue = value => {
+    try {
+      const { schema, ...rest } = value;
+      let _schema = { schema };
+      setState(state => ({
+        ...state,
+        schema: _schema,
+        formData: {},
+        selected: undefined,
+        ...rest,
+      }));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const copyValue = () => {
+    copyTOClipboard(displaySchemaString);
+  };
+
+  useImperativeHandle(ref, () => ({
+    getValue,
+    setValue,
+    copyValue,
+  }));
 
   const saveSchema = () => {
     try {
@@ -148,6 +205,12 @@ const Wrapper = ({
     ...globalProps,
   };
 
+  const _extraButtons = Array.isArray(extraButtons) ? extraButtons : [];
+  const _showDefaultBtns = _extraButtons.filter(
+    item => item === true || item === false,
+  );
+  const _extraBtns = _extraButtons.filter(item => isObject(item) && item.text);
+
   if (simple) {
     return (
       <Ctx.Provider value={setState}>
@@ -164,35 +227,52 @@ const Wrapper = ({
     <Ctx.Provider value={setState}>
       <PropsCtx.Provider value={globalProps}>
         <InnerCtx.Provider value={store}>
-          <div className="flex vh-100 overflow-hidden">
+          <div className="fr-wrapper">
             <Left saveList={saveList} setSaveList={setSaveList} />
             <div className="mid-layout pr2">
-              <div className="mv3 mh1">
-                <Button
-                  className="mr2"
-                  onClick={() => {
-                    setState({ preview: !preview, selected: '#' });
-                  }}
-                >
-                  {preview ? '开始编辑' : '最终展示'}
-                </Button>
-                <Button className="mr2" onClick={clearSchema}>
-                  清空
-                </Button>
+              <div className="mv2 mh1">
+                {_showDefaultBtns[0] !== false && (
+                  <Button
+                    className="mr2 mb1"
+                    onClick={() => {
+                      setState({ preview: !preview, selected: '#' });
+                    }}
+                  >
+                    {preview ? '开始编辑' : '最终展示'}
+                  </Button>
+                )}
+                {_showDefaultBtns[1] !== false && (
+                  <Button className="mr2" onClick={clearSchema}>
+                    清空
+                  </Button>
+                )}
                 {/* <Button className="mr2" onClick={toggleModal3}>
                   保存
                 </Button> */}
-                <Button className="mr2" onClick={toggleModal2}>
-                  导入
-                </Button>
-                <Button type="primary" className="mr2" onClick={toggleModal}>
-                  导出schema
-                </Button>
-                <Button type="primary" className="mr2" onClick={handleSubmit}>
+                {_showDefaultBtns[2] !== false && (
+                  <Button className="mr2" onClick={toggleModal2}>
+                    导入
+                  </Button>
+                )}
+                {_showDefaultBtns[3] !== false && (
+                  <Button type="primary" className="mr2" onClick={toggleModal}>
+                    导出schema
+                  </Button>
+                )}
+                {_extraBtns.map((item, idx) => {
+                  return (
+                    <Button key={idx.toString()} className="mr2" {...item}>
+                      {item.text || item.children}
+                    </Button>
+                  );
+                })}
+                {/* <Button type="primary" className="mr2" onClick={handleSubmit}>
                   保存
-                </Button>
+                </Button> */}
               </div>
-              <FR preview={preview} />
+              <div className="dnd-container">
+                <FR preview={preview} />
+              </div>
             </div>
             <Right globalProps={rest} />
             <Modal
@@ -249,10 +329,12 @@ const Wrapper = ({
       </PropsCtx.Provider>
     </Ctx.Provider>
   );
-};
+}
 
-Wrapper.defaultProps = {
+const FRWrapper = forwardRef(Wrapper);
+
+FRWrapper.defaultProps = {
   labelWidth: 120,
 };
 
-export default Wrapper;
+export default FRWrapper;

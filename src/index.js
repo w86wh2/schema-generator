@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import Main from './Main';
 import './index.css';
 
-const Root = props => {
+const Root = (props, ref) => {
   return (
     <DndProvider backend={HTML5Backend}>
-      <Main {...props} />
+      <Main ref={ref} {...props} />
     </DndProvider>
   );
 };
 
-export default Root;
+export { fromFormily, toFormily } from './utils';
+export default forwardRef(Root);

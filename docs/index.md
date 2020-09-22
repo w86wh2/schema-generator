@@ -1,4 +1,15 @@
-# Getting started
+---
+hero:
+  title: FormRender Generator
+  desc: form-render 的表单设计器
+  actions:
+    - text: 在线Demo
+      link: /playground
+    - text: Formily
+      link: /_demos/formily-pg
+    - text: 开始使用
+      link: /demo
+---
 
 ### 安装
 
@@ -13,7 +24,7 @@ import React from 'react';
 import Generator from 'fr-generator';
 
 const defaultValue = {
-  propsSchema: {
+  schema: {
     type: 'object',
     properties: {
       inputName: {
@@ -57,25 +68,15 @@ const templates = [
 ];
 
 const Demo = () => {
-  const submit = schema => {
-    alert(JSON.stringify(schema));
-  };
-
   return (
-    <Generator
-      defaultValue={defaultValue}
-      templates={templates}
-      submit={submit}
-    />
+    <div style={{ height: '100vh' }}>
+      <Generator defaultValue={defaultValue} templates={templates} />
+    </div>
   );
 };
 
 export default Demo;
 ```
 
-代码展示效果见 Demo。
-目前支持 3 个 props：`defaultValue`，`templates` 和 `submit`
-
-- **defaultValue:** 默认一进入编辑器展示的表单对应的 schema。格式参考 schema 生成器的输出 schema
-- **templates:** 常用的 schema 模板，模板方便用户点击使用。格式参照上面代码：text 按钮文案，name 对应的字段
-- **submit:** 提交按钮的 callback，入参是导出的 schema
+<!-- <code src='./Playground.jsx' className='hide-demo' /> -->
+<code src='./FormilyPG.jsx' className='hide-demo' />

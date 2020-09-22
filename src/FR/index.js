@@ -49,12 +49,14 @@ const FR = ({ id = '#', preview = false }) => {
       }
       break;
     case 'boolean':
-      if (schema.title) {
-        labelClass += ' ml2';
-        labelClass = labelClass.replace('mb2', 'mb0');
+      if (schema['ui:widget'] !== 'switch') {
+        if (schema.title) {
+          labelClass += ' ml2';
+          labelClass = labelClass.replace('mb2', 'mb0');
+        }
+        contentClass += ' flex items-center'; // checkbox高度短，需要居中对齐
+        containerClass += ' flex items-center flex-row-reverse justify-end';
       }
-      contentClass += ' flex items-center'; // checkbox高度短，需要居中对齐
-      containerClass += ' flex items-center flex-row-reverse justify-end';
       break;
     default:
       if (displayType === 'row') {
@@ -62,7 +64,9 @@ const FR = ({ id = '#', preview = false }) => {
       }
   }
   // 横排时
-  if (displayType === 'row' && !isComplex && schema.type !== 'boolean') {
+  const isCheckBox =
+    schema.type === 'boolean' && schema['ui:widget'] !== 'switch';
+  if (displayType === 'row' && !isComplex && !isCheckBox) {
     containerClass += ' flex items-center';
     labelClass += ' flex-shrink-0 fr-label-row';
     labelClass = labelClass.replace('mb2', 'mb0');
@@ -70,7 +74,7 @@ const FR = ({ id = '#', preview = false }) => {
   }
 
   // 横排的checkbox
-  if (displayType === 'row' && schema.type === 'boolean') {
+  if (displayType === 'row' && isCheckBox) {
     contentClass += ' flex justify-end pr2';
   }
 

@@ -491,7 +491,7 @@ result = result.map(list =>
   list.map(item => ({
     ...item,
     setting: { ...commonSettings, ...item.setting },
-  }))
+  })),
 );
 
 export default result;

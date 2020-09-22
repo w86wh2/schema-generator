@@ -1,6 +1,13 @@
 import nanoid from 'nanoid';
 import deepClone from 'clone';
 
+function stringContains(str, text) {
+  return str.indexOf(text) > -1;
+}
+
+export const isObject = a =>
+  stringContains(Object.prototype.toString.call(a), 'Object');
+
 // 克隆对象
 export function clone(data) {
   try {
@@ -28,6 +35,8 @@ export function isCssLength(str) {
 export function isDeepEqual(param1, param2) {
   if (param1 === undefined && param2 === undefined) return true;
   else if (param1 === undefined || param2 === undefined) return false;
+  if (param1 === null && param2 === null) return true;
+  else if (param1 === null || param2 === null) return false;
   else if (param1.constructor !== param2.constructor) return false;
 
   if (param1.constructor === Array) {
@@ -76,7 +85,7 @@ export function getFormat(format) {
 export function hasRepeat(list) {
   return list.find(
     (x, i, self) =>
-      i !== self.findIndex(y => JSON.stringify(x) === JSON.stringify(y))
+      i !== self.findIndex(y => JSON.stringify(x) === JSON.stringify(y)),
   );
 }
 
@@ -536,33 +545,33 @@ export const dropItem = ({ dragId, dragItem, dropId, position, flatten }) => {
 
 // 解析函数字符串值
 // TODO: 没有考虑list的情况
-export const getDataById = (data, idString) => {
-  if (idString === '#') return data;
-  try {
-    const idConnectedByDots = idString
-      .split('/')
-      .filter(id => id !== '#')
-      .map(id => `["${id}"]`)
-      .join('');
-    const string = `data${idConnectedByDots}`;
-    const a = `"use strict";
-    const data = ${JSON.stringify(data)};
-    return ${string}`;
-    return Function(a)();
-    // TODO: can be better
-    // let result = { ...data };
-    // idConnectedByDots.forEach((item) => {
-    //   result = result[item];
-    // });
-    // return result;
-  } catch (error) {
-    return undefined;
-  }
-};
+// export const getDataById = (data, idString) => {
+//   if (idString === '#') return data;
+//   try {
+//     const idConnectedByDots = idString
+//       .split('/')
+//       .filter(id => id !== '#')
+//       .map(id => `["${id}"]`)
+//       .join('');
+//     const string = `data${idConnectedByDots}`;
+//     const a = `"use strict";
+//     const data = ${JSON.stringify(data)};
+//     return ${string}`;
+//     return Function(a)();
+//     // TODO: can be better
+//     // let result = { ...data };
+//     // idConnectedByDots.forEach((item) => {
+//     //   result = result[item];
+//     // });
+//     // return result;
+//   } catch (error) {
+//     return undefined;
+//   }
+// };
 
 // TODO: 没有考虑list的情况
 export const dataToFlatten = (flatten, data) => {
-  if (!flatten || !data) return;
+  if (!flatten || !data) return {};
   Object.entries(flatten).forEach(([id, item]) => {
     const branchData = getDataById(data, id);
     flatten[id].data = branchData;
@@ -637,4 +646,226 @@ export const getSaveNumber = () => {
   } else {
     return 1;
   }
+};
+
+export function looseJsonParse(obj) {
+  return Function('"use strict";return (' + obj + ')')();
+}
+
+// 获得propsSchema的children
+function getChildren2(schema) {
+  if (!schema) return [];
+  const {
+    // object
+    properties,
+    // array
+    items,
+    type,
+  } = schema;
+  if (!properties && !items) {
+    return [];
+  }
+  let schemaSubs = {};
+  if (type === 'object') {
+    schemaSubs = properties;
+  }
+  if (type === 'array') {
+    schemaSubs = items.properties;
+  }
+  return Object.keys(schemaSubs).map(name => ({
+    schema: schemaSubs[name],
+    name,
+  }));
+}
+
+// formily Schema => FR schema
+const transformFrom = (mySchema, parent = null) => {
+  const isObj = mySchema.type === 'object' && mySchema.properties;
+  const isList =
+    mySchema.type === 'array' && mySchema.items && mySchema.items.properties;
+  const hasChildren = isObj || isList;
+  // debugger;
+  if (!hasChildren) {
+    if (mySchema.enum && Array.isArray(mySchema.enum)) {
+      const list = mySchema.enum;
+      if (
+        isObject(list[0]) &&
+        list[0].label !== undefined &&
+        list[0].value !== undefined
+      ) {
+        const _enumNames = list.map(i => i.label);
+        const _enum = list.map(i => i.value);
+        mySchema.enum = _enum;
+        mySchema.enumNames = _enumNames;
+      }
+    }
+  } else {
+    const childrenList = getChildren2(mySchema);
+    childrenList.map(item => {
+      if (isObj) {
+        mySchema.properties[item.name] = transformFrom(item.schema, mySchema);
+      }
+      if (isList) {
+        mySchema.items.properties[item.name] = transformFrom(
+          item.schema,
+          mySchema,
+        );
+      }
+    });
+  }
+  if (mySchema['x-component']) {
+    mySchema['ui:widget'] = mySchema['x-component'];
+  }
+  if (mySchema['x-component-props']) {
+    mySchema['ui:options'] = mySchema['x-component-props'];
+  }
+  if (parent && mySchema.required) {
+    if (parent.required && Array.isArray(parent.required)) {
+      parent.required.push(mySchema.name);
+    } else {
+      parent.required = [mySchema.name];
+    }
+  }
+  delete mySchema.key;
+  delete mySchema.name;
+  delete mySchema.required;
+  delete mySchema['x-component'];
+  delete mySchema['x-component-props'];
+  return mySchema;
+};
+
+export const fromFormily = schema => {
+  const frSchema = transformFrom(schema);
+  return {
+    schema: frSchema,
+  };
+};
+
+// FR schema => formily Schema
+const transformTo = (frSchema, parent = null, key = null) => {
+  const isObj = frSchema.type === 'object' && frSchema.properties;
+  const isList =
+    frSchema.type === 'array' && frSchema.items && frSchema.items.properties;
+  const hasChildren = isObj || isList;
+  // debugger;
+  if (!hasChildren) {
+    if (
+      frSchema.enum &&
+      Array.isArray(frSchema.enum) &&
+      frSchema.enumNames &&
+      Array.isArray(frSchema.enumNames)
+    ) {
+      const list = frSchema.enum.map((item, idx) => ({
+        value: item,
+        label: frSchema.enumNames[idx],
+      }));
+      frSchema.enum = list;
+    }
+  } else {
+    const childrenList = getChildren2(frSchema);
+    childrenList.map(item => {
+      if (isObj) {
+        frSchema.properties[item.name] = transformTo(
+          item.schema,
+          frSchema,
+          item.name,
+        );
+      }
+      if (isList) {
+        frSchema.items.properties[item.name] = transformTo(
+          item.schema,
+          frSchema,
+          item.name,
+        );
+      }
+    });
+  }
+  if (frSchema['ui:widget']) {
+    frSchema['x-component'] = frSchema['ui:widget'];
+  }
+  if (frSchema['ui:options']) {
+    frSchema['x-component-props'] = frSchema['ui:options'];
+  }
+  delete frSchema['ui:widget'];
+  delete frSchema['ui:options'];
+  delete frSchema['enumNames'];
+  if (key) {
+    frSchema.name = key;
+    frSchema.key = key;
+  }
+  if (parent && key && parent.required && Array.isArray(parent.required)) {
+    if (parent.required.indexOf(key) > -1) {
+      frSchema.required = true;
+    }
+  }
+  return frSchema;
+};
+
+export const toFormily = schema => {
+  const frSchema = schema.schema;
+  return transformTo(frSchema);
+};
+
+// 解析函数字符串值
+// TODO: 没有考虑list的情况
+// getDataById(formData, '#/a/b/c')
+export function getDataById(object, path) {
+  path = castPath(path, object);
+
+  let index = 0;
+  const length = path.length;
+
+  while (object != null && index < length) {
+    object = object[toKey(path[index++])];
+  }
+  return index && index == length ? object : undefined;
+}
+
+function castPath(value, object) {
+  if (Array.isArray(value)) {
+    return value;
+  }
+  return isKey(value, object) ? [value] : value.match(/([^\.\/\[\]#"']+)/g);
+}
+
+function toKey(value) {
+  if (typeof value === 'string') {
+    return value;
+  }
+  const result = `${value}`;
+  return result == '0' && 1 / value == -INFINITY ? '-0' : result;
+}
+
+const reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/;
+const reIsPlainProp = /^\w*$/;
+
+function isKey(value, object) {
+  if (Array.isArray(value)) {
+    return false;
+  }
+  const type = typeof value;
+  if (type === 'number' || type === 'boolean' || value == null) {
+    return true;
+  }
+  return (
+    reIsPlainProp.test(value) ||
+    !reIsDeepProp.test(value) ||
+    (object != null && value in Object(object))
+  );
+}
+
+export const oldSchemaToNew = schema => {
+  if (schema && schema.propsSchema) {
+    const { propsSchema, ...rest } = schema;
+    return { schema: propsSchema, ...rest };
+  }
+  return schema;
+};
+
+export const newSchemaToOld = setting => {
+  if (setting && setting.schema) {
+    const { schema, ...rest } = setting;
+    return { propsSchema: schema, ...rest };
+  }
+  return setting;
 };

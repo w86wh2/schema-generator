@@ -1,9 +1,11 @@
 .mid-layout {
   padding: 0 8px;
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   flex-shrink: 1;
-  height: 100vh;
-  overflow: auto;
+  /* height: 100%; */
+  overflow: hidden;
   border-left: 1px solid #e0e0e0;
   border-right: 1px solid #e0e0e0;
 }
@@ -12,4 +14,35 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.fr-wrapper {
+  display: flex;
+  overflow: hidden;
+  height: 100%;
+  min-height: 30vh;
+}
+
+.fr-wrapper .dnd-container {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.fr-wrapper .ant-tabs.ant-tabs-top {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.fr-wrapper .ant-tabs-content-holder {
+  flex-grow: 1;
+}
+
+.fr-wrapper .ant-tabs-content.ant-tabs-content-top {
+  height: 100%;
+}
+
+.fr-wrapper .ant-tabs-tabpane.ant-tabs-tabpane-active {
+  height: 100%;
+  overflow-y: auto;
 }
