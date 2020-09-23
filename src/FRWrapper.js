@@ -138,7 +138,6 @@ function Wrapper(
   try {
     const _schema = idToSchema(flattenWithData, '#', true);
     displaySchema = transformTo({ schema: _schema, ...rest });
-    console.log(displaySchema);
     if (!isNewVersion) {
       displaySchema = newSchemaToOld(displaySchema);
     }

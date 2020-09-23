@@ -816,7 +816,8 @@ export function getDataById(object, path) {
   const length = path.length;
 
   while (object != null && index < length) {
-    object = object[toKey(path[index++])];
+    const key = toKey(path[index++]);
+    object = key ? object[key] : object;
   }
   return index && index == length ? object : undefined;
 }
@@ -830,7 +831,7 @@ function castPath(value, object) {
 
 function toKey(value) {
   if (typeof value === 'string') {
-    return value;
+    return value.replace(/^#\/?/, '');
   }
   const result = `${value}`;
   return result == '0' && 1 / value == -INFINITY ? '-0' : result;
