@@ -158,10 +158,11 @@ function Wrapper(
     return displaySchema;
   };
 
+  // 第三个收口点 propsSchema 到 schema
   const setValue = value => {
     try {
-      const { schema, ...rest } = value;
-      let _schema = { schema };
+      const { schema, propsSchema, ...rest } = value;
+      let _schema = { schema: schema || propsSchema };
       setState(state => ({
         ...state,
         schema: _schema,
