@@ -86,7 +86,7 @@ function App(
     ...initGlobal, // form-render 的全局props等
   });
 
-  // 在这里统一收口 propsSchema 到 schema 的转换
+  // 收口点 propsSchema 到 schema 的转换 (一共3处，其他两个是 importSchema 和 setValue，在 FRWrapper 文件)
   useEffect(() => {
     const schema = defaultValue ? transformFrom(defaultValue) : DEFAULT_SCHEMA;
     if (schema && schema.propsSchema) {

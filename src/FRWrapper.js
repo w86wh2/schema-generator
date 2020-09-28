@@ -107,7 +107,8 @@ function Wrapper(
     setLocal({ schemaForImport: e.target.value });
   };
 
-  // 在这里统一收口 propsSchema 到 schema 的转换（一共就两个地方，一个是defaultValue，一个是importSchema）
+  // 收口点 propsSchema 到 schema 的转换（一共就3个入口：defaultValue，importSchema，setValue）
+  // TODO: 3个入口可能还是太多了，是不是考虑在外面裹一层
   const importSchema = () => {
     try {
       const info = transformFrom(looseJsonParse(local.schemaForImport));
@@ -158,16 +159,21 @@ function Wrapper(
     return displaySchema;
   };
 
-  // 第三个收口点 propsSchema 到 schema
+  // 收口点 propsSchema 到 schema
   const setValue = value => {
     try {
       const { schema, propsSchema, ...rest } = value;
       let _schema = { schema: schema || propsSchema };
+      let _isNewVersion = true;
+      if (!schema && propsSchema) {
+        _isNewVersion = false;
+      }
       setState(state => ({
         ...state,
         schema: _schema,
         formData: {},
         selected: undefined,
+        isNewVersion: _isNewVersion,
         ...rest,
       }));
     } catch (error) {
