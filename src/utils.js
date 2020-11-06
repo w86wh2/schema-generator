@@ -811,14 +811,25 @@ export const toFormily = schema => {
 // getDataById(formData, '#/a/b/c')
 export function getDataById(object, path) {
   path = castPath(path, object);
+  const temp = deepClone(object);
 
   let index = 0;
   const length = path.length;
 
   while (object != null && index < length) {
-    object = object[toKey(path[index++])];
+    const key = toKey(path[index++]);
+    object = key ? deepGet(temp, key) : object;
   }
   return index && index == length ? object : undefined;
+}
+
+function deepGet(obj, keys, defaultVal) {
+  return (
+    (!Array.isArray(keys) ? keys.split('/') : keys).reduce(
+      (o, k) => (o || {})[k],
+      obj,
+    ) || defaultVal
+  );
 }
 
 function castPath(value, object) {
